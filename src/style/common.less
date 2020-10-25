@@ -1,0 +1,110 @@
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
+::-webkit-scrollbar  
+{  
+    width: 0px;  
+    height: 0px;  
+    background-color: #F5F5F5;  
+}  
+  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track  
+{  
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0);  
+    border-radius: 10px;  
+    background-color: #F5F5F5;  
+}  
+  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb  
+{  
+    border-radius: 10px;  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+    background-color: #555;  
+} 
+
+html,body{
+    height: 100%;
+    width: 100%;
+    // background-color: #F5F5F5;
+    color: rgba(0,0,0,.7);
+    font-family: "microsoft yahei", arial, sans-serif;
+}
+
+.fillcontain{
+    height: 100%;
+    width: 100%;
+    background-color: #f0f3f4;
+}
+.wrapper-content {
+    padding: 20px;
+}
+.ibox {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid #dee5e7;
+    /**
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    **/
+	min-width:120px;
+}
+.ibox-title {
+    height: 30px;
+    border-color: #edf1f2;
+    background-color: #f6f8f8;
+    font-weight: 700;
+    padding: 8px 10px 3px 10px;
+    border-bottom: 1px solid transparent;
+    display: block;
+    clear: both;
+}
+.ibox-content {
+    padding: 15px 20px 20px 20px;
+    -webkit-border-image: none;
+    -o-border-image: none;
+    border-image: none;
+    border-top: 1px solid #e7eaec;
+	position:relative;
+}
+.el-table tr.tableHeadbg th {
+    background-color: #F5F5F6;
+    color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+}
+.optbtncls {
+    margin-bottom: 10px;
+}
+/**
+.btn {
+    padding: 5px 12px;
+}
+**/
+//覆盖elementui 的 对话框样式
+.el-dialog__footer {
+    padding: 10px !important;
+    text-align: center !important;
+    background-color: #f8fafb !important;
+    border-top: 1px solid #e5e5e5 !important;
+}
+.el-dialog__header {
+    padding: 15px !important;
+    text-align: center !important;
+    background-color: #f8fafb !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    .el-dialog__title {
+        font-size: 20px;
+        font-weight: 600;
+    }
+}
+.el-button {
+    padding: 5px 12px;
+}
+.el-input__inner {
+    height: 32px;
+}
+.el-form-item {
+    margin-bottom:15px;
+}
+.el-form-item__error{
+    padding-top:0px;
+}
