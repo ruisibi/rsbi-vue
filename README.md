@@ -1,6 +1,6 @@
 # rsbi-vue
 
-> A Vue.js project
+> 睿思bi开源版前端框架-基于VUE,开发中...
 
 ## Build Setup
 
