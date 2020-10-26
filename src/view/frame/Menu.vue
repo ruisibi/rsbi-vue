@@ -62,7 +62,7 @@ export default {
 			menuPid:null,
 			menuName:"",
 			menuDesc:"",
-			menuOrder:0,
+			menuOrder: null,
 			menuUrl:"",
 			avatar:""
 		},
@@ -73,7 +73,9 @@ export default {
 		},
 		operDailog:false,
 		operDailogTitle:"",
-		menuIcons : menuData
+    menuIcons : menuData,
+    isupdate:false,
+    treeRef:null
 	};
   },
   components: {
@@ -86,17 +88,76 @@ export default {
   methods: {
 	  addMenu:function(node, isupdate){
 		  this.operDailogTitle = isupdate?"修改菜单":"创建菜单";
-		  this.$refs.operForm.showDailog();
+      this.$refs.operForm.showDailog();
+      this.isupdate = isupdate;
+      if(isupdate){
+        const node = this.treeRef.get_selected(true)[0];
+        //回写值
+        let ts = this;
+        ajax({
+          url:"frame/menu/get.action",
+						data:{menuId:node.id},
+						dataType:"json",
+						success:function(dt){
+							dt = dt.rows;
+							for(let v in ts.menu){
+								ts.menu[v] = dt[v];
+              }
+              ts.showPic(dt.avatar);
+						}
+        }, ts);
+      }else{
+        //清空值
+        for(let v in this.menu){
+          this.menu[v] = null;
+        }
+      }
 	  },
 	  delMenu:function(node){
-
+      let ts = this;
+      if(confirm("是否确认?")){
+        ajax({
+          type:"GET",
+          data:{menuId:node.id},
+          postJSON:false,
+          url:"frame/menu/delete.action",
+          success:function(){
+            ts.treeRef.delete_node(node);
+          }
+        }, ts);
+      }
 	  },
 	  showPic:function(cls){
-		  $("#picview").html(`<i class='${cls}'></i>`);
+      $("#picview").html(`<i class='${cls}'></i>`);
+      this.menu.avatar = cls;
 	  },
-	  //在 operationDailog 里面进行回掉的函数
+	  //在 operationDailog 里面进行回调的函数
 	  saveMenu:function(){
-		  return true;
+      const node = this.treeRef.get_selected(true)[0];
+      this.menu.menuPid = node.id;
+      let ts = this;
+      let ret = true;
+				this.$refs['menuForm'].validate((valid) => {
+					if (valid) {
+						ajax({
+							type:"POST",
+							data: ts.menu,
+							postJSON:false,
+							url:ts.isupdate?"frame/menu/update.action":"frame/menu/save.action",
+							success:function(resp){
+                if(ts.isupdate){
+                  ts.treeRef.rename_node(node, ts.menu.menuName);
+                }else{
+                  ts.treeRef.create_node(node.id, {id:resp.rows,text:ts.menu.menuName, icon:'fa fa-file-o'});
+					        ts.treeRef.open_node(node);
+                }
+							}
+						}, ts);
+					}else{
+            ret = false;
+          }
+				});
+		  return ret;
 	  },
     //初始化 jstree
     initTree: function () {
@@ -194,6 +255,7 @@ export default {
           const ref = $("#menuTree").jstree(true);
           ref.set_icon(b.node, "fa fa-folder-o");
         });
+        this.treeRef = $("#menuTree").jstree(true);
     },
   },
   watch: {},

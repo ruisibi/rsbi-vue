@@ -33,8 +33,8 @@
 					<el-table-column align="center" prop="loginTime" label="登录时间"></el-table-column>
 					<el-table-column align="center" prop="userId" label="操作">
 						<template slot-scope="scope">
-								<a class="btn btn-primary btn-xs" @click="userRole(scope.userId)"> 授权角色 </a>
-								<a class="btn btn-primary btn-xs" @click="userMenu(scope.userId)"> 授权菜单 </a>
+								<a class="btn btn-primary btn-xs" @click="addUserRole(scope.row.userId)"> 授权角色 </a>
+								<a class="btn btn-primary btn-xs" @click="userMenu(scope.row.userId)"> 授权菜单 </a>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -95,6 +95,16 @@
 			  <div slot="footer" class="dialog-footer">
 			    <el-button type="primary" @click="saveUser()">确 定</el-button>
 				<el-button @click="addUserDailog = false">取 消</el-button>
+			  </div>
+			</el-dialog>
+
+			<el-dialog title="授权角色" :visible.sync="userRoleDailog">
+				  <el-checkbox-group v-model="checkList">
+					<el-checkbox v-for="r in roles" :label="r.roleId" :key="r.roleId">{{r.roleName}}</el-checkbox>
+				  </el-checkbox-group>
+			  <div slot="footer" class="dialog-footer">
+			    <el-button type="primary" @click="saveUserRole()">确 定</el-button>
+				<el-button @click="userRoleDailog = false">取 消</el-button>
 			  </div>
 			</el-dialog>
   	</div>
@@ -161,8 +171,10 @@
 						label:"停用",
 						value:"0"
 					}]
-				}
-				
+				},
+				userRoleDailog:false,
+				roles:[],
+				checkList:[]
 			}
 		},
 		mounted(){
@@ -277,6 +289,28 @@
 						}
 					}, this);
 				}
+			},
+			userMenu:function(userId) {
+				this.$router.push({name:"userMenu", params: {userId}});
+			},
+			addUserRole:function(userId) {
+				this.userRoleDailog = true;
+				let ts = this;
+				ajax({
+					type:"GET",
+					data:{userId:userId},
+					postJSON:false,
+					url:"frame/role/userRolelist.action",
+					success:function(resp){
+						ts.roles = resp.rows;
+						ts.checkList = resp.rows.filter(r=>r.userId).map(r=>{
+							return r.roleId
+						});
+					}
+				}, ts);
+			},
+			saveUserRole:function(){
+				alert(this.checkList);
 			}
 		},
 		watch: {

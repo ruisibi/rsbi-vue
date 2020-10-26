@@ -33,7 +33,7 @@
 						<el-table-column align="center" prop="ord" label="排序"></el-table-column>
 						<el-table-column align="center" prop="roleId" label="操作">
 							<template slot-scope="scope">
-								<a class="btn btn-primary btn-xs" @click="userRole(scope.roleId)"> 授权菜单 </a>
+								<a class="btn btn-primary btn-xs" @click="userRole(scope.row.roleId)"> 授权菜单 </a>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -170,6 +170,9 @@
 						}
 					}, this);
 				}
+			},
+			userRole:function(roleId) {
+				this.$router.push({name:"roleMenu", params: {roleId}});
 			}
 		},
 		watch: {
