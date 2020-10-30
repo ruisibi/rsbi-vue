@@ -308,9 +308,24 @@
 						});
 					}
 				}, ts);
+				this.curUserId = userId;
 			},
 			saveUserRole:function(){
-				alert(this.checkList);
+				let ts = this;
+				ajax({
+					type:"POST",
+					url:"frame/role/userRoleSave.action",
+					dataType:"JSON",
+					postJSON:true,
+					data:JSON.stringify({roleId:ts.checkList,userId:ts.curUserId}),
+					success:function(resp){
+						 ts.$notify.success({
+							title: '授权成功',
+							offset: 50
+						});
+						ts.userRoleDailog = false;
+					}
+				}, ts);
 			}
 		},
 		watch: {

@@ -26,18 +26,25 @@
       </li>
     </ul>
 	</nav>
+  <userInfo ref="uinfo"></userInfo>
+  <password ref="psd"></password>
   </div>
 </template>
 
 <script>
 import {baseUrl} from '@/common/biConfig'
 import $ from 'jquery'
-  
+import userInfo from '@/components/UserInfo'
+import password from '@/components/Password'
+
 export default {
   name: 'FrameTOp',
   data () {
     return {userbtnstyle:'glyphicon-menu-up',swatchcls:''}
   },
+  components: {
+		userInfo,password
+	},
   methods:{
     mover:function(){
       this.userbtnstyle = "glyphicon-menu-down";
@@ -73,6 +80,14 @@ export default {
                ts.$router.push('/'); 
             }
           });
+        }else if(cmd === 'grxx'){
+          this.$refs['uinfo'].show = true;
+        }else if(cmd === 'xgmm'){
+          this.$refs['psd'].show = true;
+        }else if(cmd === 'wtfk'){
+          window.open("http://www.ruisitech.com/suggest.html");
+        }else if(cmd === 'sysc'){
+          window.open("http://book.ruisitech.com");
         }
     }
   }

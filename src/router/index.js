@@ -8,6 +8,7 @@ import Role from '@/view/frame/Role'
 import RoleMenu from '@/view/frame/RoleMenu'
 import User from '@/view/frame/User'
 import UserMenu from '@/view/frame/UserMenu'
+import Model from '@/view/model/Index'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
           path:'/frame/UserMenu',
           name:'userMenu',
           component:UserMenu
+        },
+        {
+          path:'/model/Index',
+          name:'model',
+          component:Model
         }
       ]
     }

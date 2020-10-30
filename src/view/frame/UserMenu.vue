@@ -76,7 +76,37 @@ export default {
     },
     save:function(){
       const ts = this;
-      
+      let ids = "";
+      let nodes = this.treeRef.get_selected(true);
+      for(let i=0; nodes&&i<nodes.length; i++){
+        var n = nodes[i];
+        if(n.state.disabled){
+          continue;
+        }
+        ids = ids + n.id + ",";
+      }
+      $("#menutree").find(".jstree-undetermined").each(function (i, element) {
+        var id = $(element).closest('.jstree-node').attr("id");
+        if(id != 'root'){
+          ids = ids + id + ",";
+        }
+      });
+      if(ids.length > 0){
+        ids = ids.substring(0, ids.length - 1);
+      }
+      ajax({
+        type:"POST",
+        url:"/frame/user/userMenu/save.action",
+        dataType:"JSON",
+        data:{userId:ts.$route.params.userId, menuIds:ids},
+        success:function(resp){
+          ts.$notify.success({
+            title: '授权成功',
+            offset: 50
+          });
+          ts.backpage();
+        }
+      }, ts);
     },
     backpage:function(){
       this.$router.push('user')
