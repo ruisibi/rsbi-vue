@@ -74,7 +74,7 @@
 
 <script>
 import { baseUrl, ajax } from "@/common/biConfig";
-import operationDailog from "@/components/OperationDailog";
+import dsetAdd from "@/view/model/DsetAdd";
 import $ from "jquery";
 
 export default {
@@ -86,7 +86,9 @@ export default {
       isupdate: false
     };
   },
-  components: {},
+  components: {
+    dsetAdd
+  },
   mounted() {
     this.loadData();
   },
@@ -104,6 +106,14 @@ export default {
     },
     selectme: function (a, b) {
       this.checked = a.dsetId;
+    },
+    addDset(isupdate){
+      this.isupdate = isupdate;
+      let o = this.$parent.$parent.$parent;
+      let oper =  o.$refs['dsetOper'];
+      o.dsetOperTitle = isupdate===false?"创建数据集":"编辑数据集";
+      oper.showDailog();
+      o.$refs["dsetAddForm"].addDset(isupdate);
     }
   },
 };
