@@ -225,8 +225,11 @@
 					this.addUserDailog = true;	
 					this.dialogTitle = "新增用户";
 					//清空值
-					for(let v in ts.user){
-						ts.user[v] = null;
+					for(let v in this.user){
+						this.user[v] = null;
+					}
+					if(this.$refs['userForm']){
+						this.$refs['userForm'].clearValidate();
 					}
 				}
 				this.isupdate = isupdate;

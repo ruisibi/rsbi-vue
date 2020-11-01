@@ -15,8 +15,9 @@ export {
  * 封装Ajax请求
  * @param {*} cfg 
  * @param {*} ts 
+ * @param {*} loadingObj   loading对象，如果有
  */
-export const ajax = (cfg, ts) => {
+export const ajax = (cfg, ts, loadingObj) => {
 	let o = {
 		type:cfg.type,
 		data:cfg.data,
@@ -26,6 +27,9 @@ export const ajax = (cfg, ts) => {
 		crossDomain: true,
 		url:baseUrl+cfg.url,
 		success:function(resp){
+			if(loadingObj){
+				loadingObj.close();
+			}
 			if(resp.result === 1){
 				cfg.success(resp);
 			}else{
@@ -37,6 +41,9 @@ export const ajax = (cfg, ts) => {
 			}
 		},
 		error: function(){
+			if(loadingObj){
+				loadingObj.close();
+			}
 			ts.$notify.error({
 				title: '系统出错',
 				offset: 50

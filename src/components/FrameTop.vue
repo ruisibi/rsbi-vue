@@ -135,4 +135,7 @@ export default {
   li {
     list-style-type: none;
   }
+  ul {
+    margin-bottom:0px;
+  }
 </style>

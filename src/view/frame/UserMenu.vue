@@ -126,8 +126,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import "../../style/mixin";
+<style lang="css">
 .jstree-default .jstree-disabled.jstree-clicked {
 	background:none;
 	text-decoration: line-through;
