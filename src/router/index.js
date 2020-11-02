@@ -9,6 +9,8 @@ import RoleMenu from '@/view/frame/RoleMenu'
 import User from '@/view/frame/User'
 import UserMenu from '@/view/frame/UserMenu'
 import Model from '@/view/model/Index'
+import Portal from '@/view/portal/Index'
+import ReportDesign from '@/view/bireport/ReportDesign'
 
 Vue.use(Router)
 
@@ -58,6 +60,17 @@ export default new Router({
           path:'/model/Index',
           name:'model',
           component:Model
+        },
+        {
+          path:'/portal/Index',
+          name:'portal',
+          component:Portal
+        }
+        ,
+        {
+          path:'/bireport/ReportDesign',
+          name:'bireport',
+          component:ReportDesign
         }
       ]
     }

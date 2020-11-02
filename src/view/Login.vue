@@ -9,7 +9,7 @@
 	  </div>
 		<transition name="el-fade-in">
 	  		<section class="form_contianer" v-show="showLogin">
-		    	<el-form :model="loginForm" :rules="rules" ref="loginForm">
+		    	<el-form :model="loginForm" :rules="rules" ref="loginForm" @keyup.enter.native="submitForm('loginForm')">
 					<h2>用户登录</h2>
 					<div class="row">
 						<div class="col-sm-6">
@@ -104,11 +104,6 @@
 							}
 						});						
 					} else {
-						this.$notify.error({
-							title: '登录错误',
-							message: '请输入正确的用户名密码',
-							offset: 50
-						});
 						return false;
 					}
 				});
