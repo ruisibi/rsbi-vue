@@ -87,7 +87,7 @@ export default {
     };
   },
   components: {
-    dsetAdd
+    dsetAdd,
   },
   mounted() {
     this.loadData();
@@ -113,7 +113,26 @@ export default {
       let oper =  o.$refs['dsetOper'];
       o.dsetOperTitle = isupdate===false?"创建数据集":"编辑数据集";
       oper.showDailog();
-      o.$refs["dsetAddForm"].addDset(isupdate);
+      o.$refs["dsetAddForm"].addDset(isupdate, this.checked);
+    },
+    delDset(){
+      if(!this.checked){
+        this.$notify.error({
+          title: "未勾选数据",
+          offset: 50,
+        });
+        return;
+      }
+      if(confirm("是否确认？")){
+        ajax({
+          url:"model/deleteDset.action",
+          type:"GET",
+          data:{dsetId:this.checked},
+          success:(resp)=>{
+            this.loadData();
+          }
+        });
+      }
     }
   },
 };

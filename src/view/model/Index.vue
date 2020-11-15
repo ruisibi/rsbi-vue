@@ -24,6 +24,7 @@
     >
       <dsetAdd ref="dsetAddForm"></dsetAdd>
     </operationDailog>
+    <dsetTableJoin ref="tableJoinForm"></dsetTableJoin>
   </div>
 </template>
 
@@ -35,6 +36,8 @@ import cube from "@/view/model/Cube";
 import dset from "@/view/model/Dset";
 import dsource from "@/view/model/Dsource";
 import dsetAdd from "@/view/model/DsetAdd";
+import dsetTableJoin from "@/view/model/DsetTableJoin";
+
 
 export default {
   name:"modelIndex",
@@ -49,7 +52,8 @@ export default {
     dset,
     dsource,
     operationDailog,
-    dsetAdd
+    dsetAdd,
+    dsetTableJoin
   },
   mounted() {},
   computed: {},
