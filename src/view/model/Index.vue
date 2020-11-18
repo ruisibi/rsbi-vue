@@ -25,6 +25,8 @@
       <dsetAdd ref="dsetAddForm"></dsetAdd>
     </operationDailog>
     <dsetTableJoin ref="tableJoinForm"></dsetTableJoin>
+    <dsetColModify ref="colModifyForm"></dsetColModify>
+    <dynaCol ref="dynaColForm"></dynaCol>
   </div>
 </template>
 
@@ -37,7 +39,8 @@ import dset from "@/view/model/Dset";
 import dsource from "@/view/model/Dsource";
 import dsetAdd from "@/view/model/DsetAdd";
 import dsetTableJoin from "@/view/model/DsetTableJoin";
-
+import dsetColModify from "@/view/model/DsetColModify";
+import dynaCol from "@/view/model/DsetDynaCol";
 
 export default {
   name:"modelIndex",
@@ -53,7 +56,9 @@ export default {
     dsource,
     operationDailog,
     dsetAdd,
-    dsetTableJoin
+    dsetTableJoin,
+    dsetColModify,
+    dynaCol
   },
   mounted() {},
   computed: {},

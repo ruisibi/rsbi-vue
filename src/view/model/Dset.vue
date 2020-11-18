@@ -133,6 +133,31 @@ export default {
           }
         });
       }
+    },
+    flashDset(){
+      if(!this.checked){
+        this.$notify.error({
+          title: "未勾选数据",
+          offset: 50,
+        });
+        return;
+      }
+      let dset = null;
+      let ts = this;
+      this.tableData.forEach(val=>{
+        if(val.dsetId === ts.checked){
+          dset = val;
+          return false;
+        }
+      });
+      ajax({
+        url:"model/reloadDset.action",
+        type:"GET",
+        data:{dsetId:dset.dsetId, dsid:dset.dsid},
+        success:(r)=>{
+          this.$notify.success("刷新成功");
+        }
+      }, this);
     }
   },
 };

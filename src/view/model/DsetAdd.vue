@@ -1,124 +1,175 @@
 <template>
-<div>
-  <el-form :model="dset" :rules="rules" ref="dsetForm">
-    <el-tabs v-model="active" type="card">
-      <el-tab-pane label="基本信息" name="base">
-        <el-form-item label="数据集名称" label-width="100px" prop="name">
-          <el-input v-model="dset.name"></el-input>
-        </el-form-item>
-        <el-form-item label="数据源" label-width="100px" prop="dsid">
-          <el-select
-            v-model="dset.dsid"
-            placeholder="请选择"
-            @change="selectds"
-          >
-            <el-option
-              v-for="item in dsourceList"
-              :key="item.dsid"
-              :label="item.dsname"
-              :value="item.dsid"
+  <div>
+    <el-form :model="dset" :rules="rules" ref="dsetForm">
+      <el-tabs v-model="active" type="card">
+        <el-tab-pane label="基本信息" name="base">
+          <el-form-item label="数据集名称" label-width="100px" prop="name">
+            <el-input v-model="dset.name"></el-input>
+          </el-form-item>
+          <el-form-item label="数据源" label-width="100px" prop="dsid">
+            <el-select
+              v-model="dset.dsid"
+              placeholder="请选择"
+              @change="selectds"
             >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="选择表" label-width="100px">
-          <div class="row">
-            <div class="col-sm-4" style="padding-left: 0">
-              <div class="ibox">
-                <div class="ibox-title" style="line-height: normal">待选表</div>
-                <div class="ibox-content" style="padding: 0px">
-                  <div
-                    id="allTablesTree"
-                    style="height: 300px; overflow: auto"
-                  ></div>
+              <el-option
+                v-for="item in dsourceList"
+                :key="item.dsid"
+                :label="item.dsname"
+                :value="item.dsid"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择表" label-width="100px">
+            <div class="row">
+              <div class="col-sm-4" style="padding-left: 0">
+                <div class="ibox">
+                  <div class="ibox-title" style="line-height: normal">
+                    待选表
+                  </div>
+                  <div class="ibox-content" style="padding: 0px">
+                    <el-input
+                      v-model="dset.searchkey"
+                      @keyup.enter.native="searhTable()"
+                      placeholder="搜索表"
+                    ></el-input>
+                    <div
+                      id="allTablesTree"
+                      style="height: 300px; overflow: auto"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-2" style="text-align: center">
+                <button
+                  type="button"
+                  @click="left2right"
+                  style="margin-top: 120px"
+                  class="btn btn-success btn-circle"
+                >
+                  <i class="fa fa-chevron-right"></i></button
+                ><br /><br /><button
+                  type="button"
+                  @click="right2left"
+                  class="btn btn-success btn-circle"
+                >
+                  <i class="fa fa-chevron-left"></i>
+                </button>
+              </div>
+              <div class="col-sm-4" style="padding-left: 0">
+                <div class="ibox">
+                  <div class="ibox-title" style="line-height: normal">
+                    已选表
+                  </div>
+                  <div class="ibox-content" style="padding: 0px">
+                    <div
+                      id="selTablesTree"
+                      style="height: 340px; overflow: auto"
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-2" style="text-align: center">
-              <button
-                type="button"
-                @click="left2right"
-                style="margin-top: 120px"
-                class="btn btn-success btn-circle"
+          </el-form-item>
+        </el-tab-pane>
+        <el-tab-pane label="表关联" name="join">
+          <el-form-item label="主表" label-width="100px" prop="master">
+            <el-select
+              v-model="dset.master"
+              placeholder="请选择"
+              @change="changemaster"
+            >
+              <el-option
+                v-for="item in selectTables"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
               >
-                <i class="fa fa-chevron-right"></i></button
-              ><br /><br /><button
-                type="button"
-                @click="right2left"
-                class="btn btn-success btn-circle"
-              >
-                <i class="fa fa-chevron-left"></i>
-              </button>
-            </div>
-            <div class="col-sm-4" style="padding-left: 0">
-              <div class="ibox">
-                <div class="ibox-title" style="line-height: normal">已选表</div>
-                <div class="ibox-content" style="padding: 0px">
-                  <div
-                    id="selTablesTree"
-                    style="height: 300px; overflow: auto"
-                  ></div>
-                </div>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="表字段" label-width="100px">
+            <div class="row">
+              <div class="col-sm-9" style="padding-left: 0">
+                <div
+                  id="masterTableTree"
+                  style="
+                    border: 1px solid #dcdfe6;
+                    border-radius: 4px;
+                    height: 320px;
+                    overflow: auto;
+                  "
+                ></div>
+              </div>
+              <div class="col-sm-2">
+                <input
+                  type="button"
+                  value="关联"
+                  class="btn btn-primary btn-xs"
+                  @click="joinTable()"
+                />
+                <br />
+                <input
+                  type="button"
+                  value="取消"
+                  class="btn btn-primary btn-xs"
+                  @click="unjoinTable()"
+                />
               </div>
             </div>
-          </div>
-        </el-form-item>
-      </el-tab-pane>
-      <el-tab-pane label="表关联" name="join">
-        <el-form-item label="主表" label-width="100px" prop="master">
-          <el-select
-            v-model="dset.master"
-            placeholder="请选择"
-            @change="changemaster"
+          </el-form-item>
+        </el-tab-pane>
+        <el-tab-pane label="表字段" name="cols">
+          <el-table
+            :data="cols"
+            border
+            height="380"
+            style="width: 100%"
+            header-row-class-name="tableHeadbg"
           >
-            <el-option
-              v-for="item in selectTables"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
+            <el-table-column
+              align="center"
+              prop="name"
+              label="字段名"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="dispName"
+              label="显示名"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="type"
+              label="类型"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="tname"
+              label="来源表"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="idx"
+              label="操作"
+              width="100"
             >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="表字段" label-width="100px">
-          <div class="row">
-            <div class="col-sm-9" style="padding-left: 0">
-              <div
-                id="masterTableTree"
-                style="
-                  border: 1px solid #dcdfe6;
-                  border-radius: 4px;
-                  height: 320px;
-                  overflow: auto;
-                "
-              ></div>
-            </div>
-            <div class="col-sm-2">
-              <input
-                type="button"
-                value="关联"
-                class="btn btn-primary btn-xs"
-                @click="joinTable()"
-              />
-              <br />
-              <input
-                type="button"
-                value="取消"
-                class="btn btn-primary btn-xs"
-                @click="unjoinTable()"
-              />
-            </div>
-          </div>
-        </el-form-item>
-      </el-tab-pane>
-    </el-tabs>
-  </el-form>
-</div>
+              <template slot-scope="scope">
+                  <a class="btn btn-primary btn-xs" @click="modifyCol(scope.row.name, scope.row.tname)"> 编辑 </a>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="动态字段" name="dyna"> </el-tab-pane>
+      </el-tabs>
+    </el-form>
+  </div>
 </template>
 
 <script>
 import { baseUrl, ajax, newGuid } from "@/common/biConfig";
 import dsetTableJoin from "@/view/model/DsetTableJoin";
+import { Loading } from "element-ui";
 import $ from "jquery";
 
 export default {
@@ -129,7 +180,8 @@ export default {
         name: null,
         dsid: null,
         master: null,
-        dsetId:null  //数据集自己的ID
+        dsetId: null, //数据集自己的ID
+        searchkey: "",
       },
       dsourceList: [],
       rules: {
@@ -140,10 +192,12 @@ export default {
       selectTables: [],
       active: "base",
       isupdate: false,
+      cols: [],
+      joininfo:[]
     };
   },
   components: {
-    dsetTableJoin
+    dsetTableJoin,
   },
   mounted() {
     this.loadDsource();
@@ -156,7 +210,7 @@ export default {
         {
           type: "POST",
           url: "model/listTables.action",
-          data: { dsid: dsid },
+          data: { dsid: dsid, tname: this.dset.searchkey },
           success: (resp) => {
             this.initLeftTree(false, resp.rows);
           },
@@ -166,12 +220,12 @@ export default {
       //清除已选表
       this.selectTables = [];
       const ref = $("#selTablesTree").jstree(true);
-      $(ref.get_node("#").children).each((a, b)=>{
+      $(ref.get_node("#").children).each((a, b) => {
         ref.delete_node(b);
       });
       const refMaster = $("#masterTableTree").jstree(true);
-      if(refMaster){
-        $(refMaster.get_node("#").children).each((a, b)=>{
+      if (refMaster) {
+        $(refMaster.get_node("#").children).each((a, b) => {
           refMaster.delete_node(b);
         });
       }
@@ -182,59 +236,90 @@ export default {
       let ts = this;
       this.$refs["dsetForm"].validate((valid) => {
         if (valid) {
-          if(ts.selectTables.length === 0){
+          if (ts.selectTables.length === 0) {
             ts.$notify.error("请选择表");
             ret = false;
             return;
           }
-          const json = {master:ts.dset.master,name:ts.dset.name,dsid:ts.dset.dsid,joininfo:[]};
-          if(!isupdate){
+          const json = {
+            master: ts.dset.master,
+            name: ts.dset.name,
+            dsid: ts.dset.dsid,
+            joininfo: [],
+          };
+          if (!isupdate) {
             json.dsetId = newGuid();
-          }else{
+          } else {
             json.dsetId = ts.dset.dsetId;
           }
-          let joins = [ts.dset.master]; 
+          let joins = [ts.dset.master];
           const refMaster = $("#masterTableTree").jstree(true);
-          refMaster.get_node("#").children.forEach(element => {
+          refMaster.get_node("#").children.forEach((element) => {
             let node = refMaster.get_node(element);
-            if(node.li_attr.ref){
-              json.joininfo.push({col:node.id,ref:node.li_attr.ref,refKey:node.li_attr.refKey,jtype:node.li_attr.jstype });
+            if (node.li_attr.ref) {
+              json.joininfo.push({
+                col: node.id,
+                ref: node.li_attr.ref,
+                refKey: node.li_attr.refKey,
+                jtype: node.li_attr.jstype,
+              });
               joins.push(node.li_attr.ref);
             }
           });
 
           //判断是否有选的表未关联
-          ts.selectTables.forEach((v, idx)=>{
-            if(joins.indexOf(v.id) < 0){
-              ts.$notify.error("表 " + v.id+" 未和主表关联。");
+          ts.selectTables.forEach((v, idx) => {
+            if (joins.indexOf(v.id) < 0) {
+              ts.$notify.error("表 " + v.id + " 未和主表关联。");
               ret = false;
             }
           });
-          if(ret === false){
+          if (ret === false) {
             return ret;
           }
+          let load = Loading.service({ fullscreen: true });
 
-          const exec = ()=>{
-            ajax({
-              type: "POST",
-              url: isupdate?"model/updateDset.action":"model/saveDset.action",
-              dataType:"json",
-              data: {cfg:JSON.stringify(json), priTable: json.master, name:json.name,dsid:json.dsid, dsetId:json.dsetId},
-              success: function(resp){
-                ts.$parent.$parent.$refs['dsetGrid'].loadData();
-              }
-            });
+          const exec = () => {
+            ajax(
+              {
+                type: "POST",
+                url: isupdate
+                  ? "model/updateDset.action"
+                  : "model/saveDset.action",
+                dataType: "json",
+                data: {
+                  cfg: JSON.stringify(json),
+                  priTable: json.master,
+                  name: json.name,
+                  dsid: json.dsid,
+                  dsetId: json.dsetId,
+                },
+                success: function (resp) {
+                  ts.$parent.$parent.$refs["dsetGrid"].loadData();
+                },
+              },
+              ts,
+              load
+            );
+          };
+          if(isupdate){
+            json.cols = this.cols;
+            exec();
+          }else{
+            ajax(
+              {
+                type: "post",
+                url: "model/queryDatasetMeta.action",
+                dataType: "json",
+                data: { dsid: ts.dset.dsid, cfg: JSON.stringify(json) },
+                success: function (dt) {
+                  json.cols = dt.rows;
+                  exec();
+                },
+              },
+              ts
+            );
           }
-          ajax({
-            type:'post',
-            url:'model/queryDatasetMeta.action',
-            dataType:'json',
-            data:{"dsid":ts.dset.dsid, "cfg":JSON.stringify(json)},
-            success: function(dt){
-              json.cols = dt.rows;
-              exec();
-            }
-          }, ts);
         } else {
           ret = false;
         }
@@ -243,23 +328,23 @@ export default {
     },
     async addDset(isupdate, dsetId) {
       //重置表单
-      if(this.$refs["dsetForm"] ){
-       this.$refs["dsetForm"].resetFields();
+      if (this.$refs["dsetForm"]) {
+        this.$refs["dsetForm"].resetFields();
       }
       let ds = null;
       let ts = this;
-      if(isupdate){
-        await new Promise(resolve => {
-           ajax({
-              type: "POST",
-              url: "model/getDatasetCfg.action",
-              dataType:"json",
-              data: {"dsetId": dsetId},
-              success: function(resp){
-                resolve(JSON.parse(resp.rows));
-              }
-            });
-        }).then((json)=>{
+      if (isupdate) {
+        await new Promise((resolve) => {
+          ajax({
+            type: "POST",
+            url: "model/getDatasetCfg.action",
+            dataType: "json",
+            data: { dsetId: dsetId },
+            success: function (resp) {
+              resolve(JSON.parse(resp.rows));
+            },
+          });
+        }).then((json) => {
           ds = json;
         });
         this.dset.dsetId = ds.dsetId;
@@ -267,15 +352,29 @@ export default {
         this.dset.master = ds.master;
         this.dset.name = ds.name;
         //设置已选表
-        this.selectTables = [{id:ds.master, name:ds.master}];
-        ds.joininfo.forEach(v=>{
-          ts.selectTables.push({id:v.ref, name:v.ref});
+        this.selectTables = [{ id: ds.master, name: ds.master }];
+        ds.joininfo.forEach((v) => {
+          ts.selectTables.push({ id: v.ref, name: v.ref });
         });
-      }else{
+      } else {
         this.selectTables = [];
       }
+      this.dset.searchkey = "";
       this.isupdate = isupdate;
-      if(isupdate){
+      if (isupdate) {
+        $("#tab-cols").show();
+        $("#tab-dyna").show();
+      } else {
+        //新增状态隐藏 表字段/动态字段
+        $("#tab-cols").hide();
+        $("#tab-dyna").hide();
+      }
+      if (isupdate) {
+        this.cols = ds.cols;
+        this.joininfo = ds.joininfo;
+      }
+      this.active = "base";
+      if (isupdate) {
         ajax(
           {
             type: "POST",
@@ -284,24 +383,26 @@ export default {
             success: (resp) => {
               ts.initLeftTree(isupdate, resp.rows);
             },
-          }, this);
-      }else{
+          },
+          this
+        );
+      } else {
         this.initLeftTree(isupdate, []);
       }
       this.initRightTree(isupdate);
-    
-    if(!isupdate){
+
+      if (!isupdate) {
         //清除主表字段
         const refMaster = $("#masterTableTree").jstree(true);
-        if(refMaster){
-          $(refMaster.get_node("#").children).each((a, b)=>{
+        if (refMaster) {
+          $(refMaster.get_node("#").children).each((a, b) => {
             refMaster.delete_node(b);
           });
         }
-     }else{
-       //回写主表
-       this.loadMasterCols(isupdate, ds);
-     }
+      } else {
+        //回写主表
+        this.loadMasterCols(isupdate, ds);
+      }
     },
     loadDsource() {
       ajax(
@@ -334,16 +435,16 @@ export default {
           if (isupdate) {
             //隐藏已经选择的表
             var ref = $("#allTablesTree").jstree(true);
-            for(let o of ts.selectTables){
-               ref.hide_node(o.id);
+            for (let o of ts.selectTables) {
+              ref.hide_node(o.id);
             }
           }
         });
     },
     initRightTree(isupdate) {
       let dt = [];
-      if(isupdate){
-        for(let o of this.selectTables){
+      if (isupdate) {
+        for (let o of this.selectTables) {
           dt.push({
             id: o.id,
             text: o.name,
@@ -352,7 +453,7 @@ export default {
         }
       }
       const ref = $("#selTablesTree").jstree(true);
-      if(ref){
+      if (ref) {
         ref.destroy();
       }
       $("#selTablesTree").jstree({
@@ -425,64 +526,66 @@ export default {
     },
     loadMasterCols(isupdate, ds) {
       let ts = this;
-      ajax({
-        type: "post",
-        url: "model/listTableColumns.action",
-        dataType: "json",
-        data: { tname: ts.dset.master, dsid: ts.dset.dsid },
-        success: function (dt) {
-          dt = dt.rows;
-          let d = [];
-          for (let k = 0; k < dt.length; k++) {
-            var obj = {
-              id: dt[k].name,
-              text: dt[k].name,
-              icon: "glyphicon glyphicon-menu-hamburger",
+      ajax(
+        {
+          type: "post",
+          url: "model/listTableColumns.action",
+          dataType: "json",
+          data: { tname: ts.dset.master, dsid: ts.dset.dsid },
+          success: function (dt) {
+            dt = dt.rows;
+            let d = [];
+            for (let k = 0; k < dt.length; k++) {
+              var obj = {
+                id: dt[k].name,
+                text: dt[k].name,
+                icon: "glyphicon glyphicon-menu-hamburger",
+              };
+              d.push(obj);
+            }
+            //判断是否有关联字段
+            const exist = (v) => {
+              let ret = null;
+              for (let c of ds.joininfo) {
+                if (c.col === v) {
+                  ret = c;
+                  break;
+                }
+              }
+              return ret;
             };
-            d.push(obj);
-          }
-          //判断是否有关联字段
-          const exist = (v)=>{
-            let ret = null;
-            for(let c of ds.joininfo){
-              if(c.col === v){
-                ret = c;
-                break;
+            for (let o of d) {
+              let r = exist(o.id);
+              if (r) {
+                o.text = o.text + "->" + r.ref + "." + r.refKey;
+                o.icon = "glyphicon glyphicon-link";
+                o.li_attr = { ref: r.ref, refKey: r.refKey, jtype: r.jtype };
               }
             }
-            return ret;
-          }
-          for(let o of d){
-            let r = exist(o.id);
-            if(r){
-              o.text = o.text+"->"+r.ref+"."+r.refKey;
-              o.icon = "glyphicon glyphicon-link";
-              o.li_attr = {ref:r.ref, refKey:r.refKey, jtype:r.jtype};
+
+            let mtree = $("#masterTableTree").jstree(true);
+            if (mtree) {
+              mtree.destroy();
             }
-          }
-          
-          let mtree = $("#masterTableTree").jstree(true);
-          if(mtree){
-            mtree.destroy();
-          }
-          $("#masterTableTree").jstree({
-             core: {
-              check_callback: true,
-              data: d,
-            },
-            plugins: ["wholerow"],
-            
-          });
+            $("#masterTableTree").jstree({
+              core: {
+                check_callback: true,
+                data: d,
+              },
+              plugins: ["wholerow"],
+            });
+          },
         },
-      }, this);
+        this
+      );
     },
-    joinTable(){
-      this.$parent.$parent.$refs['tableJoinForm'].create(false);
+    joinTable() {
+      this.$parent.$parent.$refs["tableJoinForm"].create(false);
     },
-    unjoinTable(){
+    unjoinTable() {
       const ref = $("#masterTableTree").jstree(true);
       let node = ref.get_selected(true);
-      if(node.length === 0){
+      if (node.length === 0) {
         this.$notify.error("请选择字段再点关联");
         return;
       }
@@ -493,6 +596,25 @@ export default {
       delete node.li_attr.ref;
       delete node.li_attr.refKey;
       delete node.li_attr.jtype;
+    },
+    searhTable() {
+      if (!this.dset.dsid || this.dset.dsid === "") {
+        return;
+      }
+      ajax(
+        {
+          type: "POST",
+          url: "model/listTables.action",
+          data: { dsid: this.dset.dsid, tname: this.dset.searchkey },
+          success: (resp) => {
+            this.initLeftTree(false, resp.rows);
+          },
+        },
+        this
+      );
+    },
+    modifyCol(col, tname){
+      this.$parent.$parent.$refs['colModifyForm'].modify(col, tname, this.cols, this.joininfo, this.dset.master);
     }
   },
 };
