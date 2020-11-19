@@ -27,6 +27,10 @@
     <dsetTableJoin ref="tableJoinForm"></dsetTableJoin>
     <dsetColModify ref="colModifyForm"></dsetColModify>
     <dynaCol ref="dynaColForm"></dynaCol>
+
+    <operationDailog mainDiv="mainDiv" :title="cubeOperTitle" ref="cubeOper" :callback="saveCube">
+      <cubeAdd ref="cubeForm"></cubeAdd>
+    </operationDailog>
   </div>
 </template>
 
@@ -41,13 +45,14 @@ import dsetAdd from "@/view/model/DsetAdd";
 import dsetTableJoin from "@/view/model/DsetTableJoin";
 import dsetColModify from "@/view/model/DsetColModify";
 import dynaCol from "@/view/model/DsetDynaCol";
+import cubeAdd from "@/view/model/CubeAdd";
 
 export default {
   name:"modelIndex",
   data() {
     return {
-      dsetOperTitle:""
-
+      dsetOperTitle:"",
+      cubeOperTitle:""
     };
   },
   components: {
@@ -58,7 +63,8 @@ export default {
     dsetAdd,
     dsetTableJoin,
     dsetColModify,
-    dynaCol
+    dynaCol,
+    cubeAdd
   },
   mounted() {},
   computed: {},
@@ -75,6 +81,9 @@ export default {
       let update = this.$refs['dsetGrid'].isupdate;
       return this.$refs['dsetAddForm'].saveDset(update);
     },
+    saveCube(){
+      alert(1);
+    }
   },
   watch: {},
 };

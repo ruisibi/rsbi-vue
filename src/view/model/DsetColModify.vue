@@ -7,7 +7,7 @@
          <el-form-item label="显示名" label-width="100px">
             <el-input v-model="col.dispName"></el-input>
           </el-form-item>
-          <el-form-item label="字段类型" label-width="100px" prop="linkType">
+          <el-form-item label="字段类型" label-width="100px">
             <el-select v-model="col.type" placeholder="请选择">
               <el-option
                 v-for="item in opts.types"

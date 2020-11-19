@@ -1,5 +1,4 @@
 <template>
-  <div>
     <el-form :model="dset" :rules="rules" ref="dsetForm">
       <el-tabs v-model="active" type="card">
         <el-tab-pane label="基本信息" name="base">
@@ -160,10 +159,48 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="动态字段" name="dyna"> </el-tab-pane>
+        <el-tab-pane label="动态字段" name="dyna">
+          <div style="padding-bottom:10px;">
+          <button class="btn btn-info btn-xs" type="button" @click="crtdyna(false)">创建</button>
+          </div>
+          <el-table
+            :data="dynamic"
+            border
+            height="380"
+            style="width: 100%"
+            header-row-class-name="tableHeadbg"
+          >
+            <el-table-column
+              align="center"
+              prop="name"
+              label="字段名"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="expression"
+              label="表达式"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="type"
+              label="类型"
+            ></el-table-column>
+            
+            <el-table-column
+              align="center"
+              prop="idx"
+              label="操作"
+              width="100"
+            >
+              <template slot-scope="scope">
+                  <a class="btn btn-primary btn-xs" @click="crtdyna(true, scope.row.name)"> 编辑 </a>
+                  <a class="btn btn-danger btn-xs" @click="deleteDyna(scope.row.name)"> 删除 </a>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
       </el-tabs>
     </el-form>
-  </div>
 </template>
 
 <script>
@@ -193,7 +230,8 @@ export default {
       active: "base",
       isupdate: false,
       cols: [],
-      joininfo:[]
+      joininfo:[],
+      dynamic:[]  //动态字段
     };
   },
   components: {
@@ -246,6 +284,7 @@ export default {
             name: ts.dset.name,
             dsid: ts.dset.dsid,
             joininfo: [],
+            dynamic: ts.dynamic
           };
           if (!isupdate) {
             json.dsetId = newGuid();
@@ -292,7 +331,7 @@ export default {
                   priTable: json.master,
                   name: json.name,
                   dsid: json.dsid,
-                  dsetId: json.dsetId,
+                  dsetId: json.dsetId
                 },
                 success: function (resp) {
                   ts.$parent.$parent.$refs["dsetGrid"].loadData();
@@ -372,6 +411,7 @@ export default {
       if (isupdate) {
         this.cols = ds.cols;
         this.joininfo = ds.joininfo;
+        this.dynamic = ds.dynamic?ds.dynamic:[];
       }
       this.active = "base";
       if (isupdate) {
@@ -615,6 +655,19 @@ export default {
     },
     modifyCol(col, tname){
       this.$parent.$parent.$refs['colModifyForm'].modify(col, tname, this.cols, this.joininfo, this.dset.master);
+    },
+    crtdyna(isupdate, col){
+      this.$parent.$parent.$refs['dynaColForm'].createDyna(isupdate, col, this.cols, this.dynamic, this.dset.master);
+    },
+    deleteDyna(col){
+      if(confirm("是否确认?")){
+        this.dynamic.forEach((e,i)=>{
+          if(e.name === col){
+            this.dynamic.splice(i, 1);
+            return false;
+          }
+        });
+      }
     }
   },
 };
