@@ -380,7 +380,7 @@ export default {
             dataType: "json",
             data: { dsetId: dsetId },
             success: function (resp) {
-              resolve(JSON.parse(resp.rows));
+              resolve(resp.rows);
             },
           });
         }).then((json) => {
@@ -537,7 +537,7 @@ export default {
 
       node = selRef.get_node(node[0]);
 
-      if (this.isupdate && node.id == dset.master) {
+      if (this.isupdate && node.id == this.dset.master) {
         msginfo("不能移除主表。");
         return;
       }
@@ -586,6 +586,9 @@ export default {
             //判断是否有关联字段
             const exist = (v) => {
               let ret = null;
+              if(!ds.joininfo){
+                return ret;
+              }
               for (let c of ds.joininfo) {
                 if (c.col === v) {
                   ret = c;
@@ -594,12 +597,14 @@ export default {
               }
               return ret;
             };
-            for (let o of d) {
-              let r = exist(o.id);
-              if (r) {
-                o.text = o.text + "->" + r.ref + "." + r.refKey;
-                o.icon = "glyphicon glyphicon-link";
-                o.li_attr = { ref: r.ref, refKey: r.refKey, jtype: r.jtype };
+            if(isupdate){
+              for (let o of d) {
+                let r = exist(o.id);
+                if (r) {
+                  o.text = o.text + "->" + r.ref + "." + r.refKey;
+                  o.icon = "glyphicon glyphicon-link";
+                  o.li_attr = { ref: r.ref, refKey: r.refKey, jtype: r.jtype };
+                }
               }
             }
 

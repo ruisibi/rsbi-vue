@@ -11,7 +11,7 @@
             <dset ref="dsetGrid"></dset>
           </el-tab-pane>
           <el-tab-pane label="立方体">
-            <cube></cube>
+            <cube ref="cubeInfo"></cube>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -31,6 +31,9 @@
     <operationDailog mainDiv="mainDiv" :title="cubeOperTitle" ref="cubeOper" :callback="saveCube">
       <cubeAdd ref="cubeForm"></cubeAdd>
     </operationDailog>
+    <groupAdd ref="groupForm"></groupAdd>
+    <expressionAdd ref="expressionForm"></expressionAdd>
+    <dimKpiModify ref="dimKpiForm"></dimKpiModify>
   </div>
 </template>
 
@@ -46,6 +49,9 @@ import dsetTableJoin from "@/view/model/DsetTableJoin";
 import dsetColModify from "@/view/model/DsetColModify";
 import dynaCol from "@/view/model/DsetDynaCol";
 import cubeAdd from "@/view/model/CubeAdd";
+import groupAdd from "@/view/model/CubeAddGroup";
+import expressionAdd from "@/view/model/ExpressAdd";
+import dimKpiModify from "@/view/model/DimKpiModify";
 
 export default {
   name:"modelIndex",
@@ -64,7 +70,10 @@ export default {
     dsetTableJoin,
     dsetColModify,
     dynaCol,
-    cubeAdd
+    cubeAdd,
+    groupAdd,
+    expressionAdd,
+    dimKpiModify
   },
   mounted() {},
   computed: {},
@@ -82,7 +91,8 @@ export default {
       return this.$refs['dsetAddForm'].saveDset(update);
     },
     saveCube(){
-      alert(1);
+      let update = this.$refs['cubeInfo'].isupdate;
+      return this.$refs['cubeForm'].saveCube(update);
     }
   },
   watch: {},

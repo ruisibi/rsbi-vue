@@ -74,7 +74,8 @@ export default {
   data() {
     return {
       tableData:[],
-      checked:null
+      checked:null,
+      isupdate:false
     }
   },
   components: {
@@ -98,11 +99,31 @@ export default {
       this.checked = a.cubeId;
     },
     addCube(isupdate){
+      this.isupdate = isupdate;
       let o = this.$parent.$parent.$parent;
       let oper =  o.$refs['cubeOper'];
       o.cubeOperTitle = isupdate===false?"创建立方体":"编辑立方体";
       oper.showDailog();
-      //o.$refs["dsetAddForm"].addDset(isupdate, this.checked);
+      o.$refs["cubeForm"].addCube(isupdate, this.checked);
+    },
+    delCube(){
+      if(!this.checked){
+        this.$notify.error({
+          title: "未勾选数据",
+          offset: 50,
+        });
+        return;
+      }
+      if(confirm("是否确认？")){
+        ajax({
+          url:"model/delCube.action",
+          type:"GET",
+          data:{cubeId:this.checked},
+          success:(resp)=>{
+            this.loadData();
+          }
+        });
+      }
     }
   }
 };
