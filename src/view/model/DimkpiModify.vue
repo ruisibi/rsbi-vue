@@ -17,6 +17,72 @@
          <el-form-item label="显示名称" label-width="100px" prop="dimname">
           <el-input v-model="node.dimname"></el-input>
          </el-form-item>
+          <el-form-item label="维度类型" label-width="100px" prop="dimtype">
+            <el-select v-model="node.dimtype" clearable="clearable" style="width:100%" placeholder="请选择">
+              <el-option
+                v-for="item in opts.dimtype"
+                :key="item.value"
+                :label="item.text"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="维度格式" label-width="100px" prop="dateformat">
+            <el-select v-model="node.dateformat" clearable="clearable" style="width:100%"  placeholder="请选择">
+              <el-option
+                v-for="item in opts.dateformat"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="维度对应表" label-width="100px" prop="dateformat">
+            <el-select v-model="node.colTable" clearable="clearable" style="width:100%" @change="chgtable"  placeholder="请选择">
+              <el-option
+                v-for="item in opts.colTable"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="维度Key字段" label-width="100px" prop="colkey">
+            <el-select v-model="node.colkey"  style="width:100%"  placeholder="请选择">
+              <el-option
+                v-for="item in opts.colkey"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="维度Text字段" label-width="100px" prop="coltext">
+            <el-select v-model="node.coltext"  style="width:100%"  placeholder="请选择">
+              <el-option
+                v-for="item in opts.coltext"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="排序方式" label-width="100px">
+            <el-select v-model="node.dimord" placeholder="请选择">
+              <el-option
+                v-for="item in opts.dimord"
+                :key="item.value"
+                :label="item.text"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="save()">确 定</el-button>
@@ -35,15 +101,42 @@ export default {
     return {
       show:false,
       tit:"",
+      clearable:true,
      node: {
-      dimname:"",
-      col:"",
-      alias:"",
+        dimname:"",
+        col:"",
+        alias:"",
+        dimtype:"",
+        dateformat:"",
+        colTable:""
      },
+     dset:null,
       rule:{
-        dimname: [{ required: true, message: "必填", trigger: "blur" }],
+        //dimname: [{ required: true, message: "必填", trigger: "blur" }],
+        //dimtype: [{ required: true, message: "必填", trigger: "blur" }],
       },
-      type:''  //dim/kpi/group 三种
+      type:'',  //dim/kpi 2种
+      opts:{
+        dimtype:[
+          {value:"year",text:"年"},
+          {value:"quarter",text:"季度"},
+          {value:"month",text:"月"},
+          {value:"day",text:"日"},
+          {value:"prov",text:"省份"},
+          {value:"city",text:"地市"}
+        ],
+        dateformat:[
+          'yyyymmdd', 'yyyy-mm-dd', 'yyyy年mm月dd日', 'yyyymm', 'yyyy-mm', 'yyyy年mm月', 'yyyy', 'yyyy年'
+        ],
+        colTable:[],
+        dimord:[{
+          value:"asc", text:"升序"
+        },{
+          value:"desc", text:"降序"
+        }],
+        coltext:[],
+        colkey:[]
+      }
     }
   },
   components: {
@@ -58,12 +151,32 @@ export default {
       let ts = this;
       this.$refs['nodeForm'].validate(v=>{
        if(v){
-					
+          let ref = $("#cuberighttree").jstree(true);
+          let node = ref.get_selected(true)[0];
+					if(ts.type === 'dim'){
+            var dtp = ts.node.dimtype;
+						var dtfmt = ts.node.dateformat;
+						if(dtp != "" && (dtp == "year" || dtp == "month" || dtp == "quarter" || dtp == "day") && dtfmt == "" ){
+						  this.$notify.error("请选择时间维度类型。");
+							return;
+						}
+						node.li_attr.dispName = ts.node.dimname;
+						node.li_attr.dimtype = dtp;
+						node.li_attr.colTable = ts.node.colTable;
+						node.li_attr.colkey = ts.node.colkey;
+						node.li_attr.coltext = ts.node.coltext;
+						node.li_attr.dimord = ts.node.dimord;
+						node.li_attr.dateformat = dtfmt;
+            node.li_attr.isupdate = "y";  //表示维度已经更改过了。
+            ref.rename_node(node, ts.node.dimname);
+          }else{
+
+          }
           ts.show = false;
        }
       });
     },
-    modify(selectNode){
+    modify(selectNode, dset){
       this.show = true;
       if(this.$refs['nodeForm']){
         this.$refs['nodeForm'].resetFields();
@@ -72,6 +185,26 @@ export default {
       this.node.col = selectNode.li_attr.col;
       this.node.alias = selectNode.li_attr.alias;
       this.node.dimname = selectNode.li_attr.dispName;
+      this.node.dimtype = selectNode.li_attr.dimtype;
+      this.node.colTable = selectNode.li_attr.colTable;
+      this.node.colkey = selectNode.li_attr.colkey;
+      this.node.coltext = selectNode.li_attr.coltext;
+      this.node.dimord = selectNode.li_attr.dimord;
+      this.node.dateformat = selectNode.li_attr.dateformat;
+      this.dset = dset;
+      let ts = this;
+      ts.opts.colTable = [];
+      ts.opts.colkey = [];
+      ts.opts.colkey = [];
+      $(dset.cols).each((a, b)=>{
+        if(!(ts.opts.colTable.indexOf(b.tname) >= 0)){
+          ts.opts.colTable.push(b.tname);
+        }
+      });
+    },
+    chgtable(val){
+      let ls = this.dset.cols.filter(c=>c.tname === val).map(m=>m.name);
+      this.opts.coltext = this.opts.colkey = ls;
     }
   }
 };

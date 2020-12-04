@@ -587,7 +587,7 @@ export default {
       return {id:ret + 1, aliasId:maxAliasId + 1};
     },
     addgroup(){
-      this.$parent.$parent.$refs['groupForm'].create();
+      this.$parent.$parent.$refs['groupForm'].create(false);
     },
     editCalcKpi(){
       this.$parent.$parent.$refs['expressionForm'].create(false, this.dset);
@@ -607,7 +607,11 @@ export default {
         this.$parent.$parent.$refs['expressionForm'].create(true, this.dset);
         return;
       }
-      this.$parent.$parent.$refs['dimKpiForm'].modify(node);
+      if(node.li_attr.tp === 'group'){
+        this.$parent.$parent.$refs['groupForm'].create(true, node);
+        return;
+      }
+      this.$parent.$parent.$refs['dimKpiForm'].modify(node, this.dset);
     }
   }
 };

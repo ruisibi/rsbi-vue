@@ -7,6 +7,7 @@
 import $ from 'jquery'
 
 const baseUrl = 'http://localhost:8080/';
+//const baseUrl = "https://www.ruisitech.com/rsbi-os-4.7/";
 
 export {
 	baseUrl
