@@ -73,7 +73,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="排序方式" label-width="100px">
-            <el-select v-model="node.dimord" placeholder="请选择">
+            <el-select v-model="node.dimord" clearable="clearable" style="width:100%" placeholder="请选择">
               <el-option
                 v-for="item in opts.dimord"
                 :key="item.value"
@@ -108,7 +108,10 @@ export default {
         alias:"",
         dimtype:"",
         dateformat:"",
-        colTable:""
+        colTable:"",
+        colkey:"",
+        coltext:"",
+        dimord:""
      },
      dset:null,
       rule:{
@@ -118,10 +121,11 @@ export default {
       type:'',  //dim/kpi 2种
       opts:{
         dimtype:[
+          {value:"frd",text:"未选择"},
           {value:"year",text:"年"},
           {value:"quarter",text:"季度"},
-          {value:"month",text:"月"},
-          {value:"day",text:"日"},
+          {value:"month",text:"月份"},
+          {value:"day",text:"日期"},
           {value:"prov",text:"省份"},
           {value:"city",text:"地市"}
         ],
