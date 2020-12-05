@@ -14,7 +14,7 @@ import ReportDesign from '@/view/bireport/ReportDesign'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   routes: [
     {
       path: '/',
@@ -76,3 +76,15 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if(to.path != "/"){
+    // if(!checkIsLogin()){
+    //   next("/")
+    //   return;
+    // }
+  }
+  next();
+})
+
+export default router;

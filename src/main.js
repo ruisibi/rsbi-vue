@@ -7,9 +7,12 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'bootstrap3/dist/css/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.css'
+import {globalMixins,globalPlugin} from "./common/globalMixins.js"
 
-Vue.config.productionTip = false;
+
 Vue.use(ElementUI);
+Vue.use(globalPlugin);
+Vue.mixin(globalMixins);
 
 /* eslint-disable no-new */
 new Vue({
