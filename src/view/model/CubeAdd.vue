@@ -394,6 +394,7 @@ export default {
       if(rightRef){
         rightRef.destroy();
       }
+      let ts = this;
       $("#cuberighttree").jstree({
         core:{
             check_callback:function(operation, source, node_parent, node_position, more){
@@ -448,9 +449,43 @@ export default {
               "wholerow","dnd"
             ]
       }).bind("ready.jstree", function(){
-       
+       if(cube){  //隐藏用户选择的列
+					const findcol =(cid)=>{
+						var ret = null;
+						for(let j=0;j<cube.dims.length;j++){
+							if(cube.dims[j].alias == cid){
+								ret = cube.dims[j];
+								break;
+							}
+						}
+						if(ret == null){
+							for(let j=0;j<cube.kpis.length;j++){
+								if(cube.kpis[j].alias == cid){
+									ret = cube.kpis[j];
+									break;
+								}
+							}
+						}
+						return ret;
+					};
+					window.setTimeout(function(){
+             var nodes = [];
+             var rref = $("#cubelefttree").jstree(true);
+             let cld = rref.get_node("#").children;
+             cld.forEach(e => {
+               let l = rref.get_node(e).children;
+               nodes = nodes.concat(l);
+             });
+							for(let i=0; i<nodes.length; i++){
+								var id = nodes[i];
+								if(findcol(id) != null){
+                  rref.hide_node(nodes[i]);
+								}
+							}
+					}, 200);
+       }
       }).bind("dblclick.jstree", function(e, data){
-        //editcubecol(cube.tid);
+        ts.editcubecol();
       });
     },
     ds2cube(){
@@ -518,7 +553,7 @@ export default {
             //获取位置
             var cnodes = rightRef.get_node(right.parent);
             var idx = -1;
-            for(j=0; j<cnodes.children.length; j++){
+            for(var j=0; j<cnodes.children.length; j++){
               if(cnodes.children[j] == right.id){
                 idx = j;
                 break;
@@ -551,7 +586,8 @@ export default {
         }
       }
       if(right.li_attr.tp != 'group'){ //分组删除不用关联左边树
-        var id = right.li_attr.fromCol;   //通过 refId 引用s数据集的字段ID
+        var id = right.li_attr.alias;   //通过 refId 引用s数据集的字段ID
+        //let nd = leftRef.get_node(id);
         leftRef.show_node(id);
       }
       if(this.delObj){

@@ -17,6 +17,7 @@
          <el-form-item label="显示名称" label-width="100px" prop="dimname">
           <el-input v-model="node.dimname"></el-input>
          </el-form-item>
+         <template v-if="type === 'dim'">
           <el-form-item label="维度类型" label-width="100px" prop="dimtype">
             <el-select v-model="node.dimtype" clearable="clearable" style="width:100%" placeholder="请选择">
               <el-option
@@ -83,6 +84,40 @@
               </el-option>
             </el-select>
           </el-form-item>
+         </template>
+         <template v-if="type === 'kpi'">
+           <el-form-item label="计算方式" label-width="100px" prop="kpiaggre">
+            <el-select v-model="node.kpiaggre" placeholder="请选择" >
+              <el-option
+                v-for="item in opts.js"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="度量单位" label-width="100px" prop="kpiunit">
+            <el-input v-model="node.kpiunit"></el-input>
+          </el-form-item>
+          <el-form-item label="格式化" label-width="100px" prop="kpifmt">
+            <el-select
+              v-model="node.kpifmt"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in opts.fmt"
+                :key="item.value"
+                :label="item.text"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="度量解释" label-width="100px" prop="kpinote">
+            <el-input type="textarea" v-model="node.kpinote"></el-input>
+          </el-form-item>
+         </template>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="save()">确 定</el-button>
@@ -111,7 +146,11 @@ export default {
         colTable:"",
         colkey:"",
         coltext:"",
-        dimord:""
+        dimord:"",
+        kpiaggre:"",
+        kpiunit:"",
+        kpifmt:"",
+        kpinote:""
      },
      dset:null,
       rule:{
@@ -139,7 +178,17 @@ export default {
           value:"desc", text:"降序"
         }],
         coltext:[],
-        colkey:[]
+        colkey:[],
+        js:["sum","avg","count","count(distinct)", "max", "min"],
+        fmt:[{
+          value:"#,###", text:"整数"
+        },{
+          value:"#,###.00", text:"小数(保留两位)"
+        },{
+          value:"#,###.0000", text:"小数(保留四位)"
+        },{
+          value:"0.00%", text: "百分比"
+        }]
       }
     }
   },
@@ -173,8 +222,13 @@ export default {
 						node.li_attr.dateformat = dtfmt;
             node.li_attr.isupdate = "y";  //表示维度已经更改过了。
             ref.rename_node(node, ts.node.dimname);
-          }else{
-
+          }else if(ts.type === 'kpi'){
+            node.li_attr.aggre = ts.node.kpiaggre;
+            node.li_attr.unit = ts.node.kpiunit;
+            node.li_attr.fmt= ts.node.kpifmt;
+            node.li_attr.kpinote = ts.node.kpinote;
+            node.li_attr.dispName = ts.node.dimname;
+            node.li_attr.isupdate = "y";  //表示度量已经更改过了。
           }
           ts.show = false;
        }
@@ -185,6 +239,7 @@ export default {
       if(this.$refs['nodeForm']){
         this.$refs['nodeForm'].resetFields();
       }
+      //维度的属性
       this.type = selectNode.li_attr.tp;
       this.node.col = selectNode.li_attr.col;
       this.node.alias = selectNode.li_attr.alias;
@@ -195,6 +250,12 @@ export default {
       this.node.coltext = selectNode.li_attr.coltext;
       this.node.dimord = selectNode.li_attr.dimord;
       this.node.dateformat = selectNode.li_attr.dateformat;
+      //指标的属性
+      this.node.kpiaggre = selectNode.li_attr.aggre;
+      this.node.kpiunit = selectNode.li_attr.unit;
+      this.node.kpifmt = selectNode.li_attr.fmt;
+      this.node.kpinote = selectNode.li_attr.kpinote;
+
       this.dset = dset;
       let ts = this;
       ts.opts.colTable = [];
