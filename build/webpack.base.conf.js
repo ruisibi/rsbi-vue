@@ -19,7 +19,7 @@ const createLintingRule = () => ({
   }
 })
 
-module.exports = {
+let exportObj = {
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
@@ -90,3 +90,21 @@ module.exports = {
     child_process: 'empty'
   }
 }
+if(process.env.NODE_ENV !== 'production'){
+  let babelLoader = exportObj.module.rules.find(v => v.loader == "babel-loader");
+  if(babelLoader){
+    babelLoader.options = {
+      presets:[
+        [
+          "env",
+          {
+            "targets": {
+              "chrome":76
+            }
+          }
+        ]
+      ]
+    }
+  }
+}
+module.exports = exportObj;

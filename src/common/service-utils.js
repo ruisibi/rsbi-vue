@@ -8,7 +8,7 @@ export const sendRequest = (ins,url,params,showLoading=true,showError=true) => {
       loadingIns = ins.$loading();
     }
     let o = {
-      type: "get",
+      type: "POST",
       data:params,
       dataType:"JSON",
       xhrFields: {withCredentials: true},
