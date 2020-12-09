@@ -1,3 +1,4 @@
+let version = "rsbi-os-4.7";
 export default {
-  "xxx":"/api/a/c",//接口说明
+  "Login":`/${version}/doLogin/action`,//登录
 }
