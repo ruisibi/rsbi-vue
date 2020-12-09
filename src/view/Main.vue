@@ -20,6 +20,7 @@
 			</div>
 		</transition>
 		<div class="page-wrapper">
+			<navMenu></navMenu>
 			<keep-alive>
 				<router-view></router-view>
 			</keep-alive>
@@ -30,7 +31,10 @@
 <script>
 	import frameTop from '../components/FrameTop'
 	import {baseUrl, ajax} from '@/common/biConfig'
+	import navMenu from '@/components/NavMenu'
 	import $ from 'jquery'
+	import "jstree";
+	import "jstree/dist/themes/default/style.min.css";
 
 	export default {
 	    data(){
@@ -40,7 +44,7 @@
 			}
 		},
 		components: {
-			frameTop
+			frameTop,navMenu
     	},
 		mounted(){
 			let ts = this;
