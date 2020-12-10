@@ -6,7 +6,7 @@
  */
 import $ from 'jquery'
 
-const baseUrl = 'http://192.168.1.8:8080/rsbi-os-4.7/';
+const baseUrl = 'http://localhost:8080/';
 //const baseUrl = "http://112.124.13.251:8081/";
 
 export {

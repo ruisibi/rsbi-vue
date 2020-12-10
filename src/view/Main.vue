@@ -3,7 +3,7 @@
 		<frame-top></frame-top>
 		<transition name="el-fade-in">
 			<div class="navbar-static-side" v-show="isShowMenu">
-				<el-menu style="min-height: 100%;" router>
+				<el-menu style="min-height: 100%;" router @select="selectMenu">
 					<template v-for="(item) in menus">
 						<el-submenu v-if="item.children&&item.children.length>0" :key="item.menuId" :index=" 'p' + item.menuId">
 							<template slot="title">
@@ -20,7 +20,7 @@
 			</div>
 		</transition>
 		<div class="page-wrapper">
-			<navMenu></navMenu>
+			<navMenu ref="navMenuForm"></navMenu>
 			<keep-alive>
 				<router-view></router-view>
 			</keep-alive>
@@ -59,7 +59,31 @@
 		},
 		computed: {
 		},
-		methods: {				
+		methods: {		
+			selectMenu(index){
+				let m = null;
+				this.menus.forEach(element => { //第一层
+					if(element.children && element.children.length > 0){  
+						$(element.children).each((a,b)=>{  //第二层
+							if(b.children && b.children.length > 0){
+								$(b.children).each((c,d)=>{  //第三层
+									if(d.menuUrl === index){
+										m = d;
+										return false;
+									}
+								});
+							}else if(b.menuUrl === index){
+								m = b;
+								return false;
+							}
+						});
+					}else if(element.menuUrl === index){
+						m = element;
+						return false;
+					}
+				});
+				this.$refs['navMenuForm'].menuAdd(m);
+			}		
 		},
 		watch: {
 		}
