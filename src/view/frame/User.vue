@@ -38,6 +38,15 @@
 						</template>
 					</el-table-column>
 				</el-table>
+				<el-pagination
+					@size-change="handleSizeChange"
+					@current-change="handleCurrentChange"
+					:page-sizes="[10, 20, 50, 100]"
+					:current-page="page"
+					:page-size="rows"
+					layout="total, sizes, prev, pager, next, jumper"
+					:total="total">
+				</el-pagination>
 			  </div>
 		  </div>
 		  	<el-dialog :title="dialogTitle" :visible.sync="addUserDailog">
@@ -122,6 +131,9 @@
 				dialogTitle:"",
 				checked:null,
 				isupdate: false,
+				total:0,
+				page:1,
+				rows:10,
 				user:{
 					userId:null,
 					staffId:null,
@@ -187,12 +199,22 @@
 				let ts = this;
 				ajax({
 					type:"GET",
-					data:{},
+					data:{page:ts.page, rows:ts.rows},
 					url:"frame/user/list.action", 
 					success:function(resp){
 						ts.tableData = resp.rows;
+						ts.total = resp.total;
+						console.log(ts.total);
 					}
 				}, ts);
+			},
+			handleSizeChange(v){
+				this.rows = v;
+				this.loadDatas();
+			},
+			handleCurrentChange(v){
+				this.page = v;
+				this.loadDatas();
 			},
 			fmtstate:function(row, column, cellValue, index){
 				return cellValue === 1 ?"启用":"停用";

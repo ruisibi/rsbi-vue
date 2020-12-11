@@ -40,6 +40,10 @@ html,body{
     height: calc(100% - 30px);
     overflow: auto;
 }
+.wrapper-content-nomargin {
+    height: calc(100% - 30px);
+    overflow: auto;
+}
 .ibox {
     /**
     margin-bottom: 20px;
@@ -111,4 +115,13 @@ html,body{
 }
 .el-form-item__error{
     padding-top:0px;
+}
+//覆盖elementUI 的 导航菜单
+.el-menu--horizontal>.el-menu-item {
+    height:35px;
+    line-height: 35px;
+}
+.el-menu--horizontal>.el-submenu .el-submenu__title {
+    height:35px;
+    line-height: 35px;
 }

@@ -1,6 +1,6 @@
 <template>
-  	<div class="wrapper-content">
-		<el-menu :default-active="activeIndex" class="el-menu-demo" text-color="#777" mode="horizontal">
+  	<div class="wrapper-content-nomargin">
+		<el-menu :default-active="activeIndex" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
 			<el-submenu index="1">
 				<template slot="title"><i class="fa fa-file"></i> 文件</template>
 				<el-menu-item index="1-1">打开</el-menu-item>
@@ -18,39 +18,44 @@
 			<el-menu-item index="3"><i class="fa fa-print"></i> 打印</el-menu-item>
 			<el-menu-item index="4"><i class="fa fa-list-alt"></i> 解释</el-menu-item>
 		</el-menu>
-		<div class="row">
-			<div class="col-sm-3">
-				<div class="ibox" style="border:none;">
-					<div class="ibox-content">
-						<button class="btn btn-block btn-primary" @click="selectdataset()"><i class="fa fa-refresh"></i> 切换数据</button>
-						<p class="text-warning">拖拽数据到表格或图表中展现</p>
-						<div id="datasettree"></div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-sm-9 animated fadeInRight">
-				<div class="ibox" style="border:none;">
-					<div class="ibox-content" id="p_param" style="padding:5px;">
-						<div class="ptabhelpr">拖拽维度到此处作为筛选条件</div>
+		<div class="wrapper-content">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="ibox">
+						<div class="ibox-content" style="padding:0px;">
+							<div style="padding:15px 20px 0px 20px">
+								<button class="btn btn-block btn-primary" @click="selectCube()"><i class="fa fa-refresh"></i> 切换数据</button>
+								<p class="text-warning">拖拽数据到表格或图形中展现</p>
+							</div>
+							<div id="datasettree"></div>
+						</div>
 					</div>
 				</div>
 				
-				<el-tabs v-model="showtype" type="border-card">
-					<el-tab-pane label="表格" name="table">表格</el-tab-pane>
-					<el-tab-pane label="图形" name="chart">图形</el-tab-pane>
-				</el-tabs>
-						
-				
+				<div class="col-sm-9 animated fadeInRight">
+					<div class="ibox" style="margin-bottom:20px;">
+						<div class="ibox-content" id="p_param" style="padding:5px;">
+							<div class="ptabhelpr">拖拽维度到此处作为筛选条件</div>
+						</div>
+					</div>
+					
+					<el-tabs v-model="showtype" type="border-card">
+						<el-tab-pane label="表格" name="table">表格</el-tab-pane>
+						<el-tab-pane label="图形" name="chart">图形</el-tab-pane>
+					</el-tabs>
+							
+					
+				</div>
 			</div>
 		</div>
-
+		<selectCube ref="selectCubeForm"></selectCube>
   	</div>
 </template>
 
 <script>
 	import {baseUrl} from '@/common/biConfig'
 	import $ from 'jquery'
+	import selectCube from "@/view/bireport/SelectCube";
 
 	export default {
 	    data(){
@@ -60,13 +65,19 @@
 				selectDs:""
 			}
 		},
+		components: {
+			selectCube
+    	},
 		mounted(){
-			this.selectdataset();
+			this.initdataset();
 		},
 		computed: {
 		},
 		methods: {	
-			selectdataset(){
+			selectCube(){
+				this.$refs['selectCubeForm'].select();
+			},
+			initdataset(){
 				if (this.selectDs.length === 0) {
 					$('#datasettree').jstree({
 						core: {
@@ -102,6 +113,10 @@
 	}
 </script>
 
-<style lang="less" scoped>
-	@import "../../style/mixin";
+<style lang="css">
+#p_param .ptabhelpr{
+	padding:5px;
+	color: #999999;
+    font-size: 14px;
+}
 </style>
