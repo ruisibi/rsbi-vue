@@ -135,7 +135,8 @@ export default {
            }else if(cmd === 'flash'){
                $(this.menus).each((a, b)=>{
                    if(b.active === 'active'){
-                       //this.$router.push(b.url);
+                       //this.$router.go(0);
+                       //this.$forceUpdate();
                        //刷新页面暂时能用。
                        return false;
                    }

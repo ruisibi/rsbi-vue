@@ -39,6 +39,7 @@
 					</el-table-column>
 				</el-table>
 				<el-pagination
+					background
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
 					:page-sizes="[10, 20, 50, 100]"

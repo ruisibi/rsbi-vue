@@ -122,6 +122,7 @@
 	@import '../style/mixin';
 	.login_page{
 		background-color: #f0f3f4;
+		background:url("../assets/image/login_bg.jpg") 100% center
 	}
 	.form_contianer{
 		max-width: 600px;
@@ -174,5 +175,11 @@
 		bottom:0px;
 		width: 100%;
 		position: absolute;
+		.txt {
+			color:#fff;
+		}
+		a {
+			color:#fff;
+		}
 	}
 </style>

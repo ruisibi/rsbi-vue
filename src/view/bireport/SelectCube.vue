@@ -14,6 +14,7 @@
 				<el-table-column align="center" prop="dsetName" label="数据集"></el-table-column>
 			</el-table>
 			<el-pagination
+				background
 				layout="prev, pager, next"
 				:total="total">
 			</el-pagination>
@@ -58,7 +59,7 @@
 					return;
 				}
 				var p = this.$parent;
-				p.selectDs = chk;
+				p.pageInfo.selectDs = chk;
 				p.initdataset();
 
 				this.show = false;
@@ -93,7 +94,7 @@
 	}
 </script>
 
-<style lang="less" scoped>
+<style lang="css">
 .el-dialog__body{
 	padding: 5px;
 }

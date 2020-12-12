@@ -88,3 +88,14 @@ export const insertText2focus = (obj,str) => {
 		obj.value += str;
 	}
 }
+
+/**
+ * list 转 String
+ * @param {*} ls 
+ */
+export const list2string = (ls)=>{
+	if(!ls){
+		return "";
+	}
+	return ls.join(",");
+}

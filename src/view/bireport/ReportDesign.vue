@@ -33,22 +33,25 @@
 				</div>
 				
 				<div class="col-sm-9 animated fadeInRight">
-					<div class="ibox" style="margin-bottom:20px;">
-						<div class="ibox-content" id="p_param" style="padding:5px;">
-							<div class="ptabhelpr">拖拽维度到此处作为筛选条件</div>
-						</div>
-					</div>
+					<reportParam :pageInfo="pageInfo" ref="paramForm"></reportParam>
 					
 					<el-tabs v-model="showtype" type="border-card">
-						<el-tab-pane label="表格" name="table">表格</el-tab-pane>
-						<el-tab-pane label="图形" name="chart">图形</el-tab-pane>
+						<el-tab-pane label="表格" name="table">
+							<reportTable ref="tableForm"></reportTable>
+						</el-tab-pane>
+						<el-tab-pane label="图形" name="chart">
+							<report-chart ref="chartForm"></report-chart>
+						</el-tab-pane>
 					</el-tabs>
-							
+					<div class="clearbtn">
+						<button type="button" class="btn btn-default btn-xs" @click="cleanData()">清除数据</button>
+					</div>
 					
 				</div>
 			</div>
 		</div>
 		<selectCube ref="selectCubeForm"></selectCube>
+		<paramFilter :pageInfo="pageInfo" ref="paramFilterForm"></paramFilter>
   	</div>
 </template>
 
@@ -56,6 +59,10 @@
 	import {baseUrl} from '@/common/biConfig'
 	import $ from 'jquery'
 	import selectCube from "@/view/bireport/SelectCube";
+	import reportParam from "@/view/bireport/ReportParam";
+	import reportTable from "@/view/bireport/ReportTable";
+	import reportChart from "@/view/bireport/ReportChart";
+	import paramFilter from "@/view/bireport/ParamFilter";
 	import "jstree";
 	import "jstree/dist/themes/default/style.min.css";
 	import 'jquery-ui-dist/jquery-ui'
@@ -65,11 +72,17 @@
 			return {
 				activeIndex:"1",
 				showtype:"table",
-				selectDs:""
+				pageInfo:{
+					selectDs:"",
+					comps:[
+						{"name":"表格组件","id":1, "type":"table"},
+						{"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]}], 
+					params:[]
+				}  //多维分析的配置对象
 			}
 		},
 		components: {
-			selectCube
+			selectCube,reportParam,reportTable,reportChart,paramFilter
     	},
 		mounted(){
 			this.initdataset();
@@ -85,7 +98,7 @@
 				if(ref){
 					ref.destroy();
 				}
-				if (this.selectDs.length === 0) {
+				if (this.pageInfo.selectDs.length === 0) {
 					$('#datasettree').jstree({
 						core: {
 							data: {
@@ -123,7 +136,7 @@
 					$('#datasettree').jstree({
 						core: {
 							data: {
-								url: 'model/treeCube.action?cubeId=' + this.selectDs + '&t=' + Math.random()
+								url: 'model/treeCube.action?cubeId=' + this.pageInfo.selectDs + '&t=' + Math.random()
 							},
 							check_callback: false
 						},
@@ -134,8 +147,10 @@
 						dragfunc();
 					});
 				}
-			}
+			},
+			cleanData(){
 
+			}
 		},
 		watch: {
 		}
@@ -143,11 +158,6 @@
 </script>
 
 <style lang="css">
-#p_param .ptabhelpr{
-	padding:5px;
-	color: #999999;
-    font-size: 14px;
-}
 .icon_kpi {
 	color:#e07900;
 }
@@ -167,5 +177,14 @@
 	width:16px;
 	height:16px;
 	color:#3f36c3;
+}
+.el-tabs--border-card {
+	box-shadow:none;
+}
+.clearbtn {
+	position: absolute;
+	z-index:10;
+	right:20px;
+	top:73px;
 }
 </style>
