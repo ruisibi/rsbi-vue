@@ -52,6 +52,15 @@
 				this.loadData();
 			},
 			save(){
+				let chk = this.checked;
+				if(!chk){
+					this.$notify.error({title: '未勾选数据',offset: 50});
+					return;
+				}
+				var p = this.$parent;
+				p.selectDs = chk;
+				p.initdataset();
+
 				this.show = false;
 			},
 			selectme:function(a, b){
@@ -85,4 +94,7 @@
 </script>
 
 <style lang="less" scoped>
+.el-dialog__body{
+	padding: 5px;
+}
 </style>

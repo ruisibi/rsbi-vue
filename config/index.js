@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/": {
-        target: "http://www.ruisitech.com/",
+        target: "http://localhost:8080/",
         // changeOrigin: true,
         // pathRewrite: {
         //   '^/': '/rsbi-os-4.7/'

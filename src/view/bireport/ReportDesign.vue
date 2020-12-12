@@ -56,6 +56,9 @@
 	import {baseUrl} from '@/common/biConfig'
 	import $ from 'jquery'
 	import selectCube from "@/view/bireport/SelectCube";
+	import "jstree";
+	import "jstree/dist/themes/default/style.min.css";
+	import 'jquery-ui-dist/jquery-ui'
 
 	export default {
 	    data(){
@@ -78,6 +81,10 @@
 				this.$refs['selectCubeForm'].select();
 			},
 			initdataset(){
+				let ref = $("#datasettree").jstree(true);
+				if(ref){
+					ref.destroy();
+				}
 				if (this.selectDs.length === 0) {
 					$('#datasettree').jstree({
 						core: {
@@ -91,18 +98,40 @@
 					});
 					return;
 				} else {
+					const dragfunc = () => {
+						$("#datasettree .jstree-node").draggable({
+							cursor: "point",
+							appendTo: "body",
+							revert: 'invalid',
+							revertDuration: 250,
+							cursorAt: { top: 0, left: -35 },
+							helper:function(e){
+								var id = $(this).find("a.jstree-anchor:first").text();
+								return "<div class=\"vakata-dnd\"><span class=\"miconcancel glyphicon glyphicon-remove\"></span>"+id+"</div>";
+							},
+							start:function(e){
+								var ref = $('#datasettree').jstree(true),node = ref.get_node(this);
+								var attr = node.li_attr;
+								delete attr.id;
+								if($.isEmptyObject(attr)){
+									return false;
+								}
+								return true;
+							}
+						});
+					}
 					$('#datasettree').jstree({
 						core: {
 							data: {
-								url: 'model/cubeTree.action?selectDsIds=' + this.selectDs + '&t=' + Math.random()
+								url: 'model/treeCube.action?cubeId=' + this.selectDs + '&t=' + Math.random()
 							},
 							check_callback: false
 						},
 						"plugins": ["wholerow"]
 					}).bind("ready.jstree", function (a, b) {
-						//dragfunc();
+						dragfunc();
 					}).bind("after_open.jstree", function () {
-						//dragfunc();
+						dragfunc();
 					});
 				}
 			}
@@ -118,5 +147,25 @@
 	padding:5px;
 	color: #999999;
     font-size: 14px;
+}
+.icon_kpi {
+	color:#e07900;
+}
+.icon_dim {
+	color:#006ae1;
+}
+.vakata-dnd {
+	border:solid 1px #ddd;
+	background-color:#f5f5f5;
+	border-radius:3px;
+	z-index:9999;
+	padding:3px;
+	box-shadow:0 2px 3px 0 rgba(0,0,0,.16), 0 2px 5px 0 rgba(0,0,0,.12);
+}
+.vakata-dnd .miconcancel {
+	display:inline-block;
+	width:16px;
+	height:16px;
+	color:#3f36c3;
 }
 </style>

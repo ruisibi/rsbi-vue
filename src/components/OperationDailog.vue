@@ -51,7 +51,7 @@ export default {
     autoHeight:function(){
         let h = $(".page-wrapper").height();
         if(h){
-            return  "height:"+ (h - 110 )+ "px;";
+            return  "height:"+ (h - 135 )+ "px;";
         }else{
             return "height:460px;";
         }
