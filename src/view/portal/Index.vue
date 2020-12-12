@@ -1,29 +1,45 @@
 <template>
   	<div class="wrapper-content">
-		  数据报表
+      <PortalIndex v-if="showIndex" @customizationAction="customizationAction"></PortalIndex>
+      <PortalIndexCustomiz v-if="!showIndex"></PortalIndexCustomiz>
   	</div>
 </template>
 
 <script>
-	import {baseUrl} from '@/common/biConfig'
-	import $ from 'jquery'
+import {baseUrl} from '@/common/biConfig'
+import PortalIndex from "./PortalIndex.vue"
+import PortalIndexCustomiz from "./PortalIndexCustomiz.vue"
+import {PortalIndexResource} from "./scripts.js"
+import Vue from "vue";
 
-	export default {
-	    data(){
-			return {
-				
-			}
-		},
-		mounted(){
-			
-		},
-		computed: {
-		},
-		methods: {				
-		},
-		watch: {
-		}
-	}
+export default {
+  components:{PortalIndex,PortalIndexCustomiz},
+  data(){
+    return {
+      showIndex:true,
+    }
+  },
+  mounted(){
+
+  },
+  computed: {
+  },
+  methods: {
+    customizationAction(){
+      this.showIndex = false;
+    }
+  },
+  watch: {
+  },
+  beforeMount(){
+    this.loadScripts(PortalIndexResource.js);
+    this.loadCss(PortalIndexResource.css);
+  },
+  beforeDestroy(){
+    this.removeScripts(PortalIndexResource.js);
+    this.removeCss(PortalIndexResource.css);
+  },
+}
 </script>
 
 <style lang="less" scoped>

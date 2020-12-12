@@ -1,0 +1,30 @@
+export let PortalIndexResource = {
+  js:[
+    "./static/resource/ext-res/js/jquery.min.js",
+    "./static/resource/js/json.js",
+    "./static/resource/ext-res/js/ext-base.js",
+	  "./static/resource/jquery-easyui-1.4.4/jquery.easyui.min.js",
+    "./static/resource/jquery-easyui-1.4.4/locale/easyui-lang-zh_CN.js",
+    "./static/resource/ext-res/My97DatePicker/WdatePicker.js",
+    "./static/resource/js/portal.js",
+    "./static/resource/js/portal-comp.js",
+    "./static/resource/js/portal-chart.js",
+    "./static/resource/js/portal-param.js",
+    "./static/resource/js/portal-table.js",
+	  "./static/resource/ext-res/js/echarts.min.js",
+    "./static/resource/ext-res/js/sortabletable.js",
+    "./static/resource/ext-res/js/jquery.resizeend.min.js",
+	  "./static/resource/ext-res/js/jquery-resizable.js",
+  ],
+  css:[
+    "./static/resource/ext-res/css/bootstrap.min.css",
+    "./static/resource/css/style.css",
+    "./static/resource/css/font-awesome.css?v=4.4.0",
+    "./static/resource/css/portal.css",
+    "./static/resource/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css",
+	  "./static/resource/jquery-easyui-1.4.4/themes/gray/easyui.css",
+	  "./static/resource/jquery-easyui-1.4.4/themes/icon.css",
+    "./static/resource/css/animate.css",
+  ]
+};
+

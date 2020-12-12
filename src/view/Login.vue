@@ -34,10 +34,10 @@
 		</transition>
 
 		<div align="center" class="bottomtxt">
-			
+
 			<div class="txt" align="center">
 				 <a href='https://www.ruisitech.com' target="_blank">睿思BI</a> - <a href='https://www.ruisitech.com/productent.html' target="_blank">企业版</a> - <a href='https://www.ruisitech.com/product.html' target="_blank">标准版</a>  - <a href='https://www.ruisitech.com/opensource.html' target="_blank">开源版</a> - <a href='https://www.ruisitech.com/yun.html' target="_blank">睿思云</a> - <a href='http://www.ruisibi.cn/book.htm' target="_blank">使用手册</a> - <a href='https://www.ruisitech.com/suggest.html' target="_blank">问题反馈</a> </div>
-			
+
                ©成都睿思商智科技有限公司 2020 版权所有
 		</div>
   	</div>
@@ -102,7 +102,7 @@
 										offset: 50
 									});
 							}
-						});						
+						});
 					} else {
 						return false;
 					}
@@ -113,7 +113,7 @@
 			}
 		},
 		watch: {
-			
+
 		}
 	}
 </script>
@@ -132,7 +132,7 @@
     	transform: translateY(-55%);
  		box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     	border-radius: .5rem;
-		background-color: #fff;		
+		background-color: #fff;
 		text-align: center;
 		.submit_btn{
 			width: 100%;
