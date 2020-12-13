@@ -1,8 +1,9 @@
 <template>
-  	<el-dialog title="选择数据模型" :visible.sync="show">
+  	<el-dialog title="选择数据模型" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		<el-input v-model="search"	size="mini" placeholder="输入关键字搜索">
 			<el-button slot="append" icon="el-icon-search" @click="searchme"></el-button>
 		</el-input>
+		<div class="el-dialog-div">
 			<el-table :data="tableData" @row-click="selectme" border style="width: 100%" header-row-class-name="tableHeadbg">
 				<el-table-column label="" width="45">
 					<template slot-scope="scope">
@@ -18,7 +19,7 @@
 				layout="prev, pager, next"
 				:total="total">
 			</el-pagination>
-			
+		</div>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="save()">确 定</el-button>
       <el-button @click="show = false">取 消</el-button>
@@ -95,7 +96,7 @@
 </script>
 
 <style lang="css">
-.el-dialog__body{
+.nopadding .el-dialog__body{
 	padding: 5px;
 }
 </style>

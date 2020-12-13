@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="dialogTitle" :visible.sync="show">
+  <el-dialog :title="dialogTitle" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
     <el-tabs v-model="active" type="card">
       <el-tab-pane label="JDBC" name="jdbc">
         <el-form :model="dsource" :rules="rules" ref="dsourceForm">
@@ -246,7 +246,7 @@ export default {
 </script>
 
 <style lang="css">
-.el-dialog__body {
+.nopadding .el-dialog__body{
   padding: 5px;
 }
 </style>

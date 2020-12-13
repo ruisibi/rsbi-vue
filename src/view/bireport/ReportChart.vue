@@ -12,6 +12,12 @@
 	    data(){
 			
 		},
+		props: {
+			pageInfo: {
+			type: Object,
+			required: true,
+			},
+		},
 		mounted(){
 		},
 		computed: {

@@ -162,6 +162,8 @@ export default {
         });
       }else{
         this.initRightTree();
+        //清空 leftTree
+        this.initLeftTree([]);
       }
     },
     saveCube(isupdate){

@@ -229,6 +229,7 @@ export default {
             node.li_attr.kpinote = ts.node.kpinote;
             node.li_attr.dispName = ts.node.dimname;
             node.li_attr.isupdate = "y";  //表示度量已经更改过了。
+            ref.rename_node(node, ts.node.kpiaggre+"("+ts.node.dimname+")");
           }
           ts.show = false;
        }
@@ -236,9 +237,6 @@ export default {
     },
     modify(selectNode, dset){
       this.show = true;
-      if(this.$refs['nodeForm']){
-        this.$refs['nodeForm'].resetFields();
-      }
       //维度的属性
       this.type = selectNode.li_attr.tp;
       this.node.col = selectNode.li_attr.col;

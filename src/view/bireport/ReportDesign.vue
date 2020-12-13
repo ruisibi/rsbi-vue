@@ -37,10 +37,10 @@
 					
 					<el-tabs v-model="showtype" type="border-card">
 						<el-tab-pane label="表格" name="table">
-							<reportTable ref="tableForm"></reportTable>
+							<reportTable :pageInfo="pageInfo" ref="tableForm"></reportTable>
 						</el-tab-pane>
 						<el-tab-pane label="图形" name="chart">
-							<report-chart ref="chartForm"></report-chart>
+							<report-chart :pageInfo="pageInfo" ref="chartForm"></report-chart>
 						</el-tab-pane>
 					</el-tabs>
 					<div class="clearbtn">
@@ -68,6 +68,7 @@
 	import 'jquery-ui-dist/jquery-ui'
 
 	export default {
+		name:"reportDesign",
 	    data(){
 			return {
 				activeIndex:"1",
@@ -78,7 +79,8 @@
 						{"name":"表格组件","id":1, "type":"table"},
 						{"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]}], 
 					params:[]
-				}  //多维分析的配置对象
+				},  //多维分析的配置对象
+				isupdate:false  //是否发生了变动
 			}
 		},
 		components: {
@@ -150,6 +152,9 @@
 			},
 			cleanData(){
 
+			},
+			setIsUpdate(){
+				this.isupdate = true;
 			}
 		},
 		watch: {
@@ -187,4 +192,12 @@
 	right:20px;
 	top:73px;
 }
+/**固定弹出窗口的高度 */
+ .el-dialog-div{
+    height: 60vh;
+    overflow: auto;
+ }
+ .el-tabs--border-card>.el-tabs__content {
+	 padding: 5px;
+ }
 </style>
