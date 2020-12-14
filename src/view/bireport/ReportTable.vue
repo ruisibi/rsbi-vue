@@ -3,6 +3,7 @@
 import { ajax } from "@/common/biConfig";
 import $ from "jquery";
 import * as tools from '@/view/bireport/bireportUtils'
+import { Loading } from "element-ui";
 
 export default {
   name:"reportTable",
@@ -19,8 +20,8 @@ export default {
   },
   render(h){
 	  //一个 table, 2个tr, 一个 tr 里 2个td
-	  let trtd1 = h('td', {class:"blank"});
-	  let trtd2 = h('td', [h('div', {attrs:{id:"d_colDims", class:"tabhelpr"}}, '将维度拖到此处作为列标签')]);
+	  let trtd1 = h('td', {class:"blank", attrs:{valign:"bottom"}}, this.renderRowDimsList(h));
+	  let trtd2 = h('td', this.renderColDimsList(h));
 	  let tr2td1 = h('td', [h('div', {attrs:{id:"d_rowDims", class:"tabhelpr"}}, [h('div','将维度拖到此处'),h('div','作为行标签')])]);
 	  let tr2td2 = h('td', [h('div', {attrs:{id:"d_kpi", class:"tabhelpr"}}, '将度量拖到此处查询数据')]);
 	  let tr = [h('tr', [trtd1, trtd2])];
@@ -33,6 +34,41 @@ export default {
   },
   computed: {},
   methods: {
+	  /**
+	   * 渲染交叉表rows维度列表
+	   */
+	  renderRowDimsList(h){
+		  let ts = this;
+		  const comp = tools.findCompById(this.tableId, this.pageInfo);
+		  let ret = [];
+		  if(comp.rows && comp.rows.length > 0 ){
+			  $(comp.rows).each((a, b)=>{
+				  ret.push(h('th', [h('span', [h('b',b.dimdesc), h('a', 
+				  {attrs:{class:"fa fa-gear set tableDimOpt",href:"javascript:;"},on:{click:()=>{ts.setDimInfo(b.id)}}}, " ")])]));
+			  });
+			  ret =  h("table", {class:"grid5"}, [h("tbody", [h('tr', ret)])]);
+			  ret = [h("div", {attrs:{class:"rowDimsList"}}, [ret])];
+		  }
+		  return ret;
+		
+	  },
+	  /**
+	   * 渲染交叉表cols维度列表
+	   */
+	   renderColDimsList(h){
+		    let ts = this;
+		    const comp = tools.findCompById(this.tableId, this.pageInfo);
+		   	if(comp.cols && comp.cols.length > 0){
+				 let nodes = [];
+				 $(comp.cols).each((a, b)=>{
+					 nodes.push(h('span', [h('b', b.dimdesc), h('a', 
+					 {attrs:{class:"fa fa-gear set tableDimOpt", href:"javascript:;"},on:{click:()=>ts.setDimInfo(b.id)}}, ' ')]));
+				 });
+				 return [h('div', {attrs:{class:"colDimsList"}}, nodes)]
+			}else{
+				return [h('div', {attrs:{id:"d_colDims", class:"tabhelpr"}}, '将维度拖到此处作为列标签')];
+			}
+	   },
 	 bindDropEvent(id){
 		var ischg = false;
 		const ts = this;
@@ -158,7 +194,68 @@ export default {
 		});
 	 },
 	 tableView(json){
-
+		let load = Loading.service({ fullscreen: true });
+		 ajax({
+			 url:"bireport/TableView.action",
+			 data:JSON.stringify(json),
+			 postJSON:true,
+			 type:"POST",
+			 success:(resp)=>{
+				 //console.log(resp);
+			 }
+		 },this, load);
+		 this.$forceUpdate();
+	 },
+	 setDimInfo(dimId){
+		 if($("ul.tableDimOpt").length == 0){
+			$.contextMenu({
+				selector: 'a.tableDimOpt', 
+				className: "tableDimOpt",
+				trigger: 'left',
+				delay: 500,
+				zIndex:300,
+				autoHide:true,
+				position: function(opt, x, y){
+					var offset = $(this).offset();
+					opt.$menu.css({left:offset.left, top:offset.top + 15});
+				},
+				callback: function(key, opt) {
+					var o = $(this);
+					var compId =  o.parents(".comp_table").attr("id");
+					curTmpInfo.ckid = o.attr("cid");
+					curTmpInfo.compId = compId
+					curTmpInfo.pos = o.attr("cpos");
+					curTmpInfo.dimname = o.attr("cname");
+					if(key == 'asc' || key == 'desc'){
+						dimsort(key);
+					}else if(key == 'hlhh'){
+						changecolrow(true);
+					}else if(key == "left" || key == "right"){
+						dimmove(key);
+					}else if(key == "moveTo"){
+						dimexchange();
+					}else if(key == "filter"){
+						filterDims();
+					}else if(key == "aggre"){
+						aggreDim();
+					}else if(key == "top"){
+						getDimTop('table');
+					}else if(key == "remove"){
+						delJsonKpiOrDim('dim');
+					}
+				},
+				items: {
+					"asc": {name: "升序", icon: "fa-sort-amount-asc"},
+					"desc": {name: "降序", icon: 'fa-sort-amount-desc'},
+					"move":{name:"移动",items:{left:{name:"左移",icon:"fa-arrow-left"},right:{name:"右移", icon:"fa-arrow-right"},moveTo:{name:"移至行/列"}}},
+					"hlhh": {name: "行列互换", icon:"fa-exchange"},
+					"filter": {name: "筛选",icon:"fa-filter"},
+					"aggre": {name: "聚合",icon:""},
+					"top": {name: "取Top...",icon:""},
+					"remove": {name: "删除",icon:"fa-remove"}
+				}
+			});
+		}
 	 }
   },
   watch: {},
@@ -197,5 +294,31 @@ TABLE.d_table td {
   color: #999999;
   font-size: 14px;
   padding: 15px;
+}
+.colDimsList span{
+	display:-moz-inline-box;  
+	display:inline-block;
+	width:110px;
+	border:1px solid #CACACA;
+	padding:5px;
+	margin:3px 0px 3px 3px;
+	background-color:#FFFFCC;
+	text-align:center;
+}
+.rowDimsList span{
+	display:-moz-inline-box;  
+	display:inline-block;
+	width:126px;
+	border-right:none;
+	background-color:#FFFFCC;
+	text-align:center;
+	padding:4px 2px 5px 2px;
+}
+span a.set {
+	display:-moz-inline-box;  
+	display:inline-block;
+	width:18px;
+	height:16px;
+	text-decoration:none;
 }
 </style>

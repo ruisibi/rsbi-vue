@@ -24,6 +24,7 @@
     "element-ui": "^2.13.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
+    "jquery-contextmenu": "^2.9.2",
     "jquery-ui-dist": "^1.12.1",
     "jstree": "^3.3.10",
     "popper.js": "^1.16.1",

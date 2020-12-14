@@ -66,6 +66,8 @@
 	import "jstree";
 	import "jstree/dist/themes/default/style.min.css";
 	import 'jquery-ui-dist/jquery-ui'
+	import "jquery-contextmenu";
+	import "jquery-contextmenu/dist/jquery.contextMenu.min.css";
 
 	export default {
 		name:"reportDesign",
@@ -151,7 +153,13 @@
 				}
 			},
 			cleanData(){
-
+				if(this.showtype==="table"){ //清除表格
+					this.pageInfo.comps[0] = {"name":"表格组件","id":1, "type":"table"};
+					this.$refs['tableForm'].$forceUpdate();
+				}else{ //清除图形
+					this.pageInfo.comps[1] = {"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]};
+					this.$refs['chartForm'].$forceUpdate();
+				}
 			},
 			setIsUpdate(){
 				this.isupdate = true;
