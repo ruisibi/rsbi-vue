@@ -9,7 +9,8 @@ export default {
   name:"reportTable",
   data() {
 	  return {
-		  tableId:1  //ID 写死
+		  tableId:1,  //ID 写死
+		  datas:null	//数据
 		} 
   },
   props: {
@@ -20,10 +21,10 @@ export default {
   },
   render(h){
 	  //一个 table, 2个tr, 一个 tr 里 2个td
-	  let trtd1 = h('td', {class:"blank", attrs:{valign:"bottom"}}, this.renderRowDimsList(h));
-	  let trtd2 = h('td', this.renderColDimsList(h));
-	  let tr2td1 = h('td', [h('div', {attrs:{id:"d_rowDims", class:"tabhelpr"}}, [h('div','将维度拖到此处'),h('div','作为行标签')])]);
-	  let tr2td2 = h('td', [h('div', {attrs:{id:"d_kpi", class:"tabhelpr"}}, '将度量拖到此处查询数据')]);
+	  let trtd1 = h('td', {class:"blank", attrs:{valign:"bottom"}}, this.renderCrossList(h));
+	  let trtd2 = h('td', [h("div", {attrs:{id:"d_colDims"}}, this.renderColDimsList(h))]);
+	  let tr2td1 = h('td', [h('div', {attrs:{id:"d_rowDims"}}, this.renderRowDimsList(h))]);
+	  let tr2td2 = h('td', this.renderKpisList(h));
 	  let tr = [h('tr', [trtd1, trtd2])];
 	  let tr2 = [h('tr', [tr2td1, tr2td2])];
 	  let table = h('table', {class:"d_table"}, [h('tbody', [tr, tr2])]);
@@ -34,22 +35,48 @@ export default {
   },
   computed: {},
   methods: {
-	  /**
+	   /**
 	   * 渲染交叉表rows维度列表
 	   */
 	  renderRowDimsList(h){
+		   let ts = this;
+		   let ret = [];
+		   if(this.datas){
+				let trs = [];
+				$(this.datas.datas).each((a, b)=>{
+					let ths = [];
+					$(b).each((c, d)=>{
+						if(d.isRow === false){
+							return true;
+						}
+						ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan}},[h('span', {class:"s_rowDim"}, d.value)]));
+					});
+					trs.push(h('tr', ths));
+				});
+				ret.push(h('table',[h('tbody', trs)]));
+			}else{
+				ret = [h('div',{class:"tabhelpr"},'将维度拖到此处'),h('div',{class:"tabhelpr"},'作为行标签')];
+			}
+
+		  return ret;
+	  },
+
+		/**
+		 * 渲染交叉区域
+		 */
+	  renderCrossList(h){
 		  let ts = this;
 		  const comp = tools.findCompById(this.tableId, this.pageInfo);
-		  let ret = [];
 		  if(comp.rows && comp.rows.length > 0 ){
+			  let tds = [];
 			  $(comp.rows).each((a, b)=>{
-				  ret.push(h('th', [h('span', [h('b',b.dimdesc), h('a', 
+				  tds.push(h('th', [h('span', [h('b',b.dimdesc), h('a', 
 				  {attrs:{class:"fa fa-gear set tableDimOpt",href:"javascript:;"},on:{click:()=>{ts.setDimInfo(b.id)}}}, " ")])]));
 			  });
-			  ret =  h("table", {class:"grid5"}, [h("tbody", [h('tr', ret)])]);
-			  ret = [h("div", {attrs:{class:"rowDimsList"}}, [ret])];
+			  return [(h("table", {class:"grid5"}, [h("tbody", [h('tr', tds)])]))];
+		  }else{
+			  return [];
 		  }
-		  return ret;
 		
 	  },
 	  /**
@@ -57,17 +84,62 @@ export default {
 	   */
 	   renderColDimsList(h){
 		    let ts = this;
-		    const comp = tools.findCompById(this.tableId, this.pageInfo);
+			const comp = tools.findCompById(this.tableId, this.pageInfo);
+			let ret = [];
 		   	if(comp.cols && comp.cols.length > 0){
 				 let nodes = [];
 				 $(comp.cols).each((a, b)=>{
 					 nodes.push(h('span', [h('b', b.dimdesc), h('a', 
 					 {attrs:{class:"fa fa-gear set tableDimOpt", href:"javascript:;"},on:{click:()=>ts.setDimInfo(b.id)}}, ' ')]));
 				 });
-				 return [h('div', {attrs:{class:"colDimsList"}}, nodes)]
+				 ret.push(h('div', {attrs:{class:"colDimsList"}}, nodes));
+
 			}else{
-				return [h('div', {attrs:{id:"d_colDims", class:"tabhelpr"}}, '将维度拖到此处作为列标签')];
+				ret.push(h('div', {class:"tabhelpr"},'将维度拖到此处作为列标签'));
 			}
+			if(this.datas){
+				let trs = [];
+				$(this.datas.header).each((a, b)=>{
+					let ths = [];
+					$(b).each((c, d)=>{
+						if(d.isCross){
+							return true;
+						}
+						ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan}},[h('span', {class:"colkpi"},[
+							h('span', {attrs:{class:"kpiname", title:d.desc}},d.desc), 
+							h('a',{attrs:{class:"tableKpiBtn dimoptbtn set",href:"javascript:;",on:{click:()=>{}}}},' ')
+						])]));
+					});
+					trs.push(h('tr', ths));
+				});
+				ret.push(h('table',[h('tbody', trs)]));
+			}
+			return ret;
+	   },
+	   /**
+		* 渲染指标区域数据
+	    */
+	   renderKpisList(h){
+		   let ret = [];
+		   //const comp = tools.findCompById(this.tableId, this.pageInfo);
+		   if(this.datas){
+				let trs = [];
+				$(this.datas.datas).each((a, b)=>{
+					let ths = [];
+					$(b).each((c, d)=>{
+						if(d.isRow === true){
+							return true;
+						}
+						console.log(d);
+						ths.push(h('td', {attrs:{class:"kpiData1 grid5-td", align:"right"}},[h('span', {class:"kpiValue"}, d.value)]));
+					});
+					trs.push(h('tr', ths));
+				});
+				ret.push(h('table',[h('tbody', trs)]));
+		   }else{
+		 	  ret.push(h('div', {class:"tabhelpr"}, '将度量拖到此处查询数据'));
+		   }
+		   return [h("div", {attrs:{id:"d_kpi"}}, ret)];
 	   },
 	 bindDropEvent(id){
 		var ischg = false;
@@ -201,10 +273,10 @@ export default {
 			 postJSON:true,
 			 type:"POST",
 			 success:(resp)=>{
-				 //console.log(resp);
+				 this.datas = JSON.parse(resp.rows);
+				 this.$forceUpdate();
 			 }
 		 },this, load);
-		 this.$forceUpdate();
 	 },
 	 setDimInfo(dimId){
 		 if($("ul.tableDimOpt").length == 0){
