@@ -33,11 +33,11 @@ export const findCompById = (id, pageInfo)=>{
 	return ret;
 }
 export const msginfo = (msg, type)=>{
-    if(!type){
-        Message.error({message:msg, type:"info",showClose: true });
-    }else{
-        Message.success({message:msg, type:"success",showClose: true});
-    }
+	if(!type || type === 'error'){
+		Message.error({message:msg, type:"error",showClose: true});
+	}else{
+		Message.success({message:msg, type:"success",showClose: true});
+	}
 }
 
 export const kpiExist = (kpiId, kpis)=>{

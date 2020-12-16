@@ -22,6 +22,7 @@
 				<el-date-picker
 				v-model="st"
 				type="month"
+				value-format="yyyy-MM"
 				placeholder="选择月份">
 				</el-date-picker>
 			</div>
@@ -30,6 +31,7 @@
 				<el-date-picker
 				v-model="end"
 				type="month"
+				value-format="yyyy-MM"
 				placeholder="选择月份">
 				</el-date-picker>
 			</div>
@@ -42,6 +44,7 @@
 				<el-date-picker
 				v-model="st"
 				type="date"
+				value-format="yyyy-MM-dd"
 				placeholder="选择日期">
 				</el-date-picker>
 			</div>
@@ -50,6 +53,7 @@
 				<el-date-picker
 				v-model="end"
 				type="date"
+				value-format="yyyy-MM-dd"
 				placeholder="选择日期">
 				</el-date-picker>
 			</div>
@@ -66,7 +70,7 @@
 	import {ajax} from '@/common/biConfig'
 	import $ from 'jquery'
 	import { Loading } from "element-ui"
-	import {findParamById} from '@/view/bireport/bireportUtils'
+	import {findParamById,msginfo} from '@/view/bireport/bireportUtils'
 
 	export default {
 		props:{
@@ -82,9 +86,9 @@
 				param:{},
 				checkList:[],
 				dimValus:[],
-				st:"",  //日期/月份的开始日期
-				end:"",	//日期/月份的结束日期,
-				search:""
+				st:null,  //日期/月份的开始日期
+				end:null,	//日期/月份的结束日期,
+				search:null
 			}
 		},
 		mounted(){
@@ -99,8 +103,8 @@
 				this.param = p;
 				this.dimValus = [];
 				this.checkList = p.vals || [];
-				this.st = [];
-				this.end = [];
+				this.st = p.st?p.st: null;
+				this.end = p.end?p.end:null;
 				let load = Loading.service({ fullscreen: true });
 				ajax({
 					url:"bireport/paramFilter.action",
@@ -111,16 +115,36 @@
 				}, this, load);
 			},
 			save(){
-				this.param.vals = this.checkList;
-				var strs = [];
-				this.checkList.forEach(e=>{
-					let t = this.dimValus.filter(m=>m.id===e)[0];
-					strs.push(t.name);
-				});
-				this.param.valStrs = strs;
+				let p = this.param;
+				if(p.type === 'month'){
+					p.st =  this.st;
+					p.end =  this.end;
+					//判断是否st < ed
+					if(Number(p.st) > Number(p.end)){
+						msginfo("您选择的开始月份不能大于结束月份。", "error");
+						return;
+					}
+				}else if(p.type === 'day'){
+					p.st =  this.st;
+					p.end =  this.end;
+					//判断是否st < ed
+					if(Number(p.st.replace(/-/g, "")) > Number(p.end.replace(/-/g, ""))){
+						msginfo("您选择的开始日期不能大于结束日期。", "error");
+						return;
+					}
+				}else{
+					this.param.vals = this.checkList;
+					var strs = [];
+					this.checkList.forEach(e=>{
+						let t = this.dimValus.filter(m=>m.id===e)[0];
+						strs.push(t.name);
+					});
+					this.param.valStrs = strs;
+				}
 				this.show = false;
 				//刷新组件
 				this.$parent.$refs['paramForm'].$forceUpdate();
+				this.$parent.$refs['tableForm'].tableView();
 			},
 			searchme(){
 				let load = Loading.service({ fullscreen: true });

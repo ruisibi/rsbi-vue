@@ -4,7 +4,7 @@
 			<div class="ptabhelpr">拖拽维度到此处作为筛选条件</div>
 			<template v-for="(p) in pageInfo.params">
 				<span :key="p.id" class="pppp">
-					<span title="筛选" @click="paramFilter(p.id, p.type, p.name)" class="text">{{p.name}}({{p.valStrs&&p.valStrs.length>0?p.valStrs.join(","):"无"}})</span>
+					<span title="筛选" @click="paramFilter(p.id, p.type, p.name)" class="text">{{p.name}}({{ paramsDisp(p) }})</span>
 					<button class="btn btn-default btn-xs" title="删除" @click.stop="deleteParam(p.id)"><i class="fa fa-remove"></i></button>
 				</span>
 			</template>
@@ -31,8 +31,30 @@
 			this.paramDrop();
 		},
 		computed: {
+			//ccc: {
+			//	get:function(){
+					//return "abc";
+			//	}
+				//var s = p.valStrs&&p.valStrs.length>0?p.valStrs.join(","):"无";
+				//return 'abc';
+			// }
 		},
 		methods: {	
+			paramsDisp(p){
+				if(p.type === 'day' || p.type === 'month'){
+					if(p.st && p.end){
+						return p.st + "至" + p.end
+					}else{
+						return "无";
+					}
+				}else{
+					if(p.valStrs&&p.valStrs.length>0){
+						return p.valStrs.join(",");
+					}else{
+						return "无";
+					}
+				}
+			},
 			/**
 			 * 参数接受拖拽事件
 			 */
