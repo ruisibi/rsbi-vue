@@ -65,11 +65,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         to: config.dev.assetsSubDirectory,
         ignore: ['.*']
       },
+      /**
       {
         from: path.resolve(__dirname, '../resource'),
         to: "resource",
         ignore: ['.*']
       },
+       */
     ])
   ]
 })
