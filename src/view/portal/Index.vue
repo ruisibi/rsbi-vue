@@ -9,7 +9,6 @@
 import {baseUrl} from '@/common/biConfig'
 import PortalIndex from "./PortalIndex.vue"
 import PortalIndexCustomiz from "./PortalIndexCustomiz.vue"
-import {PortalIndexResource} from "./scripts.js"
 import Vue from "vue";
 
 export default {
@@ -32,12 +31,10 @@ export default {
   watch: {
   },
   beforeMount(){
-    this.loadScripts(PortalIndexResource.js);
-    this.loadCss(PortalIndexResource.css);
+   
   },
   beforeDestroy(){
-    this.removeScripts(PortalIndexResource.js);
-    this.removeCss(PortalIndexResource.css);
+    
   },
 }
 </script>

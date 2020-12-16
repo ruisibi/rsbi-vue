@@ -51,54 +51,10 @@ export default {
 
   methods: {
     initPage(){
-      $(".file-box").mouseover(function(){
-        $(this).find(".tooltip").css("display", "block");
-      }).mouseout(function(){
-        $(this).find(".tooltip").css("display", "none");
-      });
-      function renamereport(id){
-        $.messager.prompt('报表改名', '请输入新的报表名称？', function(msg){
-          if(msg){
-            $.ajax({
-                type: "POST",
-                url: "rename.action",
-                dataType:"JSON",
-                data: {pageId:id, pageName:msg},
-                success: function(resp){
-                  $("div.file-box[cid=\""+id+"\"] .file-name a").text(msg);
-                },
-                error:function(){
-
-                }
-            });
-          }
-        });
-      }
-      function delreport(id){
-        if(confirm('是否确认删除？')){
-          $.ajax({
-              type: "POST",
-              url: "delete.action",
-              dataType:"JSON",
-              data: {pageId:id},
-              success: function(resp){
-                $("div.file-box[cid=\""+id+"\"]").remove();
-              },
-              error:function(){
-
-              }
-          });
-        }
-      }
-      function newreport(){
-        location.href = 'customization.action';
-      }
-      function editreport(id){
-        location.href = 'customization.action?pageId=' + id;
-      }
+     
     },
     customizationAction(){
-      this.$emit("customizationAction")
+
     }
   },
   watch: {
@@ -108,9 +64,7 @@ export default {
 
   },
   mounted() {
-    setTimeout(() => {
-      this.initPage()
-    },200)
+   
   },
 }
 </script>

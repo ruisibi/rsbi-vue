@@ -55,7 +55,7 @@ export default {
 				});
 				ret.push(h('table',[h('tbody', trs)]));
 			}else{
-				ret = [h('div',{class:"tabhelpr"},'将维度拖到此处'),h('div',{class:"tabhelpr"},'作为行标签')];
+				ret = [h('div',{class:"tabhelpr"},[h('div','将维度拖到此处'), h('div','作为行标签')])];
 			}
 
 		  return ret;
