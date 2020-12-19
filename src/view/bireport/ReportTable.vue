@@ -51,8 +51,9 @@ export default {
 						if(d.isRow === false){
 							return true;
 						}
-						ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan}},[h('span', {class:"s_rowDim", title:d.value}, [
-							h('a',{attrs:{class:"dimDrill",href:"javascript:;"}, on:{click:()=>{}}},' '),
+						let lastlvl = d.level === ts.datas.rowLevel - 1;
+						ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan,valign:"top"}},[h('span', {class:"s_rowDim", title:d.value}, [
+							h('a',{attrs:{class:(lastlvl?"dimDrill fa fa-plus-square-o":"dimgoup fa fa-minus-square-o")}, on:{click:()=>{lastlvl?ts.drillDim(d.nodeId, 'row', d.value):ts.dirllUp(d.nodeId, 'row')}}},' '),
 							h('span', d.value)
 						])]));
 					});
@@ -113,13 +114,17 @@ export default {
 							return true;
 						}
 						if(a === size - 1){ //最后一行是指标
+							let isext = d.nodeId && d.nodeId.startsWith("ext_");  //该指标是指标的衍生指标
+							let jstype = isext?d.nodeId.split("_")[2]:"";
+							let jskpiId = isext?d.nodeId.split("_")[1]:"";
 							ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan}},[h('span', {class:"colkpi"},[
 								h('span', {attrs:{class:"kpiname", title:d.desc}},d.desc), 
-								h('a',{attrs:{class:"fa fa-gear set tableKpiBtn",href:"javascript:;"}, on:{click:()=>{ts.setKpiInfo(d)}}},' ')
+								h('a',{attrs:{class:isext?"fa fa-remove":"fa fa-gear" + "fa fa-gear set tableKpiBtn",href:"javascript:;"}, on:{click:()=>{isext?ts.delExtKpi(jskpiId,jstype):ts.setKpiInfo(d.col)}}},' ')
 							])]));
 						}else{ //其他是维度
+							let lastlvl = d.level === ts.datas.colLevel - 2;
 							ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan}},[h('div', {class:"coldim"},[
-								h('a', {attrs:{class:"dimDrill",href:"javascript:;"}},' '), 
+								h('a', {attrs:{class:lastlvl?"dimDrill fa fa-plus-square-o":"dimgoup fa fa-minus-square-o"},on:{click:()=>{lastlvl?ts.drillDim(d.nodeId, 'col', d.value):ts.dirllUp(d.nodeId, 'col')}}},' '), 
 								h('span',{attrs:{class:"s_colDim", title:d.desc}},d.desc)
 							])]));
 						}
@@ -370,9 +375,20 @@ export default {
 			});
 		}
 	 },
-	 setKpiInfo(kpi){
+	 delExtKpi(id, jstype){
+		const comp = tools.findCompById(this.tableId, this.pageInfo);
+		 //根据kpi_id查找kpiJson
+		let kpi = comp.kpiJson.filter(k=>k.kpi_id == id)[0];
+		tableUtils.delExtKpi(kpi, jstype, ()=>{
+			this.tableView();
+			this.setUpdate();
+		});
+	 },
+	 setKpiInfo(col){
 		$.contextMenu( 'destroy');
 		const comp = tools.findCompById(this.tableId, this.pageInfo);
+		 //根据col查找kpiJson
+		let kpi = comp.kpiJson.filter(k=>k.alias === col)[0];
 		let ts = this;
 		$.contextMenu({
 			selector: 'a.tableKpiBtn', 
@@ -397,7 +413,10 @@ export default {
 					if(key == 'def'){
 						key = "";
 					}
-					kpisort(key);
+					tableUtils.kpisort(key, kpi.kpi_id, comp, ()=>{
+						ts.tableView();
+						ts.setUpdate();
+					});
 				}else if(key == "remove"){
 					tableUtils.delJsonKpiOrDim('kpi', kpi.kpi_id, null, comp, ts.pageInfo, ()=>{
 						ts.tableView();
@@ -405,7 +424,10 @@ export default {
 					});
 				}else if(key == "sq" || key == 'tq' || key == 'zje' || key == 'hb' || key == 'tb' 
 					|| key =='sxpm' || key =='jxpm' || key =='zb' || key =='ydpj'){
-					kpicompute(key);
+					tableUtils.kpicompute(key, kpi, comp, ts.pageInfo,()=>{
+						ts.tableView();
+						ts.setUpdate();
+					});
 				}
 			},
 			items: {
@@ -419,7 +441,167 @@ export default {
 				"remove": {name: "删除",icon:"fa-remove"}
 			}
 		});
+	},
+	dirllUp(dimId, pos){
+		const comp = tools.findCompById(this.tableId, this.pageInfo);
+		tableUtils.goupDim(comp, pos, dimId, this.pageInfo, ()=>{
+			this.tableView();
+			this.setUpdate();
+		});
+	},
+	//下钻维度
+	drillDim(oldDimId, pos, value){
+		let ts = this;
+		//查询度量已有维
+		const comp = tools.findCompById(this.tableId, this.pageInfo);
+		var oldDim = (pos=="row"?comp.rows:comp.cols).filter(d=>d.id == oldDimId)[0];
+		const opts = (resp)=>{
+			var items = {};
+			var cnt = 0;
+			var ignoreGroup = []; 
+			const groupExist = (ignoreGroup, group)=>{
+				let r = false;
+				for(let k=0; k<ignoreGroup.length; k++){
+					if(ignoreGroup[k] == group){
+						r = true;
+					}
+				}
+				return r;
+			};
+			const findGroupChild = function(grouptype){
+				var dimret = [];
+				for(let j=0; j<resp.length; j++){
+					if(resp[j].grouptype == grouptype){
+						dimret.push(resp[j]);
+					}
+				}
+				return dimret;
+			};
+			for(let i=0; i<resp.length; i++){
+				//忽略已存在的维
+				if(tools.dimExist(resp[i].dim_id, comp.cols) || tools.dimExist(resp[i].dim_id, comp.rows)){
+					continue;
+				}
+				
+				if(resp[i].grouptype == '' || resp[i].grouptype == null){ //无分组的，直接显示维度
+						var id  = resp[i].dim_id;
+						//str = str +  "<div onclick=\"drill("+id+", "+comp.id+", '"+pos+"', '"+val+"', '"+vdesc+"', '"+oldDimId+"', true)\"><span style=\"color:#ccc\">下钻</span>" + resp[i].dimdesc+"</div>"
+						items["dim_"+id] = {name:'<span style="color:#ccc">下钻</span>'+resp[i].dim_desc,isHtmlName: true,callback:function(itemKey, opt, e){
+							var dimid = itemKey.split("_")[1];
+							tableUtils.drill(oldDimId, dimid, comp, pos, value, "", ()=>{
+								ts.tableView();
+								ts.setUpdate();
+							});
+						}};
+						cnt = cnt + 1;	
+					}else{ //有分组，显示分组, 对于分组，如果下级分组已选择，不能再选择上级分组
+						if(!groupExist(ignoreGroup, resp[i].grouptype)){
+							var o = items["g"+resp[i].grouptype] = {name:"<span style=\"color:#ccc\">下钻</span>"+resp[i].groupname,isHtmlName: true, items:{}};
+							ignoreGroup.push(resp[i].grouptype);
+							//查询分组的内容
+							var lsdim = findGroupChild(resp[i].grouptype);
+							var ss = "";
+							var ccnt = 0;
+							for(let kl = 0; kl<lsdim.length; kl++){
+								var tmp = lsdim[kl];
+								var bcz = !tools.dimExist(tmp.dim_id, comp.cols) && !tools.dimExist(tmp.dim_id, comp.rows);
+								if(bcz){
+									o.items['dim_'+tmp.dim_id] = {name:'<span style="color:#ccc">下钻</span>' + tmp.dim_desc, isHtmlName: true, callback:function(itemKey, opt, e){
+										var dimid = itemKey.split("_")[1];
+										tableUtils.drill(oldDimId, dimid, comp, pos, value, "", ()=>{
+											ts.tableView();
+											ts.setUpdate();
+										});
+									}};
+									ccnt = ccnt + 1;	
+								}else{
+									ss = "";
+									ccnt = 0;
+								}
+							}
+							if(ccnt == 0){
+								groups = "";
+							}
+							cnt = cnt + ccnt;
+						}
+					}
+			}
+			if(cnt == 0){
+				tools.msginfo("数据已钻透。", "error");
+				return;
+			}
+			$.contextMenu( 'destroy');
+			//drillmenu
+			$.contextMenu({
+				selector: 'a.dimDrill',
+				className: "tableDrillMenu",
+				trigger: 'left',
+				delay: 500,
+				zIndex:300,
+				autoHide:true,
+				items:items
+			});
+		}
+		if(comp.dims){
+			opts(comp.dims);
+		}else{
+			ajax({
+				type:"POST",
+				url: "bireport/queryDims.action",
+				data:{"cubeId": comp.cubeId},
+				dataType:"json",
+				success:function(resp){
+					comp.dims = resp.rows;
+					opts(comp.dims);
+				}
+			});
+		}
+	},
+	//上卷维度
+	goupDim(compId, ts, pos, dimId, islink){
+		var dims = null;
+		var comp = findCompById(compId);
+		if(pos == 'row'){
+			dims = comp.rows;
+		}else{
+			dims = comp.cols;
+		}
 		
+		//清除过滤条件
+		//删除该维度以后的维度
+		var idx = 0;
+		for(i=0; i<dims.length;i++){
+			if(dims[i].id == dimId){
+				dims[i].vals = "";
+				if(dims[i].type == 'day'){
+					delete dims[i].startdt;
+					delete dims[i].enddt;
+				}
+				if(dims[i].type == 'month'){
+					delete dims[i].startmt;
+					delete dims[i].endmt;
+				}
+				idx = i;
+				break;
+			}
+		}
+		dims.splice(idx + 1, dims.length - 1);
+		
+		//如果删除维度后无时间维度，并且度量中含有计算度量，需要清除计算度量内容
+		if(!isExistDateDim(comp, 'table')){
+			for(var j=0; comp.kpiJson&&j<comp.kpiJson.length; j++){
+				delete comp.kpiJson[j].compute;
+			}
+		}
+		//如果有参数,并且参数是时间维度，如果参数时间类型表格中没有，移除计算度量
+		if(!paramsamedimdate(comp)){
+			for(var j=0; comp.kpiJson&&j<comp.kpiJson.length; j++){
+				delete comp.kpiJson[j].compute;
+			}
+		}
+		
+		curTmpInfo.isupdate = true;
+		tableView(comp, comp.id);
 	}
   },
   watch: {},
@@ -544,5 +726,19 @@ span.kpiname {
 	display: inline-block;
     white-space: nowrap;
     width: 89px;
+}
+.dimDrill{
+	display: inline-block;
+    text-decoration: none;
+    width: 16px;
+	height:14px;
+	cursor:pointer;
+}
+.dimgoup{
+	display: inline-block;
+    text-decoration: none;
+    width: 16px;
+	height:14px;
+	cursor:pointer;	
 }
 </style>
