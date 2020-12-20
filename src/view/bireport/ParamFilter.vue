@@ -84,6 +84,8 @@
 				show:false,
 				title:"",
 				param:{},
+				cubeId:null,
+				dsid:null,
 				checkList:[],
 				dimValus:[],
 				st:null,  //日期/月份的开始日期
@@ -96,11 +98,34 @@
 		computed: {
 		},
 		methods: {	
+			createDimFilter(dim, comp){
+				this.show = true;
+				this.title = dim.dimdesc+" - 维度筛选";
+				this.param = dim;
+				this.cubeId = comp.cubeId;
+				this.dsid = comp.dsid;
+				this.search = null;
+				this.dimValus = [];
+				this.checkList = dim.vals || [];
+				this.st = dim.st?dim.st: null;
+				this.end = dim.end?dim.end:null;
+				let load = Loading.service({ fullscreen: true });
+				ajax({
+					url:"bireport/paramFilter.action",
+					data:{id:dim.id, cubeId:comp.cubeId, dsid:comp.dsid},
+					success:(resp)=>{
+						this.dimValus = resp.rows.datas;
+					}
+				}, this, load);
+			},
 			create(paramId){
-				this.show = true
+				this.show = true;
 				let p = findParamById(paramId, this.pageInfo.params);
 				this.title = p.name + " - 参数筛选";
 				this.param = p;
+				this.cubeId = p.cubeId;
+				this.dsid = p.dsid;
+				this.search = null;
 				this.dimValus = [];
 				this.checkList = p.vals || [];
 				this.st = p.st?p.st: null;
@@ -151,7 +176,7 @@
 				let p = this.param;
 				ajax({
 					url:"bireport/paramFilter.action",
-					data:{id:p.id, cubeId:p.cubeId, keyword:this.search, dsid:p.dsid},
+					data:{id:p.id, cubeId:this.cubeId, keyword:this.search, dsid:this.dsid},
 					success:(resp)=>{
 						this.dimValus = resp.rows.datas;
 					}

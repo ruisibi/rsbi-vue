@@ -416,3 +416,33 @@ export function goupDim(comp, pos, dimId, pageInfo, cb){
 		cb();
 	}
 }
+export function fireTableScroll(comp){
+	let id = comp.id;
+	$("#T"+id+" #d_kpi").scroll(function(){
+		var top = $(this).scrollTop();
+		$("#d_rowDims table").css("margin-top", "-"+top+"px");
+		//$("#T"+id+" #d_rowDims").scrollTop(top);
+		var left = $(this).scrollLeft();
+		$("#T"+id+" #d_colDims table").css("margin-left", "-"+left+"px");
+	});
+	/**
+	$("#T"+id+" #d_rowDims").scroll(function(){
+		var top = $(this).scrollTop();
+		//$("#d_kpi table").css("margin-top", "-"+top+"px");
+		$("#T"+id+" #d_kpi").scrollTop(top);
+	});
+	**/
+	var rowLvl = comp.rows?comp.rows.length:1;
+	if(rowLvl == 0){
+		rowLvl = 1;
+	}
+	var w = Math.round($("#T"+id).width()), h = Math.round($(".wrapper-content").height());
+	h = h - Math.round($("#d_colDims").height()) - 110;
+	w = w - (127 * rowLvl);
+	if(w <0){
+		w = 200;
+	}
+	$("#T"+id+" #d_rowDims").height(h);
+	$("#T"+id+" #d_colDims").width(w);
+	$("#T"+id+" #d_kpi").width(w).height(h).css("overflow", "auto");
+}

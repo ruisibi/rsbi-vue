@@ -56,11 +56,17 @@ export default {
       if(this.swatchcls === ''){
         this.swatchcls = 'swatchBtn';
         this.$parent.isShowMenu = false;
-        window.setTimeout(()=>$(".page-wrapper").css({"margin": "0", "width":"100%"}), 200);
+        window.setTimeout(()=>{
+          $(".page-wrapper").css({"margin": "0", "width":"100%"})
+          $(window).trigger("resize");
+        }, 200);
       }else{
         this.swatchcls = '';
         this.$parent.isShowMenu = true;
-        window.setTimeout(()=>$(".page-wrapper").css({"margin": "0 0 0 220px", "width":"calc(100% - 220px)"}), 200);
+        window.setTimeout(()=>{
+          $(".page-wrapper").css({"margin": "0 0 0 220px", "width":"calc(100% - 220px)"});
+           $(window).trigger("resize");
+        }, 200);
       }
     },
     handleCommand:function(cmd){

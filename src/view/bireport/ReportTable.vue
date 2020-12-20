@@ -34,6 +34,14 @@ export default {
   },
   mounted() {
 	  this.bindDropEvent(this.tableId);
+	  //注册固定表头事件
+	  tableUtils.fireTableScroll(tools.findCompById(this.tableId, this.pageInfo));
+	  $(window).bind("resize",()=>{
+		  tableUtils.fireTableScroll(tools.findCompById(this.tableId, this.pageInfo));
+	  });
+  },
+  beforeDestroy(){
+    $(window).unbind("resize");
   },
   computed: {},
   methods: {
@@ -350,7 +358,7 @@ export default {
 							ts.setUpdate();
 						});
 					}else if(key == "filter"){
-						filterDims();
+						ts.$parent.$parent.$parent.$refs['paramFilterForm'].createDimFilter(dim, comp);
 					}else if(key == "aggre"){
 						aggreDim();
 					}else if(key == "top"){
