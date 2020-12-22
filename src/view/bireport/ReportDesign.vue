@@ -63,6 +63,7 @@
 	import reportTable from "@/view/bireport/ReportTable";
 	import reportChart from "@/view/bireport/ReportChart";
 	import paramFilter from "@/view/bireport/ParamFilter";
+	import reportTableDailog from "@/view/bireport/ReportTableDailog";
 	import "jstree";
 	import "jstree/dist/themes/default/style.min.css";
 	import 'jquery-ui-dist/jquery-ui'

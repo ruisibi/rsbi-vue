@@ -5,6 +5,8 @@ import $ from "jquery";
 import * as tools from '@/view/bireport/bireportUtils'
 import * as tableUtils from '@/view/bireport/tableUtils'
 import { Loading } from "element-ui";
+import reportTableDailog from '@/view/bireport/ReportTableDailog'
+
 
 export default {
   name:"reportTable",
@@ -20,6 +22,9 @@ export default {
       required: true,
     },
   },
+  components:{
+	reportTableDailog
+  },
   render(h){
 	  let tdborder = "1px solid #dee5e7";
 	  //一个 table, 2个tr, 一个 tr 里 2个td
@@ -30,7 +35,7 @@ export default {
 	  let tr = [h('tr', [trtd1, trtd2])];
 	  let tr2 = [h('tr', [tr2td1, tr2td2])];
 	  let table = h('table', {class:"d_table"}, [h('tbody', [tr, tr2])]);
-	  return h('div', {attrs:{tp:"table", class:"comp_table", id:"T"+this.tableId}}, [table]);
+	  return h('div', {attrs:{tp:"table", class:"comp_table", id:"T"+this.tableId}}, [table, h('reportTableDailog',{ref:"tableDailog"}, '')]);
   },
   mounted() {
 	  this.bindDropEvent(this.tableId);
@@ -149,6 +154,7 @@ export default {
 	    */
 	   renderKpisList(h){
 		   let ret = [];
+		   let ts = this;
 		   if(this.datas){
 				let trs = [];
 				$(this.datas.datas).each((a, b)=>{
@@ -157,7 +163,14 @@ export default {
 						if(d.isRow === true){
 							return true;
 						}
-						ths.push(h('td', {attrs:{class: (a%2===0?"kpiData1":"kpiData2")+ " grid5-td", align:"right"}},[h('span', {class:"kpiValue"}, d.value)]));
+						ths.push(h('td', {attrs:{class: (a%2===0?"kpiData1":"kpiData2")+ " grid5-td", align:"right"}},[h('span', {attrs:{class:"kpiValue"}}, [h('a', {
+							attrs:{href:"javascript:;"},
+							on:{
+								click:()=>{
+									ts.linkDetail(d);
+								}
+							}
+						}, d.value)])]));
 					});
 					trs.push(h('tr', ths));
 				});
@@ -166,6 +179,10 @@ export default {
 		 	  ret.push(h('div', {attrs:{class:"tabhelpr"},domProps:{innerHTML:"将度量拖到此处<br/>查询数据"}}));
 		   }
 		   return [h("div", {attrs:{id:"d_kpi"}}, ret)];
+	   },
+	   linkDetail(dt){
+		   console.log(dt);
+		   alert(dt.value);
 	   },
 	 bindDropEvent(id){
 		var ischg = false;
@@ -360,7 +377,14 @@ export default {
 					}else if(key == "filter"){
 						ts.$parent.$parent.$parent.$refs['paramFilterForm'].createDimFilter(dim, comp);
 					}else if(key == "aggre"){
-						aggreDim();
+						if(dim.issum === 'y'){
+							dim.issum = 'n';
+							delete dim.aggre;
+							ts.tableView();
+							ts.setUpdate();
+							return;
+						}
+						ts.$refs['tableDailog'].dimAggre(dim, comp);
 					}else if(key == "top"){
 						getDimTop('table');
 					}else if(key == "remove"){
