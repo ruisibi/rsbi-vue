@@ -437,7 +437,7 @@ export function fireTableScroll(comp){
 		rowLvl = 1;
 	}
 	var w = Math.round($("#T"+id).width()), h = Math.round($(".wrapper-content").height());
-	h = h - Math.round($("#d_colDims").height()) - 110;
+	h = h - Math.round($("#d_colDims").height()) - 120;
 	w = w - (127 * rowLvl);
 	if(w <0){
 		w = 200;

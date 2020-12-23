@@ -66,7 +66,7 @@ export default {
 						}
 						let lastlvl = d.level === ts.datas.rowLevel - 1;
 						ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan,valign:"top"}},[h('span', {class:"s_rowDim", title:d.value}, [
-							h('a',{attrs:{class:(lastlvl?"dimDrill fa fa-plus-square-o":"dimgoup fa fa-minus-square-o")}, on:{click:()=>{lastlvl?ts.drillDim(d.nodeId, 'row', d.value):ts.dirllUp(d.nodeId, 'row')}}},' '),
+							h('a',{attrs:{class:(d.nodeType==='none'?"":(lastlvl?"dimDrill fa fa-plus-square-o":"dimgoup fa fa-minus-square-o"))}, on:{click:()=>{lastlvl?ts.drillDim(d.nodeId, 'row', d.value):ts.dirllUp(d.nodeId, 'row')}}},' '),
 							h('span', d.value)
 						])]));
 					});
@@ -137,7 +137,7 @@ export default {
 						}else{ //其他是维度
 							let lastlvl = d.level === ts.datas.colLevel - 2;
 							ths.push(h('th', {attrs:{colspan:d.colSpan, rowspan:d.rowSpan}},[h('div', {class:"coldim"},[
-								h('a', {attrs:{class:lastlvl?"dimDrill fa fa-plus-square-o":"dimgoup fa fa-minus-square-o"},on:{click:()=>{lastlvl?ts.drillDim(d.nodeId, 'col', d.value):ts.dirllUp(d.nodeId, 'col')}}},' '), 
+								h('a', {attrs:{class:d.nodeType==='none'?"":(lastlvl?"dimDrill fa fa-plus-square-o":"dimgoup fa fa-minus-square-o")},on:{click:()=>{lastlvl?ts.drillDim(d.nodeId, 'col', d.value):ts.dirllUp(d.nodeId, 'col')}}},' '), 
 								h('span',{attrs:{class:"s_colDim", title:d.desc}},d.desc)
 							])]));
 						}
@@ -155,6 +155,7 @@ export default {
 	   renderKpisList(h){
 		   let ret = [];
 		   let ts = this;
+		   const comp = tools.findCompById(this.tableId, this.pageInfo);
 		   if(this.datas){
 				let trs = [];
 				$(this.datas.datas).each((a, b)=>{
@@ -163,6 +164,14 @@ export default {
 						if(d.isRow === true){
 							return true;
 						}
+						//判断是否有预警
+						let hasyj = false;
+						comp.kpiJson.forEach(element => {
+							if(element.kpi_id == d.colRef && element.warning){
+								hasyj = true;
+								return false;
+							}
+						});
 						ths.push(h('td', {attrs:{class: (a%2===0?"kpiData1":"kpiData2")+ " grid5-td", align:"right"}},[h('span', {attrs:{class:"kpiValue"}}, [h('a', {
 							attrs:{href:"javascript:;"},
 							on:{
@@ -170,7 +179,7 @@ export default {
 									ts.linkDetail(d);
 								}
 							}
-						}, d.value)])]));
+						}, hasyj?[h('span', {domProps:{innerHTML:d.value}})]:d.value)])]));
 					});
 					trs.push(h('tr', ths));
 				});
@@ -386,7 +395,7 @@ export default {
 						}
 						ts.$refs['tableDailog'].dimAggre(dim, comp);
 					}else if(key == "top"){
-						getDimTop('table');
+						ts.$refs['tableDailog'].dimTop(dim, comp);
 					}else if(key == "remove"){
 						tableUtils.delJsonKpiOrDim('dim', dim.id, pos, comp, ts.pageInfo,()=>{
 							ts.tableView();
@@ -433,14 +442,14 @@ export default {
 				//curTmpInfo.parentId = o.attr("parentId");
 				//curTmpInfo.parentValue = o.attr("parentValue");
 				if(key == "prop"){
-					kpiproperty();
+					ts.$refs['tableDailog'].kpiProperty(kpi, comp);
 				}else if(key == "chart"){
 					//let linkpms = o.attr("toCharPms");
 					crtChartfromTab(JSON.parse(linkpms));
 				}else if(key == "filter"){
-					kpiFilter('table');
+					ts.$refs['tableDailog'].kpiFilter(kpi, comp);
 				}else if(key == 'warn'){
-					kpiwarning()
+					ts.$refs['tableDailog'].kpiwarning(kpi, comp);
 				}else if(key == 'asc' || key == 'desc' || key == 'def'){
 					if(key == 'def'){
 						key = "";
@@ -772,5 +781,53 @@ span.kpiname {
     width: 16px;
 	height:14px;
 	cursor:pointer;	
+}
+.warning1 {
+	display: inline-block;
+    width: 16px;
+	height:16px;
+	background-image:url(../../assets/image/j1.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.warning2 {
+	display: inline-block;
+    width: 16px;
+	height:16px;
+	background-image:url(../../assets/image/j2.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.warning3 {
+	display: inline-block;
+    width: 16px;
+	height:16px;
+	background-image:url(../../assets/image/j3.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.warning4 {
+	display: inline-block;
+    width: 16px;
+	height:16px;
+	background-image:url(../../assets/image/w1.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.warning5 {
+	display: inline-block;
+    width: 16px;
+	height:16px;
+	background-image:url(../../assets/image/w2.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.warning6 {
+	display: inline-block;
+    width: 16px;
+	height:16px;
+	background-image:url(../../assets/image/w3.png);
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 </style>
