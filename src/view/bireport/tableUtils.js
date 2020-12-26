@@ -3,7 +3,6 @@
  */
 import $ from 'jquery'
 import * as tools from '@/view/bireport/bireportUtils'
-import { lte } from 'semver';
 
 export const dimsort = (tp, dim, pos, comp, cb)=>{
 	dim.dimord = tp;
