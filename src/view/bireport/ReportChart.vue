@@ -2,6 +2,7 @@
 <script>
 	import {ajax} from '@/common/biConfig'
 	import $ from 'jquery'
+	import { Loading } from "element-ui";
 	import * as tools from '@/view/bireport/bireportUtils'
 	import * as chartUtils from '@/view/bireport/chartUtils'
 
@@ -64,7 +65,7 @@
 				h('a',{attrs:{href:"javascript:;"}, on:{click:()=>{this.exchangexs();}}}, [h("img", {attrs:{src:require("../../assets/image/reload.png")}})]),
 				h("img", {attrs:{src:require("../../assets/image/exchangexs2.gif")}})
 			];
-			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, [h('div', {class:"tsbd"}, [cgbtn, xcolobj, ycolobj, scolobj]), h('div', {class:"exchangexs"}, exchange), h("div", {class:"chartctx"}, "图表预览区域")]);
+			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, [h('div', {class:"tsbd"}, [cgbtn, xcolobj, ycolobj, scolobj]), h('div', {class:"exchangexs"}, exchange), h("div", {attrs:{class:"chartctx", id:"chart"+this.chartId}}, "图表预览区域")]);
 			return h('div', [r]);
 		},
 		mounted(){
@@ -191,6 +192,44 @@
 				this.$parent.$parent.$parent.setIsUpdate();
 			},
 			chartView(){
+				let json = tools.findCompById(this.chartId, this.pageInfo);
+				if(!json.kpiJson || json.kpiJson.length == 0){
+					return;
+				}
+				if(json.chartJson.type == "scatter" && (json.kpiJson.length < 2 || json.kpiJson[1] == null)  ){
+					return;
+				}
+				if(json.chartJson.type == "bubble" && (json.kpiJson.length < 3 || json.kpiJson[2] == null ) ){
+					return;
+				}
+				var kpiType = json.ttype;
+				json = {"chartJson":json.chartJson, "kpiJson":json.kpiJson, "params":this.pageInfo.params, dsid:json.dsid, dsetId:json.dsetId};
+				let load = Loading.service({ fullscreen: true });
+				ajax({
+					type: "POST",
+					url: "bireport/ChartView.action",
+					postJSON:true,
+					data: JSON.stringify(json),
+					success: (resp)=>{
+						 //try{
+							let option = JSON.parse(resp.rows,function(k,v){
+								if(!v){
+									return v;
+								}else if(v.indexOf&&v.indexOf('f$')>-1){
+									return eval("("+v.replace("f$", "")+")");
+								}
+								return v;
+							});
+							console.log(option);
+							var echarts = require('echarts');
+							const myChart = echarts.init(document.getElementById('chart'+this.chartId));
+							myChart.setOption(option);
+						//}catch(ex){
+						//	tools.msginfo(resp.rows);
+						//}
+						
+					}
+				}, this, load);
 				this.$forceUpdate();
 			},
 			chartmenu(o, pos){

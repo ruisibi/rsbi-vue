@@ -11,8 +11,6 @@ import 'font-awesome/css/font-awesome.css'
 import {globalMixins,globalPlugin} from "./common/globalMixins.js"
 import {store} from "./store/index.js";
 
-
-
 Vue.use(ElementUI);
 Vue.use(globalPlugin);
 Vue.mixin(globalMixins);
