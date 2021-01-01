@@ -5,6 +5,8 @@
 	import { Loading } from "element-ui";
 	import * as tools from '@/view/bireport/bireportUtils'
 	import * as chartUtils from '@/view/bireport/chartUtils'
+	import * as echartsUtils from '@/common/echartsUtils'
+	import chgChartDailog from '@/view/bireport/ChgChartDailog'
 
 	export default {
 	    data(){
@@ -20,7 +22,7 @@
 			},
 		},
 		components:{
-			
+			chgChartDailog
 		},
 		render(h){
 			const comp = tools.findCompById(this.chartId, this.pageInfo);
@@ -54,7 +56,7 @@
 			//图例 Ser
 			let scolobj = h('div', {class:"ts_h"}, [h('div', '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
 			//切换图表
-			let cgbtn = h('button', {attrs:{class:"btn btn-block btn-default"}, on:{click:()=>{alert(1)}}}, '切换图形类型');
+			let cgbtn = h('button', {attrs:{class:"btn btn-block btn-default"}, on:{click:()=>{this.changeChartType()}}}, '切换图形类型');
 			//启用多指标查询
 			//let mkpi = h('div', {class:"ts_h"}, [h('el-checkbox' ,{domProps:{value:this.mkpi}}, "启用多指标")]);
 
@@ -66,16 +68,36 @@
 				h("img", {attrs:{src:require("../../assets/image/exchangexs2.gif")}})
 			];
 			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, [h('div', {class:"tsbd"}, [cgbtn, xcolobj, ycolobj, scolobj]), h('div', {class:"exchangexs"}, exchange), h("div", {attrs:{class:"chartctx", id:"chart"+this.chartId}}, "图表预览区域")]);
-			return h('div', [r]);
+			return h('div', [r, h('chgChartDailog', {ref:"chgChartForm"}, '')]);
 		},
 		mounted(){
 			this.initChartKpiDrop(2);
+			//放入window对象
+			window.echartsUtils = echartsUtils;
+			var echarts = require('echarts');
+			window.echarts = echarts;
+		},
+		beforeDestroy(){
+			delete window.echartsUtils;
+			delete window.echarts;
 		},
 		computed: {
 		},
 		methods: {	
 			exchangexs(){
-				alert(4);
+				var comp = tools.findCompById(this.chartId, this.pageInfo);
+				if(comp.chartJson == undefined || (comp.chartJson.xcol == undefined && comp.chartJson.scol == undefined)){
+					tools.msginfo("您还未选择维度。");
+				}
+				var tmp = comp.chartJson.xcol;
+				comp.chartJson.xcol = comp.chartJson.scol;
+				comp.chartJson.scol = tmp;
+				this.chartView();
+			},
+			changeChartType(){
+				var comp = tools.findCompById(this.chartId, this.pageInfo);
+				this.$refs['chgChartForm'].open(comp);
+				
 			},
 			initChartKpiDrop(id){
 				const ts = this;
@@ -192,6 +214,7 @@
 				this.$parent.$parent.$parent.setIsUpdate();
 			},
 			chartView(){
+				this.$forceUpdate();
 				let json = tools.findCompById(this.chartId, this.pageInfo);
 				if(!json.kpiJson || json.kpiJson.length == 0){
 					return;
@@ -210,27 +233,19 @@
 					url: "bireport/ChartView.action",
 					postJSON:true,
 					data: JSON.stringify(json),
-					success: (resp)=>{
-						 //try{
-							let option = JSON.parse(resp.rows,function(k,v){
-								if(!v){
-									return v;
-								}else if(v.indexOf&&v.indexOf('f$')>-1){
-									return eval("("+v.replace("f$", "")+")");
-								}
+					success: (resp)=>{							
+						let option = JSON.parse(resp.rows,function(k,v){
+							if(!v){
 								return v;
-							});
-							console.log(option);
-							var echarts = require('echarts');
-							const myChart = echarts.init(document.getElementById('chart'+this.chartId));
-							myChart.setOption(option);
-						//}catch(ex){
-						//	tools.msginfo(resp.rows);
-						//}
-						
+							}else if(v.indexOf&&v.indexOf('f$')>-1){
+								return eval("("+v.replace("f$", "")+")");
+							}
+							return v;
+						});
+						const myChart = echarts.init(document.getElementById('chart'+this.chartId));
+						myChart.setOption(option, true);
 					}
 				}, this, load);
-				this.$forceUpdate();
 			},
 			chartmenu(o, pos){
 				const ts = this;
@@ -314,7 +329,7 @@ span.charttip {
 }
 .chartctx {
 	border:1px solid #CACACA;
-	height:200px;
+	height:320px;
 	margin-left:170px;
 }
 span.charttxt {

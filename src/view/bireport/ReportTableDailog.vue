@@ -169,12 +169,6 @@
 	import {findParamById,msginfo} from '@/view/bireport/bireportUtils'
 
 	export default {
-		props:{
-			pageInfo:{
-				type:Object,
-				required:true
-			}
-		},
 	    data(){
 			return {
 				show:false,

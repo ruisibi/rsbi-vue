@@ -160,6 +160,11 @@
 					this.$refs['tableForm'].$forceUpdate();
 				}else{ //清除图形
 					this.pageInfo.comps[1] = {"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]};
+					var echarts = require('echarts');
+					var myChart = echarts.init(document.getElementById('chart'+this.$refs['chartForm'].chartId));
+					if(myChart){
+						myChart.clear();
+					}
 					this.$refs['chartForm'].$forceUpdate();
 				}
 			},
