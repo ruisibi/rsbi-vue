@@ -122,6 +122,8 @@
 				if(this.pageInfo.params.length === 0){
 					$("#p_param").html("<div class=\"ptabhelpr\">拖拽维度到此处作为页面参数</div>");
 				}
+				this.$parent.$refs['tableForm'].tableView();
+				this.$parent.$refs['chartForm'].chartView();
 			}
 		},
 		watch: {

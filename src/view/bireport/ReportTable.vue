@@ -384,7 +384,7 @@ export default {
 							ts.setUpdate();
 						});
 					}else if(key == "filter"){
-						ts.$parent.$parent.$parent.$refs['paramFilterForm'].createDimFilter(dim, comp);
+						ts.$parent.$parent.$parent.$refs['paramFilterForm'].createDimFilter(dim, comp, 'table');
 					}else if(key == "aggre"){
 						if(dim.issum === 'y'){
 							dim.issum = 'n';

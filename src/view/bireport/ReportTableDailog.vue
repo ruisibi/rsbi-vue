@@ -39,7 +39,7 @@
 				<el-form-item label="所属表" label-width="100px">
 					{{kpi.tname}}
 				</el-form-item>
-				<el-form-item label="所属表" label-width="100px">
+				<el-form-item label="聚合方式" label-width="100px">
 					{{kpi.aggre}}
 				</el-form-item>
 				<el-form-item label="度量单位" label-width="100px">

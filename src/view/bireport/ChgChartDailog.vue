@@ -18,7 +18,7 @@
 			</ul>
 			</div>
 			<div class="selright col-sm-9">
-			<div class="one" id="schart1" align="center" style="display: none;" tp="line">
+			<div class="one" id="schart1" align="center" style="display: block;" tp="line">
 			<img src="../../assets/chart/c1.gif">
 			</div>
 			<div class="one" id="schart2" align="center" tp="column" style="display: none;">
@@ -27,7 +27,7 @@
 			<div class="one" id="schart3" align="center" tp="pie" style="display: none;">
 			<img src="../../assets/chart/c3.gif">
 			</div>
-			<div class="one" id="schart10" align="center" tp="bar" style="display: block;">
+			<div class="one" id="schart10" align="center" tp="bar" style="display: none;">
 			<img src="../../assets/chart/bar.gif">
 			</div>
 			<div class="one" id="schart9" align="center" tp="area" style="display: none;">

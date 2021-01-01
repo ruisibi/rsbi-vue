@@ -7,6 +7,7 @@
 	import * as chartUtils from '@/view/bireport/chartUtils'
 	import * as echartsUtils from '@/common/echartsUtils'
 	import chgChartDailog from '@/view/bireport/ChgChartDailog'
+	import reportChartDailog from '@/view/bireport/ReportChartDailog'
 
 	export default {
 	    data(){
@@ -22,7 +23,7 @@
 			},
 		},
 		components:{
-			chgChartDailog
+			chgChartDailog, reportChartDailog
 		},
 		render(h){
 			const comp = tools.findCompById(this.chartId, this.pageInfo);
@@ -68,7 +69,7 @@
 				h("img", {attrs:{src:require("../../assets/image/exchangexs2.gif")}})
 			];
 			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, [h('div', {class:"tsbd"}, [cgbtn, xcolobj, ycolobj, scolobj]), h('div', {class:"exchangexs"}, exchange), h("div", {attrs:{class:"chartctx", id:"chart"+this.chartId}}, "图表预览区域")]);
-			return h('div', [r, h('chgChartDailog', {ref:"chgChartForm"}, '')]);
+			return h('div', [r, h('chgChartDailog', {ref:"chgChartForm"}, ''), h('reportChartDailog', {ref:"reportChartForm"}, '')]);
 		},
 		mounted(){
 			this.initChartKpiDrop(2);
@@ -242,7 +243,10 @@
 							}
 							return v;
 						});
-						const myChart = echarts.init(document.getElementById('chart'+this.chartId));
+						let myChart = echarts.getInstanceByDom(document.getElementById('chart'+this.chartId));
+						if(!myChart){
+							myChart = echarts.init(document.getElementById('chart'+this.chartId));
+						}
 						myChart.setOption(option, true);
 					}
 				}, this, load);
@@ -257,17 +261,27 @@
 					delay: 500,
 					autoHide:true,
 					callback: function(key, opt) {
-						var compId =  ts.chartId;
+						var comp = tools.findCompById(ts.chartId, ts.pageInfo);
 						if(key == 'asc' || key == 'desc'){
-							chartsort(key);
+							chartUtils.chartsort(key, pos, comp, ()=>{
+								ts.setUpdate();
+								ts.chartView();
+							});
 						}else if(key == "filter"){
-							chartfilterDims();
+							if(pos === 'xcol' || pos === 'scol'){
+								ts.$parent.$parent.$parent.$refs['paramFilterForm'].createDimFilter(o, comp, 'chart');
+							}else{  //指标筛选
+
+							}
 						}else if(key == "prop"){
-							setChartKpi();
+							ts.$refs['reportChartForm'].setChartKpi(o, comp);
 						}else if(key == "top"){
-							getDimTop('chart');
+							ts.$refs['reportChartForm'].dimTop(o, comp);
 						}else if(key == "remove"){
-							delChartKpiOrDim();
+							chartUtils.delChartKpiOrDim(pos, comp, ()=>{
+								ts.setUpdate();
+								ts.chartView();
+							});
 						}
 					},
 					items: {
@@ -275,15 +289,14 @@
 						"desc": {name: "降序", icon: 'fa-sort-amount-desc'},
 						"filter": {name: "筛选",icon:"fa-filter"},
 						"top": {name: "取Top...",disabled:function(key, opt){
-							var tp = $(this).attr("cpos");
-							if(tp == "xcol"){
+							if(pos == "xcol"){
 								return false;
 							}else{
 								return true;
 							}
 						}},
 						"prop": {name: "属性...",disabled:function(key, opt){
-							var tp = $(this).attr("cpos");
+							let tp = pos;
 							if(tp == 'ycol' || tp == 'y2col' || tp=='y3col'){
 								return false;
 							}else{

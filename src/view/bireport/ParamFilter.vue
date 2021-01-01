@@ -90,7 +90,8 @@
 				dimValus:[],
 				st:null,  //日期/月份的开始日期
 				end:null,	//日期/月份的结束日期,
-				search:null
+				search:null,
+				useType: null
 			}
 		},
 		mounted(){
@@ -98,7 +99,7 @@
 		computed: {
 		},
 		methods: {	
-			createDimFilter(dim, comp){
+			createDimFilter(dim, comp, useType){   //用在维度
 				this.show = true;
 				this.title = dim.dimdesc+" - 维度筛选";
 				this.param = dim;
@@ -110,6 +111,7 @@
 				this.st = dim.st?dim.st: null;
 				this.end = dim.end?dim.end:null;
 				let load = Loading.service({ fullscreen: true });
+				this.useType = useType;
 				ajax({
 					url:"bireport/paramFilter.action",
 					data:{id:dim.id, cubeId:comp.cubeId, dsid:comp.dsid},
@@ -118,7 +120,7 @@
 					}
 				}, this, load);
 			},
-			create(paramId){
+			create(paramId){	//用在参数筛选
 				this.show = true;
 				let p = findParamById(paramId, this.pageInfo.params);
 				this.title = p.name + " - 参数筛选";
@@ -130,6 +132,7 @@
 				this.checkList = p.vals || [];
 				this.st = p.st?p.st: null;
 				this.end = p.end?p.end:null;
+				this.useType = 'param';
 				let load = Loading.service({ fullscreen: true });
 				ajax({
 					url:"bireport/paramFilter.action",
@@ -169,7 +172,14 @@
 				this.show = false;
 				//刷新组件
 				this.$parent.$refs['paramForm'].$forceUpdate();
-				this.$parent.$refs['tableForm'].tableView();
+				if(this.useType === 'param'){
+					this.$parent.$refs['tableForm'].tableView();
+					this.$parent.$refs['chartForm'].chartView();
+				}else if(this.useType === 'chart'){
+					this.$parent.$refs['chartForm'].chartView();
+				}else if(this.useType === 'table'){
+					this.$parent.$refs['tableForm'].tableView();
+				}
 			},
 			searchme(){
 				let load = Loading.service({ fullscreen: true });
