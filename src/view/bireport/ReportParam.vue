@@ -19,7 +19,9 @@
 
 	export default {
 	    data(){
-			
+			return {
+
+			}
 		},
 		props:{
 			pageInfo:{

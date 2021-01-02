@@ -333,12 +333,8 @@ export default {
 			 postJSON:true,
 			 type:"POST",
 			 success:(resp)=>{
-				 try{
-					this.datas = JSON.parse(resp.rows);
-					this.$forceUpdate();
-				 }catch(ex){
-					 tools.msginfo(resp.rows);
-				 }
+				this.datas = resp.rows;
+				this.$forceUpdate();
 			 }
 		 },this, load);
 	 },

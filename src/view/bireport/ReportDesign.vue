@@ -1,6 +1,6 @@
 <template>
   	<div class="wrapper-content-nomargin">
-		<el-menu :default-active="activeIndex" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
+		<el-menu :default-active="activeIndex" @select="handleSelect" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
 			<el-submenu index="1">
 				<template slot="title"><i class="fa fa-file"></i> 文件</template>
 				<el-menu-item index="1-1">打开</el-menu-item>
@@ -52,6 +52,7 @@
 		</div>
 		<selectCube ref="selectCubeForm"></selectCube>
 		<paramFilter :pageInfo="pageInfo" ref="paramFilterForm"></paramFilter>
+		<kpi-desc ref="kpiDescForm"></kpi-desc>
   	</div>
 </template>
 
@@ -69,6 +70,8 @@
 	import 'jquery-ui-dist/jquery-ui'
 	import "jquery-contextmenu";
 	import "jquery-contextmenu/dist/jquery.contextMenu.min.css";
+	import kpiDesc from './KpiDesc.vue';
+	import * as tools from '@/view/bireport/bireportUtils'
 
 	export default {
 		name:"reportDesign",
@@ -87,7 +90,7 @@
 			}
 		},
 		components: {
-			selectCube,reportParam,reportTable,reportChart,paramFilter
+			selectCube,reportParam,reportTable,reportChart,paramFilter, kpiDesc
     	},
 		mounted(){
 			this.initdataset();
@@ -170,6 +173,37 @@
 			},
 			setIsUpdate(){
 				this.isupdate = true;
+			},
+			handleSelect(key, keyPath){
+				if(key === '4'){
+					this.$refs['kpiDescForm'].openDailog(this.pageInfo.selectDs);
+				}else if(key === '3'){  //打印
+					var comp = this.showtype === 'table' ? tools.findCompById(1, this.pageInfo) : tools.findCompById(2, this.pageInfo)
+					if(this.showtype === 'table'){
+						if(!comp.kpiJson){
+							tools.msginfo("无数据");
+							return;
+						}
+					}
+					if(this.showtype ==='chart'){
+						if(!comp.kpiJson || comp.kpiJson.length == 0){
+							tools.msginfo("无数据");
+							return;
+						}
+						if(comp.chartJson.type == "scatter" && (comp.kpiJson.length < 2 || comp.kpiJson[1] == null)  ){
+							tools.msginfo("无数据");
+							return;
+						}
+						if(comp.chartJson.type == "bubble" && (comp.kpiJson.length < 3 || comp.kpiJson[2] == null ) ){
+							tools.msginfo("无数据");
+							return;
+						}
+					}
+					var info = JSON.parse(JSON.stringify(this.pageInfo));  //复制对象
+					delete comp.dims;
+					info.comps = [comp];
+					this.$router.push({path:"/bireport/Print", name:"bireportPrint", params:{json:info,type:this.showtype}});
+				}
 			}
 		},
 		watch: {

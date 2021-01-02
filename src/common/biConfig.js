@@ -5,6 +5,7 @@
  * 
  */
 import $ from 'jquery'
+import { Message } from 'element-ui'
 
 const baseUrl = 'http://localhost:8080/';
 //const baseUrl = "http://112.124.13.251:8081/";
@@ -33,12 +34,21 @@ export const ajax = (cfg, ts, loadingObj) => {
 			}
 			if(resp.result === 1){
 				cfg.success(resp);
+			}else if(resp.result === 2){
+				ts.$notify.error({
+					title: '登录信息失效',
+					message:resp.msg,
+					offset: 50
+				});
 			}else{
+				/** 
 				ts.$notify.error({
 					title: '系统出错',
 					message:resp.msg,
 					offset: 50
 				});
+				*/
+				Message.error({message:resp.msg, type:"error",showClose: true});
 			}
 		},
 		error: function(){
@@ -98,4 +108,28 @@ export const list2string = (ls)=>{
 		return "";
 	}
 	return ls.join(",");
+}
+
+/**
+ * 解析图形JSON中的f$标志为字符串
+ * @param json 
+ */
+export const loopChartJson = (json)=>{
+	const exec = (jsons)=>{
+		for(let key in jsons) {
+			let o = jsons[key];
+			if(typeof o  === 'object'){
+				exec(o);  //如果是Object则递归
+			}else if(typeof o === 'string'){
+				if(o.indexOf&&o.indexOf('f$')>-1){  //吧f$字符串解析成函数
+					jsons[key] = eval("("+o.replace("f$", "")+")");
+				}
+			}
+			//else if(typeof o === 'number'){
+
+			//}
+		}
+	}
+	exec(json);
+	return json;
 }

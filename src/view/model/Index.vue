@@ -59,7 +59,7 @@ export default {
     return {
       dsetOperTitle:"",
       cubeOperTitle:""
-    };
+    }
   },
   components: {
     cube,

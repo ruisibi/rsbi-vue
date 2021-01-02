@@ -1,6 +1,6 @@
 <!-- 图形渲染类 -->
 <script>
-	import {ajax} from '@/common/biConfig'
+	import {ajax,loopChartJson} from '@/common/biConfig'
 	import $ from 'jquery'
 	import { Loading } from "element-ui";
 	import * as tools from '@/view/bireport/bireportUtils'
@@ -235,14 +235,7 @@
 					postJSON:true,
 					data: JSON.stringify(json),
 					success: (resp)=>{							
-						let option = JSON.parse(resp.rows,function(k,v){
-							if(!v){
-								return v;
-							}else if(v.indexOf&&v.indexOf('f$')>-1){
-								return eval("("+v.replace("f$", "")+")");
-							}
-							return v;
-						});
+						let option = loopChartJson(resp.rows);
 						let myChart = echarts.getInstanceByDom(document.getElementById('chart'+this.chartId));
 						if(!myChart){
 							myChart = echarts.init(document.getElementById('chart'+this.chartId));

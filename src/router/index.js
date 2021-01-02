@@ -11,6 +11,7 @@ import UserMenu from '@/view/frame/UserMenu'
 import Model from '@/view/model/Index'
 import Portal from '@/view/portal/Index'
 import ReportDesign from '@/view/bireport/ReportDesign'
+import BireportPrint from '@/view/bireport/Print'
 
 Vue.use(Router)
 
@@ -73,6 +74,11 @@ let router = new Router({
           component:ReportDesign
         }
       ]
+    },
+    {
+      path: '/bireport/Print',
+      name: 'bireportPrint',
+      component: BireportPrint
     }
   ]
 })
