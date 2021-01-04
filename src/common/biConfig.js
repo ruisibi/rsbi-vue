@@ -40,6 +40,7 @@ export const ajax = (cfg, ts, loadingObj) => {
 					message:resp.msg,
 					offset: 50
 				});
+				ts.$router.push("/");
 			}else{
 				/** 
 				ts.$notify.error({

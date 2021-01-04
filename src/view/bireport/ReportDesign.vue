@@ -1,6 +1,6 @@
 <template>
   	<div class="wrapper-content-nomargin">
-		<el-menu :default-active="activeIndex" @select="handleSelect" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
+		<el-menu @select="handleSelect" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
 			<el-submenu index="1">
 				<template slot="title"><i class="fa fa-file"></i> 文件</template>
 				<el-menu-item index="1-1">打开</el-menu-item>
@@ -9,11 +9,11 @@
 			</el-submenu>
 			<el-submenu index="2">
 				<template slot="title"><i class="fa fa-file-excel-o"></i> 导出</template>
-				<el-menu-item index="2-1">HTML</el-menu-item>
-				<el-menu-item index="2-2">CSV</el-menu-item>
-				<el-menu-item index="2-3">EXCEL</el-menu-item>
-				<el-menu-item index="2-3">WORD</el-menu-item>
-				<el-menu-item index="2-3">PDF</el-menu-item>
+				<el-menu-item index="html">HTML</el-menu-item>
+				<el-menu-item index="csv">CSV</el-menu-item>
+				<el-menu-item index="excel">EXCEL</el-menu-item>
+				<el-menu-item index="word">WORD</el-menu-item>
+				<el-menu-item index="pdf">PDF</el-menu-item>
 			</el-submenu>
 			<el-menu-item index="3"><i class="fa fa-print"></i> 打印</el-menu-item>
 			<el-menu-item index="4"><i class="fa fa-list-alt"></i> 解释</el-menu-item>
@@ -35,7 +35,7 @@
 				<div class="col-sm-9 animated fadeInRight">
 					<reportParam :pageInfo="pageInfo" ref="paramForm"></reportParam>
 					
-					<el-tabs v-model="showtype" type="border-card">
+					<el-tabs v-model="pageInfo.showtype" type="border-card">
 						<el-tab-pane label="表格" name="table">
 							<reportTable :pageInfo="pageInfo" ref="tableForm"></reportTable>
 						</el-tab-pane>
@@ -53,6 +53,8 @@
 		<selectCube ref="selectCubeForm"></selectCube>
 		<paramFilter :pageInfo="pageInfo" ref="paramFilterForm"></paramFilter>
 		<kpi-desc ref="kpiDescForm"></kpi-desc>
+		<report-save ref="reportSaveForm"></report-save>
+		<report-list ref="reportListForm"></report-list>
   	</div>
 </template>
 
@@ -72,15 +74,16 @@
 	import "jquery-contextmenu/dist/jquery.contextMenu.min.css";
 	import kpiDesc from './KpiDesc.vue';
 	import * as tools from '@/view/bireport/bireportUtils'
+	import reportSave from './ReportSave.vue';
+	import reportList from './ReportList.vue';
 
 	export default {
 		name:"reportDesign",
 	    data(){
 			return {
-				activeIndex:"1",
-				showtype:"table",
 				pageInfo:{
 					selectDs:"",
+					showtype:"table",
 					comps:[
 						{"name":"表格组件","id":1, "type":"table"},
 						{"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]}], 
@@ -90,7 +93,7 @@
 			}
 		},
 		components: {
-			selectCube,reportParam,reportTable,reportChart,paramFilter, kpiDesc
+			selectCube,reportParam,reportTable,reportChart,paramFilter, kpiDesc,reportSave,reportList
     	},
 		mounted(){
 			this.initdataset();
@@ -156,15 +159,15 @@
 					});
 				}
 			},
-			cleanData(){
-				if(this.showtype==="table"){ //清除表格
+			cleanData(isall){
+				if(this.pageInfo.showtype==="table" || isall === true){ //清除表格
 					this.pageInfo.comps[0] = {"name":"表格组件","id":1, "type":"table"};
 					this.$refs['tableForm'].datas = null;
 					this.$refs['tableForm'].$forceUpdate();
-				}else{ //清除图形
+				}else if( this.pageInfo.showtype==="chart" || isall === true){ //清除图形
 					this.pageInfo.comps[1] = {"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]};
 					var echarts = require('echarts');
-					var myChart = echarts.init(document.getElementById('chart'+this.$refs['chartForm'].chartId));
+					var myChart = echarts.getInstanceByDom(document.getElementById('chart2'));
 					if(myChart){
 						myChart.clear();
 					}
@@ -174,18 +177,27 @@
 			setIsUpdate(){
 				this.isupdate = true;
 			},
+			//根据pageInfo重置多维分析
+			resetOlap(){
+				this.initdataset();
+				this.isupdate = false;
+				this.$nextTick(()=>{  //不采用这种方式，会出现子组件 pageInfo 没更新的情况
+					this.$refs['tableForm'].tableView();
+					this.$refs['chartForm'].chartView();
+				});
+			},
 			handleSelect(key, keyPath){
 				if(key === '4'){
 					this.$refs['kpiDescForm'].openDailog(this.pageInfo.selectDs);
 				}else if(key === '3'){  //打印
-					var comp = this.showtype === 'table' ? tools.findCompById(1, this.pageInfo) : tools.findCompById(2, this.pageInfo)
-					if(this.showtype === 'table'){
+					var comp = this.pageInfo.showtype === 'table' ? tools.findCompById(1, this.pageInfo) : tools.findCompById(2, this.pageInfo)
+					if(this.pageInfo.showtype === 'table'){
 						if(!comp.kpiJson){
 							tools.msginfo("无数据");
 							return;
 						}
 					}
-					if(this.showtype ==='chart'){
+					if(this.pageInfo.showtype ==='chart'){
 						if(!comp.kpiJson || comp.kpiJson.length == 0){
 							tools.msginfo("无数据");
 							return;
@@ -202,11 +214,65 @@
 					var info = JSON.parse(JSON.stringify(this.pageInfo));  //复制对象
 					delete comp.dims;
 					info.comps = [comp];
-					this.$router.push({path:"/bireport/Print", name:"bireportPrint", params:{json:info,type:this.showtype}});
+					this.$router.push({path:"/bireport/Print", name:"bireportPrint", params:{json:info,type:this.pageInfo.showtype}});
+				}else if(key ==='1-3'){  //保存
+					this.$refs['reportSaveForm'].open(this.pageInfo);
+				}else if(key === '1-1'){  //打开
+					this.$refs['reportListForm'].open();
+				}else if(key ==='1-2'){ //新建
+					if(this.isupdate){
+						if(!confirm("多维分析未保存，是否继续新建？")){
+							return
+						}
+					}
+					this.cleanData(true);
+					this.pageInfo = {
+						selectDs:"",
+						showtype:"table",
+						comps:[
+							{"name":"表格组件","id":1, "type":"table"},
+							{"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]}], 
+						params:[]
+					}
+					this.initdataset();
+				}else if(key == "html" || key === "csv" || key === "word" || key ==='excel' || key === "pdf"){
+					this.exportPage(key);
 				}
+			},
+			exportPage(tp){
+				var ctx = "<form name='expff' method='post' action=\""+baseUrl+"/bireport/ReportExport.action\" id='expff'><input type='hidden' name='type' id='type'><input type='hidden' name='json' id='json'><input type='hidden' name='picinfo' id='picinfo'></form>";
+				if($("#expff").length == 0){
+					$(ctx).appendTo("body");
+				}
+				var info = JSON.parse(JSON.stringify(this.pageInfo));  //复制对象
+				var comp = tools.findCompById(this.pageInfo.showtype ==='table'?1:2 , this.pageInfo);
+				delete comp.dims;
+				info.comps = [comp];
+				$("#expff #type").val(tp);
+				$("#expff #json").val(JSON.stringify(info));
+				//把图形转换成图片
+				var strs = "";
+				if(tp == "pdf" || tp == "excel" || tp == "word"){
+					$("div.chartUStyle").each(function(index, element) {
+						var id = $(this).attr("id");
+						id = id.substring(1, id.length);
+						var chart = echarts.getInstanceByDom(document.getElementById(id));
+						var str = chart.getDataURL({type:'png', pixelRatio:1, backgroundColor: '#fff'});
+						str = str.split(",")[1]; //去除base64标记
+						str = $(this).attr("label") + "," + str; //加上label标记
+						strs = strs  +  str;
+						if(index != $("div.chartUStyle").size() - 1){
+							strs = strs + "@";
+						}
+						
+					});
+				}
+				$("#expff #picinfo").val(strs);
+				$("#expff").submit().remove();
 			}
 		},
 		watch: {
+			
 		}
 	}
 </script>

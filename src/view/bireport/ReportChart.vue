@@ -27,6 +27,13 @@
 		},
 		render(h){
 			const comp = tools.findCompById(this.chartId, this.pageInfo);
+			let tp = comp.chartJson.type;
+			let isscatter = tp === 'scatter' || tp === 'bubble';
+
+			if(isscatter){
+				
+			}
+
 			let xcol = null;
 			if(comp.chartJson && comp.chartJson.xcol){
 				let o = comp.chartJson.xcol;
@@ -35,7 +42,7 @@
 				xcol = [h('span', {class:"charttip"}, '将维度拖到这里')]
 			}
 			//横轴　
-			let xcolobj = h('div', {class:"ts_h"}, [h('div', '横轴：'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
+			let xcolobj = h('div', {class:"ts_h"}, [h('div', isscatter?'观察维度：':'横轴：'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
 
 			let ycol = null;
 			if(comp.kpiJson && comp.kpiJson.length > 0 && comp.kpiJson[0] != null){
@@ -238,7 +245,7 @@
 						let option = loopChartJson(resp.rows);
 						let myChart = echarts.getInstanceByDom(document.getElementById('chart'+this.chartId));
 						if(!myChart){
-							myChart = echarts.init(document.getElementById('chart'+this.chartId));
+							myChart = echarts.init(document.getElementById('chart'+this.chartId),"default", {width:640, height:320});
 						}
 						myChart.setOption(option, true);
 					}
