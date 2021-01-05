@@ -12,6 +12,7 @@ import Model from '@/view/model/Index'
 import Portal from '@/view/portal/Index'
 import ReportDesign from '@/view/bireport/ReportDesign'
 import BireportPrint from '@/view/bireport/Print'
+import NotFind from '@/view/NoFind'
 
 Vue.use(Router)
 
@@ -21,6 +22,10 @@ let router = new Router({
       path: '/',
       name: 'login',
       component: Login
+    },
+    {
+      path:'*',
+      component:NotFind
     },
     {
       path: '/main',

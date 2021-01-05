@@ -168,6 +168,19 @@ export const formatNumber = (num,pattern, shortname)=>{
      }
      return r;
    }
-   export const msg = () =>{
-       alert(3);
-   }
+/**
+	 * 对于散点图的ToolTip,如果值相同，会覆盖后面的点，现在通过第一个点抓出值相同的所有点，显示再 tooltip中
+	 * @returns
+	 */
+export const scatterTooltip = (option, params)=>{
+    var target = {x:params.data[0], y:params.data[1], name:params.data[2]};
+    var dts = option.series[params.seriesIndex].data;
+    var r = [];
+    for(let k=0; k<dts.length; k++){
+        var t = dts[k];
+        if(t[0] == target.x && t[1] == target.y){
+            r.push(t[2]);
+        }
+    }
+    return r.join(",");
+}

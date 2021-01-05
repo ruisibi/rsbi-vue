@@ -26,12 +26,39 @@
 			chgChartDailog, reportChartDailog
 		},
 		render(h){
+			let leftCols = [];  //左边显示的列表
+			
+			//切换图表
+			let cgbtn = h('button', {attrs:{class:"btn btn-block btn-default"}, on:{click:()=>{this.changeChartType()}}}, '切换图形类型');
+			leftCols.push(cgbtn);
+
 			const comp = tools.findCompById(this.chartId, this.pageInfo);
 			let tp = comp.chartJson.type;
 			let isscatter = tp === 'scatter' || tp === 'bubble';
+			let isbubble = tp === 'bubble';
 
 			if(isscatter){
-				
+				let xcol = null;
+				if(comp.kpiJson && comp.kpiJson.length >0 && comp.kpiJson[0]){
+					let o = comp.kpiJson[0];
+					xcol = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
+				}else{
+					xcol = [h('span', {class:"charttip"}, '将度量拖到这里')]
+				}
+				//横轴　
+				let xcolobj = h('div', {class:"ts_h"}, [h('div', '横轴：'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
+				leftCols.push(xcolobj);
+
+				let ycol = null;
+				if(comp.kpiJson && comp.kpiJson.length >0 && comp.kpiJson[1]){
+					let o = comp.kpiJson[1];
+					ycol = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'y2col')}})]
+				}else{
+					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')]
+				}
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
+				leftCols.push(ycolobj);
+
 			}
 
 			let xcol = null;
@@ -43,16 +70,20 @@
 			}
 			//横轴　
 			let xcolobj = h('div', {class:"ts_h"}, [h('div', isscatter?'观察维度：':'横轴：'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
+			leftCols.push(xcolobj);
 
-			let ycol = null;
-			if(comp.kpiJson && comp.kpiJson.length > 0 && comp.kpiJson[0] != null){
-				let o = comp.kpiJson[0];
-				ycol = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
-			}else{
-				ycol = [h('span', {class:"charttip"}, '将度量拖到这里')];
+			if(!isscatter){
+				let ycol = null;
+				if(comp.kpiJson && comp.kpiJson.length > 0 && comp.kpiJson[0] != null){
+					let o = comp.kpiJson[0];
+					ycol = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
+				}else{
+					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')];
+				}
+				//纵轴
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴：'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
+				leftCols.push(ycolobj);
 			}
-			//纵轴
-			let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴：'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
 
 			let scol = null;
 			if(comp.chartJson && comp.chartJson.scol){
@@ -63,8 +94,8 @@
 			}
 			//图例 Ser
 			let scolobj = h('div', {class:"ts_h"}, [h('div', '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
-			//切换图表
-			let cgbtn = h('button', {attrs:{class:"btn btn-block btn-default"}, on:{click:()=>{this.changeChartType()}}}, '切换图形类型');
+			leftCols.push(scolobj);
+
 			//启用多指标查询
 			//let mkpi = h('div', {class:"ts_h"}, [h('el-checkbox' ,{domProps:{value:this.mkpi}}, "启用多指标")]);
 
@@ -75,7 +106,12 @@
 				h('a',{attrs:{href:"javascript:;"}, on:{click:()=>{this.exchangexs();}}}, [h("img", {attrs:{src:require("../../assets/image/reload.png")}})]),
 				h("img", {attrs:{src:require("../../assets/image/exchangexs2.gif")}})
 			];
-			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, [h('div', {class:"tsbd"}, [cgbtn, xcolobj, ycolobj, scolobj]), h('div', {class:"exchangexs"}, exchange), h("div", {attrs:{class:"chartctx", id:"chart"+this.chartId}}, "图表预览区域")]);
+			
+			let rh = [h('div', {class:"tsbd"}, leftCols), h('div', {class:"exchangexs"}, exchange), h("div", {class:"chartctx",attrs:{id:"chart"+this.chartId}}, "图表预览区域")];
+			if(isscatter){  //不支持交换维度
+				rh.splice(1, 1);
+			}
+			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, rh);
 			return h('div', [r, h('chgChartDailog', {ref:"chgChartForm"}, ''), h('reportChartDailog', {ref:"reportChartForm"}, '')]);
 		},
 		mounted(){
@@ -105,11 +141,10 @@
 			changeChartType(){
 				var comp = tools.findCompById(this.chartId, this.pageInfo);
 				this.$refs['chgChartForm'].open(comp);
-				
 			},
 			initChartKpiDrop(id){
 				const ts = this;
-				$("#T" + id + " #xcol, #T" + id +" #ycol, #T"+id+" #ycols, #T"+id+" #scol").droppable({
+				$("#T" + id + " #xcol, #T" + id +" #ycol, #T"+id+" #y2col, #T"+id+" #y3col, #T"+id+" #ycols, #T"+id+" #scol").droppable({
 					accept:"#datasettree .jstree-node",
 					tolerance:"pointer",
 					over:function(e, ui){
@@ -122,7 +157,7 @@
 							$(this).css("border", "1px solid #ff0000");
 						}
 						
-						if(tp == 2 && (nodeId == "ycol")){
+						if(tp == 2 && (nodeId == "ycol" || nodeId ==='y2col' || nodeId==='y3col')){
 							$(ui.helper[0]).find("span").removeClass("glyphicon-remove").addClass("glyphicon-ok");
 							$(this).css("border", "1px solid #ff0000");
 						}
@@ -165,16 +200,22 @@
 								return;
 							}
 						}
-						
-						if(node.li_attr.col_type == 2 && $(this).attr("id") == "ycol"){
-							json.kpiJson = [];
-							json.kpiJson.push({"kpi_id":node.li_attr.col_id, "kpi_name" : node.text, "col_name":node.li_attr.col_name, "aggre":node.li_attr.aggre, "fmt":node.li_attr.fmt, "alias":node.li_attr.alias,"tname":node.li_attr.tname,"unit":node.li_attr.unit,"rate":node.li_attr.rate,"calc":node.li_attr.calc});
+						let dropId = $(this).attr("id");
+						if(node.li_attr.col_type == 2 && (dropId == "ycol" || dropId == 'y2col' || dropId == 'y3col')){
+							let o = {"kpi_id":node.li_attr.col_id, "kpi_name" : node.text, "col_name":node.li_attr.col_name, "aggre":node.li_attr.aggre, "fmt":node.li_attr.fmt, "alias":node.li_attr.alias,"tname":node.li_attr.tname,"unit":node.li_attr.unit,"rate":node.li_attr.rate,"calc":node.li_attr.calc};
+							if(dropId === 'ycol'){
+								json.kpiJson[0] = o;
+							}else if(dropId === 'y2col'){
+								json.kpiJson[1] = o;
+							}else if(dropId === 'y3col'){
+								json.kpiJson[2] = o;
+							}
 							json.chartJson.ycol = {"type":"kpi"};
 							
 							ts.setUpdate();
 							ts.chartView();
 						}
-						if(node.li_attr.col_type == 1 && $(this).attr("id") == "xcol"){
+						if(node.li_attr.col_type == 1 && dropId == "xcol"){
 							//判断是否在xcol中已经存在
 							if(json.chartJson.scol != undefined && json.chartJson.scol.id == node.li_attr.col_id){
 								tools.msginfo("您拖放的维度已存在于图例项中，不能拖放。")
@@ -194,7 +235,7 @@
 							ts.setUpdate();
 							ts.chartView();
 						}
-						if(node.li_attr.col_type == 1 && $(this).attr("id") == "scol"){
+						if(node.li_attr.col_type == 1 &&  dropId == "scol"){
 							//判断是否在xcol中已经存在
 							if(json.chartJson.xcol != undefined && json.chartJson.xcol.id == node.li_attr.col_id){
 								tools.msginfo("您拖放的维度已存在于横轴中，不能拖放。")
@@ -234,7 +275,7 @@
 					return;
 				}
 				var kpiType = json.ttype;
-				json = {"chartJson":json.chartJson, "kpiJson":json.kpiJson, "params":this.pageInfo.params, dsid:json.dsid, dsetId:json.dsetId};
+				json = {id:"chart"+this.chartId,"chartJson":json.chartJson, "kpiJson":json.kpiJson, "params":this.pageInfo.params, dsid:json.dsid, dsetId:json.dsetId};
 				let load = Loading.service({ fullscreen: true });
 				ajax({
 					type: "POST",
