@@ -59,6 +59,18 @@
 				let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
 				leftCols.push(ycolobj);
 
+				//气泡大小
+				if(isbubble){
+					let qp = null;
+					if(comp.kpiJson && comp.kpiJson.length >0 && comp.kpiJson[2]){
+						let o = comp.kpiJson[2];
+						qp = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
+					}else{
+						qp = [h('span', {class:"charttip"}, '将度量拖到这里')]
+					}
+					let qpobj = h('div', {class:"ts_h"}, [h('div', '气泡大小'), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
+					leftCols.push(qpobj);
+				}
 			}
 
 			let xcol = null;
@@ -85,17 +97,18 @@
 				leftCols.push(ycolobj);
 			}
 
-			let scol = null;
-			if(comp.chartJson && comp.chartJson.scol){
-				let o = comp.chartJson.scol;
-				scol = [h('span', {attrs:{class:"charttxt", title:o.dimdesc}}, o.dimdesc), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'scol')}})]
-			}else{
-				scol = [h('span', {class:"charttip"}, '将维度拖到这里')]
+			if(tp !== 'map'){  //地图没有图例　
+				let scol = null;
+				if(comp.chartJson && comp.chartJson.scol){
+					let o = comp.chartJson.scol;
+					scol = [h('span', {attrs:{class:"charttxt", title:o.dimdesc}}, o.dimdesc), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'scol')}})]
+				}else{
+					scol = [h('span', {class:"charttip"}, '将维度拖到这里')]
+				}
+				//图例 Ser
+				let scolobj = h('div', {class:"ts_h"}, [h('div', '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
+				leftCols.push(scolobj);
 			}
-			//图例 Ser
-			let scolobj = h('div', {class:"ts_h"}, [h('div', '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
-			leftCols.push(scolobj);
-
 			//启用多指标查询
 			//let mkpi = h('div', {class:"ts_h"}, [h('el-checkbox' ,{domProps:{value:this.mkpi}}, "启用多指标")]);
 
@@ -107,12 +120,26 @@
 				h("img", {attrs:{src:require("../../assets/image/exchangexs2.gif")}})
 			];
 			
-			let rh = [h('div', {class:"tsbd"}, leftCols), h('div', {class:"exchangexs"}, exchange), h("div", {class:"chartctx",attrs:{id:"chart"+this.chartId}}, "图表预览区域")];
-			if(isscatter){  //不支持交换维度
-				rh.splice(1, 1);
+			let rh = [];
+			rh.push(h('div', {class:"tsbd"}, leftCols));
+			let disp = "none";
+			if(!(isscatter || tp === 'map')){  //不支持交换维度
+				disp = "block";
 			}
+			rh.push(h('div', {class:"exchangexs", style:{display:disp}}, exchange));
+			let zqw = [];
+			if(comp.chartJson.params && comp.chartJson.params.length > 0){
+				let clds = [h('b', '钻取维：')];
+				$(comp.chartJson.params).each((a,b)=>{
+					clds.push(h('span', {class:"chartdrillDim"}, [h('a', {class:"fa fa-minus-square-o",attrs:{href:'javascript:;',title:"上卷"},on:{click:()=>{chartUtils.chartGoupDim(comp, b.id,b.pos, ()=>{this.chartView()})}}}), h('b', b.dimdesc)]));
+				});
+				zqw.push(h('span', {class:"chartdrillmenu"}, clds));
+			}
+			zqw.push(h("div", {attrs:{id:"chart"+this.chartId}}, "图表预览区域"));
+			rh.push(h('div',{class:"chartctx"}, zqw ));
+			
 			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, rh);
-			return h('div', [r, h('chgChartDailog', {ref:"chgChartForm"}, ''), h('reportChartDailog', {ref:"reportChartForm"}, '')]);
+			return h('div', [r, h('div', {attrs:{id:"chartDirllBtn"}, style:{display:"block"}}, ''), h('chgChartDailog', {ref:"chgChartForm"}, ''), h('reportChartDailog', {ref:"reportChartForm"}, '')]);
 		},
 		mounted(){
 			this.initChartKpiDrop(2);
@@ -262,6 +289,23 @@
 			setUpdate(){
 				this.$parent.$parent.$parent.setIsUpdate();
 			},
+			/**
+			 * 重置图形
+			 */
+			resetChart(){
+				var echarts = require('echarts');
+				var myChart = echarts.getInstanceByDom(document.getElementById('chart2'));
+				if(myChart){
+					myChart.dispose();
+				}
+				let comp = tools.findCompById(this.chartId, this.pageInfo);
+				comp.kpiJson = [comp.kpiJson[0]];
+				let tp = comp.chartJson.type;
+				if(tp == "pie" || tp == "gauge"){
+					delete comp.chartJson.scol;
+				}
+				this.$forceUpdate();
+			},
 			chartView(){
 				this.$forceUpdate();
 				let json = tools.findCompById(this.chartId, this.pageInfo);
@@ -274,6 +318,7 @@
 				if(json.chartJson.type == "bubble" && (json.kpiJson.length < 3 || json.kpiJson[2] == null ) ){
 					return;
 				}
+				let ts = this;
 				var kpiType = json.ttype;
 				json = {id:"chart"+this.chartId,"chartJson":json.chartJson, "kpiJson":json.kpiJson, "params":this.pageInfo.params, dsid:json.dsid, dsetId:json.dsetId};
 				let load = Loading.service({ fullscreen: true });
@@ -289,6 +334,15 @@
 							myChart = echarts.init(document.getElementById('chart'+this.chartId),"default", {width:640, height:320});
 						}
 						myChart.setOption(option, true);
+						//图形下钻事件
+						myChart.off("click").on('click', function(params){
+							var xvalue = params.name;
+							var yvalue = params.value;
+							var svalue = params.seriesName;
+							var pos = {left:params.event.event.clientX, top:params.event.event.clientY};
+							var oldDimId = json.chartJson.xcol.alias;
+							ts.drillChart(xvalue, yvalue, svalue, pos, tools.findCompById(ts.chartId, ts.pageInfo), oldDimId); 
+						});
 					}
 				}, this, load);
 			},
@@ -312,7 +366,7 @@
 							if(pos === 'xcol' || pos === 'scol'){
 								ts.$parent.$parent.$parent.$refs['paramFilterForm'].createDimFilter(o, comp, 'chart');
 							}else{  //指标筛选
-
+								ts.$refs['reportChartForm'].kpifilter(o, comp);
 							}
 						}else if(key == "prop"){
 							ts.$refs['reportChartForm'].setChartKpi(o, comp);
@@ -347,6 +401,168 @@
 						"remove": {name: "删除",icon:"fa-remove"}
 					}
 				});
+			},
+			drillChart(xvalue, yvalue, svalue, pos, comp, oldDimId){
+				let ts = this;
+				$.contextMenu( 'destroy');
+				//查询度量已有维
+				var offset = pos;
+				var opts = function(resp){
+					//如果图形类型是地图，直接从省到市下钻
+					var ctp = comp.chartJson.type;
+					if(ctp == "map" ){
+						if(comp.chartJson.xcol.type == "prov"){  //是省钻到市
+							//查找市
+							var areaDim = null;
+							for(j=0;j<resp.length; j++){
+								if(resp[j].type == "city"){
+									areaDim = resp[j];
+								}
+							}
+							if(areaDim == null){
+								tools.msginfo("未找到地市维度。");
+								return;
+							}
+							/**
+							post("getProvByName.action", {name:xvalueDesc}, function(r){
+								comp.chartJson.maparea = r.provCode;
+								comp.chartJson.mapAreaName = r.provName;
+								chartUtils.drillingChart(areaDim.id, compId, 'row', xvalue, xvalueDesc, oldDimId, true);
+							},"JSON");
+							**/
+							return;
+						}else if(comp.chartJson.xcol.type == "city"){
+							//查找县
+							var areaDim = null;
+							for(j=0;j<resp.length; j++){
+								if(resp[j].type == "town"){
+									areaDim = resp[j];
+								}
+							}
+							if(areaDim == null){
+								tools.msginfo("未找到县维度。");
+								return;
+							}
+							/**
+							$.post("getCityByName.action", {name:xvalueDesc}, function(r){
+								comp.chartJson.maparea = r.cityCode;
+								comp.chartJson.mapAreaName = r.cityName;
+								chartUtils.drillingChart(areaDim.id, compId, 'row', xvalue, xvalueDesc, oldDimId, true);
+							},"JSON");
+							**/
+							return;
+						}else{
+							tools.msginfo("地图只支持从省市县三级。");
+							return;
+						}
+					}
+					var items = {};
+					var cnt = 0;
+					var ignoreGroup = []; 
+					var groupExist = function(ignoreGroup, group){
+						var r = false;
+						for(let k=0; k<ignoreGroup.length; k++){
+							if(ignoreGroup[k] == group){
+								r = true;
+							}
+						}
+						return r;
+					};
+					var findGroupChild = function(grouptype){
+						var dimret = [];
+						for(let j=0; j<resp.length; j++){
+							if(resp[j].grouptype == grouptype){
+								dimret.push(resp[j]);
+							}
+						}
+						return dimret;
+					};
+					for(let i=0; i<resp.length; i++){
+						//忽略用户已经选择的维度
+						if(tools.dimExist(resp[i].dim_id, comp.chartJson.params) ){
+							continue;
+						}
+						if(comp.chartJson.xcol && resp[i].dim_id == comp.chartJson.xcol.id){
+							continue;
+						} 
+						if(comp.chartJson.scol && resp[i].dim_id == comp.chartJson.scol.id){
+							continue;
+						}
+						if(resp[i].grouptype == '' || resp[i].grouptype == null){ //无分组的，直接显示维度
+							var id  = resp[i].dim_id;
+							items["dim_"+id] = {name:'<span style="color:#ccc">下钻</span>'+resp[i].dim_desc,isHtmlName: true, callback:function(itemKey, opt, e){
+								var dimid = itemKey.split("_")[1];
+								chartUtils.drillingChart(dimid, comp, 'row', xvalue, oldDimId, ()=>{
+									ts.setUpdate();
+									ts.chartView();
+								});
+							}};
+							cnt = cnt + 1;	
+						}else{ //有分组，显示分组, 对于分组，如果下级分组已选择，不能再选择上级分组
+							if(!groupExist(ignoreGroup, resp[i].grouptype)){
+								//var groups = "<div><span style=\"color:#ccc\">下钻</span><span>" + resp[i].groupname+"</span><div style=\"width:150px;\">"
+								var o = items["g"+resp[i].grouptype] = {name:"<span style=\"color:#ccc\">下钻</span>"+resp[i].groupname,isHtmlName: true, items:{}};
+								ignoreGroup.push(resp[i].grouptype);
+								//查询分组的内容
+								var lsdim = findGroupChild(resp[i].grouptype);
+								var ss = "";
+								var ccnt = 0;
+								for(let kl = 0; kl<lsdim.length; kl++){
+									var tmp = lsdim[kl];
+									var cz = tools.dimExist(tmp.dim_id, comp.chartJson.params) ||  (comp.chartJson.xcol && tmp.dim_id == comp.chartJson.xcol.id) || (comp.chartJson.scol && tmp.dim_id == comp.chartJson.scol.id);
+									if(!cz){
+										o.items['dim_'+tmp.dim_id] = {name:'<span style="color:#ccc">下钻</span>' + tmp.dim_desc, isHtmlName: true, callback:function(itemKey, opt, e){
+											var dimid = itemKey.split("_")[1];
+											chartUtils.drillingChart(dimid, comp, 'row', xvalue, oldDimId, ()=>{
+												ts.setUpdate();
+												ts.chartView();
+											});
+										}};
+										ccnt = ccnt + 1;	
+									}else{
+										ss = "";
+										ccnt = 0;
+									}
+								}
+								cnt = cnt + ccnt;
+							}
+						}
+						
+					}
+					if(cnt == 0){
+						tools.msginfo("数据已钻透。", "error");
+						return;
+					}
+					//drillmenu
+					$.contextMenu({
+						selector: '#chartDirllBtn',
+						className: "chartDrillMenu",
+						trigger: 'left',
+						delay: 500,
+						autoHide:true,
+						zIndex:2000,
+						position: function(opt, x, y){
+							opt.$menu.css({left:pos.left, top:pos.top});
+						},
+						items:items
+					});
+					$("#chartDirllBtn").trigger("click");
+				}
+				if(comp.dims){
+					opts(comp.dims);
+				}else{
+					ajax({
+						type:"POST",
+						url: "bireport/queryDims.action",
+						data:{"cubeId": comp.cubeId},
+						dataType:"json",
+						success:function(resp){
+							comp.dims = resp.rows;
+							opts(comp.dims);
+						}
+					}, this);
+					
+				}
 			}
 		},
 		watch: {
@@ -378,7 +594,6 @@ span.charttip {
 }
 .exchangexs {
 	width:20px;
-	height:170px;
 	float:left;
 }
 .chartctx {
@@ -403,5 +618,26 @@ a.charticon {
 	cursor:pointer;
 	float:right;
 	margin-top:1px;
+}
+.chartdrillmenu {
+    margin-top: 5px;
+	margin-left: 5px;
+	display: block;
+}
+.chartdrillDim{
+	display:-moz-inline-box;  
+	display:inline-block;
+	text-align:center;
+	background-color: #FFFFCC;
+	border: 1px solid #CACACA;
+	padding: 2px;
+	margin:0px 3px 0px 3px;
+}
+.chartdrillDim a {
+	display:-moz-inline-box;  
+	display:inline-block;
+	width:18px;
+	height:12px;
+	text-decoration:none;
 }
 </style>

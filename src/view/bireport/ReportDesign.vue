@@ -169,7 +169,7 @@
 					var echarts = require('echarts');
 					var myChart = echarts.getInstanceByDom(document.getElementById('chart2'));
 					if(myChart){
-						myChart.clear();
+						myChart.dispose();
 					}
 					this.$refs['chartForm'].$forceUpdate();
 				}
@@ -184,6 +184,7 @@
 				this.$nextTick(()=>{  //不采用这种方式，会出现子组件 pageInfo 没更新的情况
 					this.$refs['tableForm'].tableView();
 					this.$refs['chartForm'].chartView();
+					this.$refs['chartForm'].initChartKpiDrop(2);
 				});
 			},
 			handleSelect(key, keyPath){

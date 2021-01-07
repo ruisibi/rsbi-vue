@@ -799,6 +799,7 @@
 			
 			save(){
 				this.show = false;
+				this.$parent.resetChart();
 				//重新绑定拖拽事件
 				this.$parent.initChartKpiDrop(2);
 				this.$parent.chartView();

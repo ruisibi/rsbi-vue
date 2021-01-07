@@ -184,3 +184,17 @@ export const scatterTooltip = (option, params)=>{
     }
     return r.join(",");
 }
+/**
+配置气泡大小
+转换到 10 到 50
+**/
+export const bubbleSize = (maxval, minval, val, targetMax)=>{
+	if(maxval == minval){
+		return 40;
+	}
+	if(!targetMax){
+		targetMax = 50;
+	}
+	var r = (targetMax-10)/(maxval-minval)*(val-minval)+10;
+	return r;
+}

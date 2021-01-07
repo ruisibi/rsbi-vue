@@ -46,6 +46,31 @@
 					</el-select>
 				</el-form-item>
 			</template>
+			<template v-if="type === 'kpifilter'">
+				<el-form-item label="度量名称" label-width="100px">
+					{{kpi.kpi_name}}
+				</el-form-item>
+				<el-form-item label="操作" label-width="100px">
+					<el-select
+						v-model="val.oper"
+						placeholder="请选择"
+						>
+						<el-option
+							v-for="item in opt.oper"
+							:key="item.value"
+							:label="item.text"
+							:value="item.value"
+						>
+					</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="值" label-width="100px">
+					<el-input-number v-model="val.value1" label="描述文字"></el-input-number>
+				</el-form-item>
+				<el-form-item label="值2" v-show="val.oper === 'between'" label-width="100px">
+					<el-input-number v-model="val.value2" label="描述文字"></el-input-number>
+				</el-form-item>
+			</template>
 		  </el-form>
 		<div slot="footer" class="dialog-footer">
 			<el-button type="primary" @click="save()">确 定</el-button>
@@ -71,7 +96,10 @@
 				val:{
 					top:null,
 					rate:null,
-					fmt:null
+					fmt:null,
+					oper:null,
+					value1:null,
+					value2:null
 				},
 				opt:{
 					unit:[{
@@ -94,6 +122,13 @@
 						},{
 						value:"0.00%", text: "百分比"
 						}
+					],
+					oper:[
+						{value:null, text:"清除"},
+						{value:">", text:"大于"},
+						{value:"<", text:"小于"},
+						{value:"=", text:"等于"},
+						{value:"between", text:"区间"}
 					]
 				}
 			}
@@ -120,6 +155,12 @@
 				this.val.fmt = kpi.fmt;
 				this.val.rate = kpi.rate;
 			},
+			kpifilter(kpi, comp){
+				this.title = "度量筛选";
+				this.type = "kpifilter";
+				this.show = true;
+				this.kpi = kpi;
+			},
 			save(){
 				let dim = this.dim;
 				let kpi = this.kpi;
@@ -128,6 +169,16 @@
 				}else if(this.type === 'kpiprop'){
 					kpi.fmt = this.val.fmt;
 					kpi.rate = this.val.rate;
+				}else if(this.type === 'kpifilter'){
+						var ft = this.val.oper;
+						var sv = this.val.value1;
+						var ev = this.val.value2;
+						if(ft == null){
+							delete kpi.filter;
+						}else{
+							var filter = {"kpi":kpi.kpi_id,"filterType":ft,"val1":Number(sv),"val2":(ev == ""?0:Number(ev))};
+							kpi.filter = filter;
+						}
 				}
 				let o = this.$parent;
 				o.setUpdate();
