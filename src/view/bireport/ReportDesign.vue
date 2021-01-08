@@ -164,7 +164,8 @@
 					this.pageInfo.comps[0] = {"name":"表格组件","id":1, "type":"table"};
 					this.$refs['tableForm'].datas = null;
 					this.$refs['tableForm'].$forceUpdate();
-				}else if( this.pageInfo.showtype==="chart" || isall === true){ //清除图形
+				}
+				if( this.pageInfo.showtype==="chart" || isall === true){ //清除图形
 					this.pageInfo.comps[1] = {"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]};
 					var echarts = require('echarts');
 					var myChart = echarts.getInstanceByDom(document.getElementById('chart2'));
@@ -253,20 +254,15 @@
 				$("#expff #json").val(JSON.stringify(info));
 				//把图形转换成图片
 				var strs = "";
-				if(tp == "pdf" || tp == "excel" || tp == "word"){
-					$("div.chartUStyle").each(function(index, element) {
-						var id = $(this).attr("id");
-						id = id.substring(1, id.length);
-						var chart = echarts.getInstanceByDom(document.getElementById(id));
+				if((tp == "pdf" || tp == "excel" || tp == "word") && comp.type ==='chart'){
+					var echarts = require('echarts');
+					var chart = echarts.getInstanceByDom(document.getElementById("chart2"));
+					if(chart){
 						var str = chart.getDataURL({type:'png', pixelRatio:1, backgroundColor: '#fff'});
 						str = str.split(",")[1]; //去除base64标记
-						str = $(this).attr("label") + "," + str; //加上label标记
+						str = comp.chartJson.label + "," + str; //加上label标记
 						strs = strs  +  str;
-						if(index != $("div.chartUStyle").size() - 1){
-							strs = strs + "@";
-						}
-						
-					});
+					}
 				}
 				$("#expff #picinfo").val(strs);
 				$("#expff").submit().remove();

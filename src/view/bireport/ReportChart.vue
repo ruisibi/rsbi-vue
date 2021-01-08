@@ -598,7 +598,7 @@ span.charttip {
 }
 .chartctx {
 	border:1px solid #CACACA;
-	height:320px;
+	min-height:320px;
 	margin-left:170px;
 }
 span.charttxt {

@@ -1,6 +1,8 @@
 <template>
   	<div class="fillcontain">
-		404 not find
+		<h3>404 页面不存在</h3>
+		<button class="btn btn-sm btn-primary" @click="goback()">返回首页</button>
+
   	</div>
 </template>
 
@@ -18,7 +20,9 @@
 		computed: {
 		},
 		methods: {
-			
+			goback(){
+				this.$router.push("/Welcome");
+			}
 		},
 		watch: {
 
