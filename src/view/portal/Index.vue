@@ -1,5 +1,5 @@
 <template>
-  	<div class="wrapper-content">
+  	<div class="wrapper-content-nomargin">
       <PortalIndex v-if="showIndex" @customizationAction="customizationAction"></PortalIndex>
       <PortalIndexCustomiz v-if="!showIndex"></PortalIndexCustomiz>
   	</div>
@@ -9,7 +9,6 @@
 import {baseUrl} from '@/common/biConfig'
 import PortalIndex from "./PortalIndex.vue"
 import PortalIndexCustomiz from "./PortalIndexCustomiz.vue"
-import Vue from "vue";
 
 export default {
   components:{PortalIndex,PortalIndexCustomiz},

@@ -99,7 +99,7 @@
 	.page-wrapper {
 		position: inherit;
 		margin: 0 0 0 220px;
-		height: calc(100% - 55px);
+		height: calc(100% - 51px);
 		overflow: auto;
 		width: calc(100% - 220px);
 	}
