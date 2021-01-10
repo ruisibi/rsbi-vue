@@ -43,6 +43,12 @@
 				rows:10,
 			}
 		},
+		props:{
+			callback:{
+				type:Function,   //点击选择立方体后的回调函数
+				required:true
+			}
+		},
 		mounted(){
 		},
 		computed: {
@@ -59,9 +65,8 @@
 					this.$notify.error({title: '未勾选数据',offset: 50});
 					return;
 				}
-				var p = this.$parent;
-				p.pageInfo.selectDs = chk;
-				p.initdataset();
+				
+				this.callback(chk);
 
 				this.show = false;
 			},

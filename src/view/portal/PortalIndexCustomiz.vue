@@ -10,31 +10,32 @@
           <el-menu-item index="data-2">选择数据表</el-menu-item>
         </el-submenu>
       </el-menu>
-      <layout-left :pageInfo="pageInfo"></layout-left>
+      <layout-left :pageInfo="pageInfo" ref="layoutleftForm"></layout-left>
       <layout-center :pageInfo="pageInfo"></layout-center>
       <portal-layout :pageInfo="pageInfo" ref="layout"></portal-layout>
+      <selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
+      <select-dset ref="selectDsetForm"></select-dset>
   </div> 
 </template>
 <script>
 import layoutLeft from "./LayoutLeft.vue"
 import LayoutCenter from "./LayoutCenter.vue"
 import PortalLayout from "./PortalLayoutDailog.vue"
+import selectCube from "@/view/bireport/SelectCube"
+import SelectDset from "./SelectDset"
 
 export default {
   name: "customizer",
-  components: {layoutLeft, LayoutCenter, PortalLayout},
+  components: {layoutLeft, LayoutCenter, PortalLayout, selectCube, SelectDset},
   props: {
 
   },
   data() {
     return {
-        pageInfo:null
+        pageInfo:{"layout":1,"body":{tr1:[{colspan:1, rowspan:1, width:100, height:100, id:1}]}}
     }
   },
   methods: {
-    initPageInfo(){
-        this.pageInfo = {"layout":1,"body":{tr1:[{colspan:1, rowspan:1, width:100, height:100, id:1}]}}
-    },
     handleSelect(key, keyPath){
       if(key === 'back'){
         this.$parent.showIndex = true;
@@ -42,6 +43,19 @@ export default {
       if(key ==='layout'){
         this.$refs['layout'].setLayout();
       }
+      if(key === 'data-1'){
+        this.$refs['selectCubeForm'].select();
+      }
+      if(key === 'data-2'){
+        this.$refs['selectDsetForm'].select();
+      }
+    },
+    selectCubeCallback(cubeId){
+      this.pageInfo.selectDs = cubeId;
+      var o = this.$refs['layoutleftForm'];
+      o.tabActive = 'data-tab-2';
+      console.log(cubeId);
+      o.initcubes();
     }
   },
   watch: {
@@ -51,7 +65,7 @@ export default {
 
   },
   mounted() {
-    this.initPageInfo();
+    //this.initPageInfo();
   }
 }
 </script>

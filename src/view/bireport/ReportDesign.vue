@@ -50,7 +50,7 @@
 				</div>
 			</div>
 		</div>
-		<selectCube ref="selectCubeForm"></selectCube>
+		<selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
 		<paramFilter :pageInfo="pageInfo" ref="paramFilterForm"></paramFilter>
 		<kpi-desc ref="kpiDescForm"></kpi-desc>
 		<report-save ref="reportSaveForm"></report-save>
@@ -103,6 +103,10 @@
 		methods: {	
 			selectCube(){
 				this.$refs['selectCubeForm'].select();
+			},
+			selectCubeCallback(cubeId){
+				this.pageInfo.selectDs = cubeId;
+				this.initdataset();
 			},
 			initdataset(){
 				let ref = $("#datasettree").jstree(true);
@@ -276,26 +280,6 @@
 
 <style lang="less">
 @import "../../style/common";
-.icon_kpi {
-	color:#e07900;
-}
-.icon_dim {
-	color:#006ae1;
-}
-.vakata-dnd {
-	border:solid 1px #ddd;
-	background-color:#f5f5f5;
-	border-radius:3px;
-	z-index:9999;
-	padding:3px;
-	box-shadow:0 2px 3px 0 rgba(0,0,0,.16), 0 2px 5px 0 rgba(0,0,0,.12);
-	.miconcancel {
-		display:inline-block;
-		width:16px;
-		height:16px;
-		color:#3f36c3;
-	}
-}
 .el-tabs--border-card {
 	box-shadow:none;
 }
