@@ -43,8 +43,8 @@ export default {
           }
         }
          */
-        trs.push(h('tr', {}, tds));
       }
+      trs.push(h('tr', {}, tds));
     }
     let table = h('table', {attrs:{border:"0", cellspacing:"0", cellpadding:"0", class:"r_layout", id:"layout_table"}}, [h('tbody', trs)]);
     return h("div", {attrs:{id:"optarea", class:"layout-center-body", align:"center"}}, [table]);
@@ -63,34 +63,6 @@ export default {
 
 <style lang="less" scoped>
 @import "../../style/mixin";
-#optparam {
-  border: 1px solid #d3d3d3;
-  background-color: #ffffff;
-}
-#optparam span.pppp {
-  background-color: #f6f8f8;
-  border: 1px solid #cacaca;
-  display: inline-block;
-  margin: 4px;
-  padding: 2px;
-  text-align: center;
-  width: 180px;
-  border-radius: 3px;
-}
-#optparam span.text {
-  cursor: pointer;
-  display: inline-block;
-  width: 120px;
-  overflow: hidden;
-  white-space: nowrap;
-  margin-top: 5px;
-}
-#optparam b {
-  color: #555;
-  font-size: 13px;
-  font-weight: normal;
-  margin-left: 5px;
-}
 table.r_layout {
 	border-collapse:collapse;
 	table-layout:fixed;

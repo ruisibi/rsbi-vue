@@ -38,6 +38,6 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-	@import "../../style/mixin";
+<style lang="less">
+  @import "../../style/common";
 </style>

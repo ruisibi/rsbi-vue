@@ -12,15 +12,17 @@
       </el-menu>
       <layout-left :pageInfo="pageInfo"></layout-left>
       <layout-center :pageInfo="pageInfo"></layout-center>
+      <portal-layout :pageInfo="pageInfo" ref="layout"></portal-layout>
   </div> 
 </template>
 <script>
 import layoutLeft from "./LayoutLeft.vue"
 import LayoutCenter from "./LayoutCenter.vue"
+import PortalLayout from "./PortalLayoutDailog.vue"
 
 export default {
   name: "customizer",
-  components: {layoutLeft, LayoutCenter},
+  components: {layoutLeft, LayoutCenter, PortalLayout},
   props: {
 
   },
@@ -36,6 +38,9 @@ export default {
     handleSelect(key, keyPath){
       if(key === 'back'){
         this.$parent.showIndex = true;
+      }
+      if(key ==='layout'){
+        this.$refs['layout'].setLayout();
       }
     }
   },

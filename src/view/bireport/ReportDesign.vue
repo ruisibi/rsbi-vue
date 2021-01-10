@@ -274,7 +274,8 @@
 	}
 </script>
 
-<style lang="css">
+<style lang="less">
+@import "../../style/common";
 .icon_kpi {
 	color:#e07900;
 }
@@ -288,12 +289,12 @@
 	z-index:9999;
 	padding:3px;
 	box-shadow:0 2px 3px 0 rgba(0,0,0,.16), 0 2px 5px 0 rgba(0,0,0,.12);
-}
-.vakata-dnd .miconcancel {
-	display:inline-block;
-	width:16px;
-	height:16px;
-	color:#3f36c3;
+	.miconcancel {
+		display:inline-block;
+		width:16px;
+		height:16px;
+		color:#3f36c3;
+	}
 }
 .el-tabs--border-card {
 	box-shadow:none;
@@ -304,11 +305,6 @@
 	right:20px;
 	top:73px;
 }
-/**固定弹出窗口的高度 */
- .el-dialog-div{
-    height: 60vh;
-    overflow: auto;
- }
  .el-tabs--border-card>.el-tabs__content {
 	 padding: 5px;
  }
