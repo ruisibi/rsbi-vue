@@ -10,7 +10,7 @@ import $ from 'jquery'
 
 export default {
   components:{
-
+    
   },
   props:{
       pageInfo:{
@@ -30,7 +30,9 @@ export default {
      
   },
   methods: {
-     
+     newparam(type, ptype){
+
+     }
   },
   watch: {
   },

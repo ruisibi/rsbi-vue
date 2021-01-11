@@ -57,6 +57,7 @@ export default {
   mounted(){
     this.initcubes();
     this.initdset();
+    this.regCompAndParamTree();
   },
   computed: {
      
@@ -67,6 +68,109 @@ export default {
     },
     isActive(p){
         return this.tabActive === p ? "active" : ""
+    },
+    regCompAndParamTree(){
+        let ts = this;
+        var dt = [{id:'params', text:'参数', icon:"fa fa-binoculars",state:{opened:true}, children:[
+            {id:"input", text:"输入框",li_attr:{tp:"param",ptp:"text"},icon:"fa fa-tag comp_color"},
+            {id:"radio", text:"单选框",li_attr:{tp:"param", ptp:"radio"},icon:"fa fa-tag comp_color"},
+            {id:"checkbox", text:"多选框",li_attr:{tp:"param",ptp:"checkbox"},icon:"fa fa-tag comp_color"},
+            {id:"dateselect", text:"日历框",li_attr:{tp:"param", ptp:"dateselect"},icon:"fa fa-tag comp_color"},
+            {id:"monthselect", text:"月份框",li_attr:{tp:"param", ptp:"monthselect"},icon:"fa fa-tag comp_color"},
+            {id:"yearselect", text:"年份框",li_attr:{tp:"param", ptp:"yearselect"},icon:"fa fa-tag comp_color"}
+        ]}
+        ];
+        var compDt = [{id:"text", text:"文本",li_attr:{tp:"comp"},icon:"fa fa-file-text-o"},
+            {id:"box", text:"数据块",li_attr:{tp:"comp"},icon:"fa fa-inbox"},
+            {id:"chart", text:"图表",li_attr:{tp:"comp"},icon:"fa fa-line-chart"},
+            {id:"grid", text:"表格",li_attr:{tp:"comp"},icon:"fa fa-table"},
+            {id:"table", text:"交叉表",li_attr:{tp:"comp"},icon:"fa fa-list-alt"}];
+        
+        var dragfunc = function(treeDiv){
+            $("#"+treeDiv+" .jstree-node").draggable({
+                cursor: "point",
+                appendTo: "body",
+                revert: 'invalid',
+                revertDuration: 250,
+                cursorAt: { top: 0, left: 'comptree' == treeDiv ? -10 :-35 },
+                helper:function(e){
+                    var id = $(this).find("a.jstree-anchor:first").text();
+                    return "<div class=\"vakata-dnd\"><span class=\"miconcancel glyphicon glyphicon-remove\"></span>"+id+"</div>";
+                },
+                start:function(e){
+                    var ref = $('#'+treeDiv).jstree(true),node = ref.get_node(this);
+                    if(node.id == 'params'){
+                        return false;
+                    }
+                    if(node.li_attr.tp == 'comp'){
+                        //resetWindows('min');
+                    }
+                    return true;
+                },
+                stop:function(e){
+                    var ref = $('#'+treeDiv).jstree(true),node = ref.get_node(this);
+                    if(node.li_attr.tp == 'comp'){
+                        //resetWindows('max');
+                    }
+                    $(".indicator").hide();
+                }
+            });
+        }
+        $('#paramtree').jstree({
+            core:{
+                data:dt
+            },
+            "plugins" : [
+                "wholerow"
+            ]
+        }).bind("ready.jstree",function(a, b){
+            dragfunc('paramtree');
+        }).bind("after_open.jstree", function(){
+            dragfunc('paramtree');
+        });
+        
+        $('#comptree').jstree({
+            core:{
+                data:compDt
+            },
+            "plugins" : [
+                "wholerow"
+            ]
+        }).bind("ready.jstree",function(a, b){
+            dragfunc('comptree');
+        })
+        
+        //参数接收
+        $("#optparam").droppable({
+            accept:"#paramtree .jstree-node",
+            tolerance:"pointer",
+            over:function(e, ui){
+                var ref = $("#paramtree").jstree(true);
+                var node = ref.get_node(ui.draggable[0]);
+                var tp = node.li_attr.tp;
+                if(tp == "param"){
+                    $("#optparam").css("border", "1px solid #ff0000");
+                    $(ui.helper[0]).find("span").removeClass("glyphicon-remove").addClass("glyphicon-ok");
+                }
+            },
+            out:function(e, ui){
+                $("#optparam").css("border", "1px solid #d3d3d3");
+                $(ui.helper[0]).find("span").removeClass("glyphicon-ok").addClass("glyphicon-remove");
+                
+            },
+            drop:function(e, ui){
+                var ref = $("#paramtree").jstree(true);
+                var node = ref.get_node(ui.draggable[0]);
+                var tp = node.li_attr.tp;
+                if(tp == "param"){
+                    $("#optparam").css("border", "1px solid #d3d3d3");
+                    var node = ref.get_node(ui.draggable[0]);
+                    ts.$parent.$refs['prarmAddForm'].newparam("insert", node.li_attr.ptp);
+                }
+            }
+            
+
+        });
     },
     initdset(){
         let ref = $("#tabletree").jstree(true);
@@ -117,13 +221,13 @@ export default {
                 success:(resp)=>{
                     let ret  = resp.rows.cols;
                     for(let i=0; i<ret.length; i++){
-                        dt.children.push({id:ret[i].name, text:ret[i].name, icon:'glyphicon glyphicon-menu-hamburger',li_attr:{id:ret[i].name,name:ret[i].name,dsetId:table.dsetId,dsid:table.dsid, tname:ret[i].tname,type:ret[i].type, expression: ret[i].expression}});
+                        dt.children.push({id:ret[i].name, text:ret[i].name, icon:'icon_kpi glyphicon glyphicon-menu-hamburger',li_attr:{id:ret[i].name,name:ret[i].name,dsetId:table.dsetId,dsid:table.dsid, tname:ret[i].tname,type:ret[i].type, expression: ret[i].expression}});
                     }
                     //添加动态字段
                     let dyna = resp.dynamic;
                     for(let i=0; dyna&&dyna!=null&&i<dyna.length; i++){
                         var r = dyna[i];
-                        dt.children.push({id:r.name, text:r.name, icon:'glyphicon glyphicon-menu-hamburger',li_attr:{id:r.name,name:r.name,dsetId:table.dsetId,dsid:table.dsid, tname:r.tname,type:r.type, expression: r.expression}});
+                        dt.children.push({id:r.name, text:r.name, icon:'icon_kpi glyphicon glyphicon-menu-hamburger',li_attr:{id:r.name,name:r.name,dsetId:table.dsetId,dsid:table.dsid, tname:r.tname,type:r.type, expression: r.expression}});
                     }
                     $('#tabletree').jstree({
                         core: {
@@ -230,7 +334,9 @@ export default {
         color: #555555;
         cursor: default;
     }
-    .icon_kpi {
-    color: #e07900;
+</style>
+<style lang="less">
+    .comp_color {
+        color:#23b7e5;
     }
 </style>

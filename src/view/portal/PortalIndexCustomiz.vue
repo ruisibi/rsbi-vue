@@ -11,22 +11,28 @@
         </el-submenu>
       </el-menu>
       <layout-left :pageInfo="pageInfo" ref="layoutleftForm"></layout-left>
-      <layout-center :pageInfo="pageInfo"></layout-center>
+      <div class="layout-center">
+        <layout-param ref="paramForm" :pageInfo="pageInfo"></layout-param>
+        <layout-optarea ref="optarea" :pageInfo="pageInfo"></layout-optarea>
+      </div>
       <portal-layout :pageInfo="pageInfo" ref="layout"></portal-layout>
       <selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
       <select-dset ref="selectDsetForm"></select-dset>
+       <layout-param-add ref="prarmAddForm"></layout-param-add>
   </div> 
 </template>
 <script>
 import layoutLeft from "./LayoutLeft.vue"
-import LayoutCenter from "./LayoutCenter.vue"
 import PortalLayout from "./PortalLayoutDailog.vue"
 import selectCube from "@/view/bireport/SelectCube"
 import SelectDset from "./SelectDset"
+import layoutParam from "./LayoutParam.vue"
+import LayoutOptarea from './LayoutOptarea.vue'
+import LayoutParamAdd from './LayoutParamAdd.vue'
 
 export default {
   name: "customizer",
-  components: {layoutLeft, LayoutCenter, PortalLayout, selectCube, SelectDset},
+  components: {layoutLeft, PortalLayout, selectCube, SelectDset, layoutParam, LayoutOptarea, LayoutParamAdd},
   props: {
 
   },
@@ -54,7 +60,6 @@ export default {
       this.pageInfo.selectDs = cubeId;
       var o = this.$refs['layoutleftForm'];
       o.tabActive = 'data-tab-2';
-      console.log(cubeId);
       o.initcubes();
     }
   },
@@ -74,4 +79,9 @@ export default {
     height: 100%;
     width: 100%;
   }
+  .layout-center {
+        position: inherit;
+        margin: 0 0 0 223px;
+        height: calc(100% - 35px);
+    }
 </style>
