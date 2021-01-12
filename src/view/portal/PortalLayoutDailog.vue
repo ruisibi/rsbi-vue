@@ -21,7 +21,7 @@
 
 <script>
 import {baseUrl} from '@/common/biConfig'
-import * as layout from './layout'
+import * as layout from './Utils'
 import $ from 'jquery'
 
 export default {

@@ -11,18 +11,20 @@
             <el-form-item label="长度" label-width="100px">
               <el-input-number v-model="param.size" :min="5" :max="30"></el-input-number>
             </el-form-item>
-            <el-form-item label="日期格式" label-width="100px">
-              <el-select v-model="param.tableId" placeholder="请选择" style="width:100%">
-                <el-option v-for="item in opts.dtformats[datetype]" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>				    
-            </el-form-item>
-            <el-form-item label="最小值" label-width="100px">
-              <el-input v-model="param.minval"></el-input>
-            </el-form-item>
-            <el-form-item label="最大值" label-width="100px">
-              <el-input v-model="param.maxval" ></el-input>
-            </el-form-item>
+            <template v-if="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'">
+              <el-form-item label="时间格式" label-width="100px">
+                <el-select v-model="param.tableId" placeholder="请选择" style="width:100%">
+                  <el-option v-for="item in opts.dtformats[datetype]" :key="item" :label="item" :value="item">
+                  </el-option>
+                </el-select>				    
+              </el-form-item>
+              <el-form-item label="最小值" label-width="100px">
+                <el-input v-model="param.minval"></el-input>
+              </el-form-item>
+              <el-form-item label="最大值" label-width="100px">
+                <el-input v-model="param.maxval" ></el-input>
+              </el-form-item>
+            </template>
             <el-form-item label="默认值" label-width="100px">
               <el-input v-model="param.defvalue"></el-input>
             </el-form-item>
@@ -32,6 +34,7 @@
               <span class="text-warning"> 隐藏参数不会在页面中显示</span>
             </el-form-item>
 
+            <template v-if="datetype == 'radio' || datetype ==='checkbox'">
             <fieldset>
                 <legend>值列表</legend>
                 <el-radio v-model="param.valtype" label="static">静态值</el-radio>
@@ -40,7 +43,7 @@
                   <div>
                   <el-button @click="handleClick()" type="primary" size="small">添加</el-button>
                   </div>
-                   <el-table :data="param.option" style="width: 100%" border header-row-class-name="tableHeadbg">
+                   <el-table :data="param.values" style="width: 100%" border header-row-class-name="tableHeadbg">
                     <el-table-column
                       prop="value"
                       label="Value">
@@ -81,7 +84,8 @@
                     </el-select>				    
                   </el-form-item>
                 </template>
-            </fieldset>            
+            </fieldset>          
+            </template>  
            </el-form>
          </div>
          <div slot="footer" class="dialog-footer">
@@ -92,8 +96,9 @@
 </template>
 
 <script>
-import {baseUrl, ajax} from '@/common/biConfig'
+import {baseUrl, ajax, newGuid} from '@/common/biConfig'
 import $ from 'jquery'
+import * as tools from './Utils'
 
 export default {
   components:{
@@ -115,15 +120,13 @@ export default {
           valtype:"static",
           tableId:null,
           alias:null,
-          option:[{
-            value:1,
-            text:"a"
-          }],
+          values:null,
           dtformat:null,
           minval:null,
           maxval:null,
         },
         datetype:'day',
+        isupdate:false,
         opts:{
           datasetlist:[],
           collist:[],
@@ -154,13 +157,66 @@ export default {
        this.title = "创建参数 - " + this.getParamTypeDesc(ptype);
        this.show = true;
        this.datetype = ptype;
+       if(!paramId){
+        this.isupdate = false;
+        this.param.paramid = "p"+ Math.round( Math.random() * 10000);
+       }else{
+         this.isupdate = true;
+       }
      },
      save(){
         let ts = this;
 				this.$refs['paramForm'].validate((valid) => {
            if(valid){
-              this.show = false;
-               this.$destroy();
+             if(ts.datetype === 'radio' || ts.datetype === 'checkbox'){
+               var r = ts.param.valtype;
+                if(r == 'static'){
+                  if(!ts.param.values || ts.param.values.length === 0){
+                    tools.msginfo("您还未设置参数值。");
+                    return;
+                  }
+                }else {
+                  if(!ts.param.tableId || !ts.param.alias){
+                    tools.msginfo("您的参数还未绑定到数据。");
+                    return;
+                  }
+                }
+             }
+             if(ts.datetype == 'dateselect' || ts.datetype ==='monthselect' || ts.datetype ==='yearselect'){
+               if(!ts.param.dtformat){
+                 tools.msginfo("未设置时间格式。");
+                 return;
+               }
+             }
+             if(ts.isupdate){  //修改
+
+             }else{
+                 var obj = {id:newGuid(), type:ts.datetype, paramid:ts.param.paramid, name:ts.param.paramname,defvalue:ts.param.defvalue, size:ts.param.size, hiddenprm:ts.param.hiddenprm};
+                let paramType = ts.datetype;
+                if(paramType == "dateselect" || paramType == "monthselect" || paramType == "yearselect"){
+                    obj.maxval = ts.param.maxval;
+                    obj.minval = ts.param.minval;
+                    obj.dtformat = ts.param.dtformat;
+                  }
+                  if( paramType == 'radio' || paramType == 'checkbox'){
+                    obj.valtype = ts.param.valtype;
+                    if(obj.valtype == 'static'){
+                      obj.values = ts.param.values;
+                    }else{
+                      let table = null;
+                      $(ts.opts.datasetlist).each((a, b)=>{
+                        if(b.value === ts.param.tableId){
+                          table = b;
+                        }
+                        return false;
+                      });
+                      let dim = ts.opts.collist.filter(m=>m.value === ts.param.alias);
+                      this.param.tableId;
+                      obj.option = {"tableId":table.value, "tname":table.label,"dsource":table.dsource,"dimId":dim.dimId, "alias":dim.value};
+                    }
+                  }
+             }
+             this.show = false;
            }
         });
      },
@@ -188,7 +244,7 @@ export default {
         type:"GET",
         success:(resp)=>{
           this.opts.datasetlist = resp.rows.map(m=>{
-            return {value:m.cubeId, label:m.cubeName}
+            return {value:m.cubeId, label:m.cubeName, dsource:m.dsId}
           });
           //清空字段列表
           this.param.alias = null;
@@ -202,16 +258,26 @@ export default {
         type:"GET",
         success:resp=>{
           this.opts.collist = resp.rows.map(m=>{
-            return {value:m.alias, label:m.col_name}
+            return {value:m.alias, label:m.col_name, dimId:m.dim_id}
           });
         }
       }, this);
     }
   },
   watch:{
-    show:(v)=>{
+    show:function(v){
       if(v === false){
-       
+        let ts = this.$data;
+        //清空值
+        for(let v in ts.param){
+          if(v === 'size'){
+            ts.param[v] = 20;
+          }else if(v === 'valtype'){
+           ts.param[v] = 'static';
+          }else{
+            ts.param[v] = null;
+          }
+        }
       }
     }
   }

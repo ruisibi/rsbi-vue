@@ -205,7 +205,6 @@
 					success:function(resp){
 						ts.tableData = resp.rows;
 						ts.total = resp.total;
-						console.log(ts.total);
 					}
 				}, ts);
 			},
