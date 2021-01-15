@@ -1,7 +1,7 @@
 <template>
   	<div class="wrapper-content-nomargin">
-      <PortalIndex v-if="showIndex" @customizationAction="customizationAction"></PortalIndex>
-      <PortalIndexCustomiz v-if="!showIndex"></PortalIndexCustomiz>
+      <PortalIndex v-show="showIndex" ref="indexForm"></PortalIndex>
+      <PortalIndexCustomiz v-if="!showIndex" ref="customizForm"></PortalIndexCustomiz>
   	</div>
 </template>
 
@@ -23,18 +23,8 @@ export default {
   computed: {
   },
   methods: {
-    customizationAction(){
-      this.showIndex = false;
-    }
-  },
-  watch: {
-  },
-  beforeMount(){
-   
-  },
-  beforeDestroy(){
-    
-  },
+
+  }
 }
 </script>
 

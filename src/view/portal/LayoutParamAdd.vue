@@ -184,6 +184,9 @@ export default {
      
   },
   methods: {
+     setUpdate(){
+      this.$parent.isupdate = true;
+    },
      newparam(ptype, paramId){
        this.title = "创建参数 - " + tools.getParamTypeDesc(ptype);
        this.show = true;
@@ -296,6 +299,7 @@ export default {
                 ts.pageInfo.params.push(obj);
              }
              ts.$parent.$refs['paramForm'].$forceUpdate();
+             ts.setUpdate();
              this.show = false;
            }
         });

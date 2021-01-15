@@ -41,6 +41,9 @@ export default {
      
   },
   methods: {
+    setUpdate(){
+      this.$parent.isupdate = true;
+    },
      editParam(pid){
         let p = tools.findParamById(this.pageInfo, pid);
         this.$parent.$refs['prarmAddForm'].newparam(p.type, p.id);
@@ -52,7 +55,54 @@ export default {
        let idx = tools.findParamById(this.pageInfo, pid, true);
        this.pageInfo.params.splice(idx, 1);
        this.$forceUpdate();
-     }
+       this.setUpdate();
+     },
+     optParam(id){
+       let ts = this;
+       //let p = tools.findParamById(this.pageInfo, id);
+        $.contextMenu( 'destroy');
+        $.contextMenu({
+              selector: '#optparam button.btn-success', 
+              className: "m_optparam",
+              trigger: 'left',
+              delay: 500,
+              autoHide:true,
+              items: {
+                "edit":{name:"编辑", icon:"fa-edit",callback:function(){
+                  ts.editParam(id);
+                }},
+                "left":{name: "左移", icon:"fa-arrow-left", callback:function(){
+                  ts.moveparam(id, 'left');
+                      }},
+                "right":{name: "右移", icon:"fa-arrow-right", callback:function(){
+                  ts.moveparam(id, 'right');
+                }}
+           }
+        });
+     },
+     moveparam(pid, pos){
+       let pageInfo = this.pageInfo;
+        var idx = tools.findParamById(pageInfo, pid, true);
+        if(idx == 0 && pos == "left"){
+          tools.msginfo("参数已在最左边，无法移动。");
+          return;
+        }else if(idx == pageInfo.params.length - 1 && pos == "right"){
+          tools.msginfo("参数已在最右边，无法移动。");
+          return;
+        }
+        var pms = pageInfo.params;
+        if(pos == "left"){
+          var tp = pms[idx - 1];
+          pms[idx - 1] = pms[idx];
+          pms[idx] = tp;
+        }else if(pos == "right"){
+          var tp = pms[idx + 1];
+          pms[idx + 1] = pms[idx];
+          pms[idx] = tp;
+        }
+        this.$forceUpdate();
+        this.setUpdate();
+      }
   },
   watch: {
     
