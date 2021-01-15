@@ -17,3 +17,36 @@ export const msginfo = (msg, type)=>{
 		Message.success({message:msg, type:"success",showClose: true});
 	}
 }
+
+export const findParamById = (pageInfo, id, retIndex) => {
+	var ret = null;
+	for(let i=0; pageInfo.params&&i<pageInfo.params.length; i++){
+		var p = pageInfo.params[i];
+		if(p.id == id){
+			if(retIndex){
+				ret = i;
+			}else{
+				ret = p;
+			}
+		}
+	}
+	return ret;
+}
+
+export const getParamTypeDesc = (paramType)=>{
+	var tpname = "";
+	if(paramType == "text"){
+	  tpname = "输入框";
+	}else if(paramType == "radio"){
+	  tpname = "单选框";
+	}else if(paramType == "checkbox"){
+	  tpname = "多选框";
+	}else if(paramType == "dateselect"){
+	  tpname = "日历框";
+	}else if(paramType == "monthselect"){
+	  tpname = "月份框";
+	}else if(paramType == "yearselect"){
+	  tpname = "年份框";
+	}
+	return tpname;
+}

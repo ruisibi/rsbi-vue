@@ -13,7 +13,7 @@
             </el-form-item>
             <template v-if="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'">
               <el-form-item label="时间格式" label-width="100px">
-                <el-select v-model="param.tableId" placeholder="请选择" style="width:100%">
+                <el-select v-model="param.dtformat" placeholder="请选择" style="width:100%">
                   <el-option v-for="item in opts.dtformats[datetype]" :key="item" :label="item" :value="item">
                   </el-option>
                 </el-select>				    
@@ -41,7 +41,7 @@
                 <el-radio v-model="param.valtype" label="dynamic">动态值</el-radio>
                 <template v-if="param.valtype === 'static'">
                   <div>
-                  <el-button @click="handleClick()" type="primary" size="small">添加</el-button>
+                  <el-button @click="addStaticVal(false)" type="primary" size="small">添加</el-button>
                   </div>
                    <el-table :data="param.values" style="width: 100%" border header-row-class-name="tableHeadbg">
                     <el-table-column
@@ -56,8 +56,7 @@
                     fixed="right"
                     label="操作">
                     <template slot-scope="scope">
-                      <el-button @click="handleClick(scope.value)" type="text" size="small">编辑</el-button>
-                      <el-button type="text" size="small">删除</el-button>
+                      <el-button @click="deleteStaticVal(scope.row.value)" type="text" size="small">删除</el-button>
                     </template>
                   </el-table-column>
                   </el-table>
@@ -92,6 +91,24 @@
           <el-button type="primary" @click="save()">确 定</el-button>
           <el-button @click="show = false">取 消</el-button>
         </div>
+
+      <el-dialog width="30%" :title="valaddtitle"
+        :visible.sync="innerVisible" :close-on-click-modal="false" custom-class="nopadding"
+        append-to-body>
+        <el-form :model="pval" ref="pvalForm" :rules="pvalrules" label-position="left">
+             <el-form-item label="Value" label-width="100px" prop="value">
+              <el-input v-model="pval.value"></el-input>
+            </el-form-item>
+             <el-form-item label="Text" label-width="100px" prop="text">
+              <el-input v-model="pval.text"></el-input>
+            </el-form-item>
+        </el-form>
+         <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addValueSave()">确 定</el-button>
+          <el-button @click="innerVisible = false">取 消</el-button>
+        </div>
+      </el-dialog>
+
     </el-dialog>
 </template>
 
@@ -105,12 +122,17 @@ export default {
 
   },
   props:{
-      
+      pageInfo:{
+        type:Object,
+        required:true,
+        default:{}
+     }
   },
   data(){
     return {
         title:"",
         show:false,
+        innerVisible:false,
         param:{
           paramid:null,
           paramname:null,
@@ -127,6 +149,11 @@ export default {
         },
         datetype:'day',
         isupdate:false,
+        valaddtitle:null,
+        pval:{
+          value:null,
+          text:null
+        },
         opts:{
           datasetlist:[],
           collist:[],
@@ -143,6 +170,10 @@ export default {
           paramname:[
 						{ required: true, message: '必填', trigger: 'blur' }
 					]
+        },
+        pvalrules:{
+          value:[{ required: true, message: '必填', trigger: 'blur' }],
+          text:[{ required: true, message: '必填', trigger: 'blur' }]
         }
     }
   },
@@ -153,15 +184,31 @@ export default {
      
   },
   methods: {
-     newparam(type, ptype, paramId){
-       this.title = "创建参数 - " + this.getParamTypeDesc(ptype);
+     newparam(ptype, paramId){
+       this.title = "创建参数 - " + tools.getParamTypeDesc(ptype);
        this.show = true;
        this.datetype = ptype;
        if(!paramId){
         this.isupdate = false;
         this.param.paramid = "p"+ Math.round( Math.random() * 10000);
        }else{
+         this.param.paramid = paramId;
          this.isupdate = true;
+         let p = tools.findParamById(this.pageInfo, paramId);
+
+         this.param.paramname = p.name;
+          this.param.size = p.size;
+          this.param.defvalue = p.defvalue;
+          this.param.hiddenprm = p.hiddenprm;
+          this.param.valtype = p.valtype;
+          if(p.option){
+            this.param.tableId = p.option.tableId;
+            this.param.alias = p.option.alias;
+          }
+          this.param.values = p.values;
+          this.param.dtformat = p.dtformat;
+          this.param.minval = p.minval;
+          this.param.maxval = p.maxval;
        }
      },
      save(){
@@ -189,53 +236,110 @@ export default {
                }
              }
              if(ts.isupdate){  //修改
-
+                let pid = ts.param.paramid;
+                let param = tools.findParamById(ts.pageInfo, pid);
+                param.name = ts.param.paramname;
+                param.defvalue = ts.param.defvalue;
+                param.size = ts.param.size;
+                param.hiddenprm = ts.param.hiddenprm;
+                let paramType = ts.datetype;
+                if(paramType == "dateselect" || paramType == "monthselect" || paramType == "yearselect"){
+                  param.maxval = ts.param.maxval;
+                  param.minval = ts.param.minval;
+                  param.dtformat = ts.param.dtformat;
+                }
+                if(paramType == 'radio' || paramType == 'checkbox'){
+                  let r = param.valtype = ts.param.valtype;
+                  if(r == 'static'){
+                    param.values = ts.param.values;
+                    delete param.option;
+                  }else{
+                    let table = null;
+                    $(ts.opts.datasetlist).each((a, b)=>{
+                      if(b.value === ts.param.tableId){
+                        table = b;
+                        return false;
+                      }
+                    });
+                    let dim = ts.opts.collist.filter(m=>m.value === ts.param.alias)[0];
+                    param.option = {"tableId":table.value, "tname":table.label,"dsource":table.dsource,"dimId":dim.dimId, "alias":dim.value};
+                    delete param.values;
+                  }
+                }
              }else{
-                 var obj = {id:newGuid(), type:ts.datetype, paramid:ts.param.paramid, name:ts.param.paramname,defvalue:ts.param.defvalue, size:ts.param.size, hiddenprm:ts.param.hiddenprm};
+                 var obj = {id:ts.param.paramid, type:ts.datetype, paramid:ts.param.paramid, name:ts.param.paramname,defvalue:ts.param.defvalue, size:ts.param.size, hiddenprm:ts.param.hiddenprm};
                 let paramType = ts.datetype;
                 if(paramType == "dateselect" || paramType == "monthselect" || paramType == "yearselect"){
                     obj.maxval = ts.param.maxval;
                     obj.minval = ts.param.minval;
                     obj.dtformat = ts.param.dtformat;
                   }
-                  if( paramType == 'radio' || paramType == 'checkbox'){
-                    obj.valtype = ts.param.valtype;
-                    if(obj.valtype == 'static'){
-                      obj.values = ts.param.values;
-                    }else{
-                      let table = null;
-                      $(ts.opts.datasetlist).each((a, b)=>{
-                        if(b.value === ts.param.tableId){
-                          table = b;
-                        }
+                if( paramType == 'radio' || paramType == 'checkbox'){
+                  obj.valtype = ts.param.valtype;
+                  if(obj.valtype == 'static'){
+                    obj.values = ts.param.values;
+                  }else{
+                    let table = null;
+                    $(ts.opts.datasetlist).each((a, b)=>{
+                      if(b.value === ts.param.tableId){
+                        table = b;
                         return false;
-                      });
-                      let dim = ts.opts.collist.filter(m=>m.value === ts.param.alias);
-                      this.param.tableId;
-                      obj.option = {"tableId":table.value, "tname":table.label,"dsource":table.dsource,"dimId":dim.dimId, "alias":dim.value};
-                    }
+                      }
+                    });
+                    let dim = ts.opts.collist.filter(m=>m.value === ts.param.alias)[0];
+                    obj.option = {"tableId":table.value, "tname":table.label,"dsource":table.dsource,"dimId":dim.dimId, "alias":dim.value};
                   }
+                }
+                if(!ts.pageInfo.params){
+                  ts.pageInfo.params = [];
+                }
+                ts.pageInfo.params.push(obj);
              }
+             ts.$parent.$refs['paramForm'].$forceUpdate();
              this.show = false;
            }
         });
      },
-     getParamTypeDesc(paramType){
-        var tpname = "";
-        if(paramType == "text"){
-          tpname = "输入框";
-        }else if(paramType == "radio"){
-          tpname = "单选框";
-        }else if(paramType == "checkbox"){
-          tpname = "多选框";
-        }else if(paramType == "dateselect"){
-          tpname = "日历框";
-        }else if(paramType == "monthselect"){
-          tpname = "月份框";
-        }else if(paramType == "yearselect"){
-          tpname = "年份框";
+    addStaticVal(isupdate, id){
+      this.innerVisible = true;
+      if(this.$refs['pvalForm']){
+        this.$refs['pvalForm'].resetFields();
+      }
+      if(isupdate){
+        this.valaddtitle = "修改值";
+        let ts = this;
+         $(this.param.values).each((a, b)=>{
+            if(b.value === id){
+              ts.pval.value = b.value;
+              ts.pval.text = b.text;
+              return false;
+            }
+          });
+      }else{
+        this.valaddtitle = "添加值";
+      }
+    },
+    deleteStaticVal(id){
+      $(this.param.values).each((a, b)=>{
+        if(b.value === id){
+          this.param.values.splice(a, 1);
+          return false;
         }
-        return tpname;
+      });
+    },
+    addValueSave(){
+       let ts = this;
+				this.$refs['pvalForm'].validate((valid) => {
+           if(valid){
+             ts.innerVisible = false;
+             if(!ts.param.values){
+               ts.param.values = [];
+             }
+            // if(ts.valaddtitle === '添加值'){
+            ts.param.values.push({value:ts.pval.value, text:ts.pval.text});
+             
+           }
+        });
     },
     loadCubes(){
       ajax({

@@ -18,7 +18,7 @@
       <portal-layout :pageInfo="pageInfo" ref="layout"></portal-layout>
       <selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
       <select-dset ref="selectDsetForm"></select-dset>
-       <layout-param-add ref="prarmAddForm"></layout-param-add>
+       <layout-param-add ref="prarmAddForm" :pageInfo="pageInfo"></layout-param-add>
   </div> 
 </template>
 <script>
@@ -38,7 +38,8 @@ export default {
   },
   data() {
     return {
-        pageInfo:{"layout":1,"body":{tr1:[{colspan:1, rowspan:1, width:100, height:100, id:1}]}}
+        pageInfo:{"layout":1,"body":{tr1:[{colspan:1, rowspan:1, width:100, height:100, id:1}]}},
+        isupdate:false
     }
   },
   methods: {

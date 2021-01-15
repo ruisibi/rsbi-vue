@@ -165,7 +165,7 @@ export default {
                 if(tp == "param"){
                     $("#optparam").css("border", "1px solid #d3d3d3");
                     var node = ref.get_node(ui.draggable[0]);
-                    ts.$parent.$refs['prarmAddForm'].newparam("insert", node.li_attr.ptp);
+                    ts.$parent.$refs['prarmAddForm'].newparam(node.li_attr.ptp);
                 }
             }
             
