@@ -50,3 +50,41 @@ export const getParamTypeDesc = (paramType)=>{
 	}
 	return tpname;
 }
+
+//从布局器中查询td(容器)
+export const findLayoutById = (layoutId, pageInfo)=>{
+	var ret = null;
+	for(var i=1; true; i++){
+		var tr = pageInfo.body["tr"+i];
+		if(!tr || tr == null){
+			break;
+		}
+		for(var j=0; j<tr.length; j++){
+			var td = tr[j];
+			if(td.id == layoutId){
+				ret = td;
+				break;
+			}
+		}
+	}
+	return ret;
+}
+//查询布局器中所以组件
+export const findAllComps = (pageInfo)=>{
+	let ret = [];
+	for(var i=1; true; i++){
+		var tr = pageInfo.body["tr"+i];
+		if(!tr || tr == null){
+		  break;
+		}
+		for(var j=0; j<tr.length; j++){
+		  var td = tr[j];
+		  if(td.children){
+			td.children.forEach(element => {
+			  ret.push(element);
+			});
+		  }
+		}
+	}
+	return ret;
+}

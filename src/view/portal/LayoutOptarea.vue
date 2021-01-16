@@ -1,10 +1,14 @@
 <!-- 布局器 -->
 <script>
 import { baseUrl } from "@/common/biConfig";
+import PortalText from "./PortalText.vue"
 import $ from "jquery";
+import * as utils from './Utils'
 
 export default {
-  components: {},
+  components: {
+    PortalText
+  },
   props: {
     pageInfo: {
       type: Object,
@@ -12,6 +16,17 @@ export default {
     },
   },
   render(h) {
+    //在render函数执行后绑定拖拽事件
+    this.$nextTick(()=>{
+      if(this.$parent.isbindTdEvent===true){
+        //绑定布局器的事件
+        this.bindTdEvent();
+        //绑定组件的事件
+        utils.findAllComps(this.pageInfo).forEach(e=>this.bindCompEvent(e));
+        this.$parent.isbindTdEvent = false;
+      }
+    });
+
     var json = this.pageInfo.body;
     var trs = [];
     for (var i = 1; true; i++) {
@@ -22,6 +37,15 @@ export default {
       var tds = [];
       for (var j = 0; j < tr.length; j++) {
         var td = tr[j];
+        
+        let cmps = [];
+        if(td.children){
+          for(var k=0; k<td.children.length; k++){
+            var comp = td.children[k];
+            cmps.push(this.renderComp(comp, h, td.id));
+          }
+        }
+
         tds.push(
           h("td", {
             attrs: {
@@ -32,23 +56,19 @@ export default {
               colspan: td.colspan,
               rowspan: td.rowspan,
             },
-          }, "xxx")
+          }, cmps)
         );
-        /**
-        if(td.children){
-          for(var k=0; k<td.children.length; k++){
-            var comp = findTCompById(td.children[k]);
-            var str = compStr(comp, false);
-            ret = ret + str;
-            cps.push(comp);
-          }
-        }
-         */
       }
       trs.push(h('tr', {}, tds));
     }
     let table = h('table', {attrs:{border:"0", cellspacing:"0", cellpadding:"0", class:"r_layout", id:"layout_table"}}, [h('tbody', trs)]);
-    return h("div", {attrs:{id:"optarea", class:"layout-center-body", align:"center"}}, [table, h('div', {class:"indicator"}, '==>')]);
+    return h("div", {attrs:{id:"optarea", class:"layout-center-body", align:"center"}}, 
+      [
+        table, 
+        h('div', {class:"indicator"}, '==>'),
+        h('PortalText',{ref:"portalTextForm"},'')
+      ]
+    );
   },
   data() {
     return {
@@ -62,6 +82,40 @@ export default {
   methods: {
     setUpdate(){
       this.$parent.isupdate = true;
+    },
+    addComp(layoutId, comp){
+        var layout = utils.findLayoutById(layoutId, this.pageInfo);
+        if(!layout.children){
+          layout.children = [];
+        }
+        layout.children.push(comp);
+        this.$nextTick(()=>this.bindCompEvent(comp));
+    },
+    renderComp(comp, h, layoutId){
+      let tools = [
+        h('button', {class:"btn btn-outline btn-success btn-xs", attrs:{title:"设置组件"}, on:{click:()=>{alert(3)}}}, [h('i', {class:"fa fa-wrench"})]),
+        h('span',' '),
+        h('button', {class:"btn btn-outline btn-danger btn-xs", attrs:{title:"删除组件"}, on:{click:()=>{this.deleteComp(comp, layoutId)}}}, [h('i', {class:"fa fa-times"})])
+      ];
+      let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', comp.name)]), h('div', {class:"ibox-tools"}, tools)]);
+      let ctx = h('div', {class:"cctx ibox-content", style:{padding:"3px"}}, [h('div', {class:"ccctx"}, comp.desc)]);
+      return h('div', {attrs:{class:"ibox", id:"c_" + comp.id}}, [title, ctx]);
+    },
+    deleteComp(comp, layoutId){
+      if(!confirm("是否确认删除组件？")){
+        return;
+      }
+      //从布局器中删除，
+      var td = utils.findLayoutById(layoutId, this.pageInfo);
+      var compIdx = -1;
+      for(var i=0; i<td.children.length; i++){
+        if(td.children[i].id == comp.id){
+          compIdx = i;
+          break;
+        }
+      }
+      td.children.splice(compIdx, 1);
+      this.setUpdate();
     },
     //table 布局器拖拽事件
     bindTdEvent(){
@@ -104,7 +158,7 @@ export default {
         },
         out:function(e, ui){
           $(ui.helper[0]).find("span").removeClass("glyphicon-ok").addClass("glyphicon-remove");
-          $(".indicator").hide();
+          //$(".indicator").hide();
           delete curTmpInfo.id;
           delete curTmpInfo.tp;
         },
@@ -140,7 +194,7 @@ export default {
             var layoutId = $(this).attr("id").split("_")[1];
             var tp = node.id;
             if(tp == "text"){
-              insertText("insert", layoutId, '', curTmpInfo.id, curTmpInfo.tp);
+              ts.$refs['portalTextForm'].insertText("insert", layoutId, '', curTmpInfo.id, curTmpInfo.tp);
             }else if(tp == "table"){
               var comp = {"id":newGuid(), "name":"交叉表", "type":"table"};
               var str = addComp(comp, layoutId, true);
@@ -156,10 +210,6 @@ export default {
               //注册拖放事件
               bindCompEvent(comp);
               bindResizeEvent(comp.id, 'table');
-              //滚动位置
-              window.setTimeout(function(){
-                $("#optarea").scrollTop($("#c_"+comp.id).offset().top);
-              }, 500);
             }else if(tp == "chart"){
               setcharttype(true, layoutId, curTmpInfo.id, curTmpInfo.tp)					
             }else if(tp == "grid"){
@@ -177,10 +227,6 @@ export default {
               //注册拖放事件
               bindCompEvent(comp);
               bindResizeEvent(comp.id, 'grid');
-              //滚动位置
-              window.setTimeout(function(){
-                $("#optarea").scrollTop($("#c_"+comp.id).offset().top);
-              }, 500);
             }else if(tp == "box"){
               var comp = {"id":newGuid(), "name":"数据块", "type":"box"};
               var str = addComp(comp, layoutId, true);
@@ -204,11 +250,77 @@ export default {
         }
 
       });
+    },
+    //绑定组件拖拽事件
+    bindCompEvent(obj){
+      let ts = this;
+      let curTmpInfo = ts.curTmpInfo;
+      //注册移动事件
+      $("#c_" + obj.id).draggable({
+        revertDuration: 200,
+        handle:$("#c_" + obj.id + " div.ibox-title"),
+        delay:300,
+        cursorAt: { top: 0, left:  -10 },
+        scroll: false,
+        cursor: "point",
+        appendTo: "body",
+        revert: 'invalid',
+        helper:function(e){
+          var id = $(this).find("div.ibox-title").text();
+          return "<div class=\"vakata-dnd\"><span class=\"miconcancel glyphicon glyphicon-remove\"></span>"+id+"</div>";
+        },
+        start:function(e){
+          //resetWindows('min');
+          //$(this).hide();
+        },
+        stop:function(e){
+          $(".indicator").hide();
+          //resetWindows('max');
+          //$(this).show();
+        }
+      });
+      $("#c_" + obj.id).droppable({
+        accept:"div.ibox, #comptree .jstree-node",
+        over:function(e, ui){
+          curTmpInfo.mouseOnDiv = true;
+          curTmpInfo.id = $(this).attr("id");
+          curTmpInfo.tp = "before";
+          $(".indicator").css({
+            display:'block',
+            left:$(this).offset().left,
+            top:$(this).offset().top - 10
+          });
+        },
+        out:function(e, ui){
+          var source = ui.draggable[0];
+          curTmpInfo.mouseOnDiv = false;
+          var obj = $(this).parent();
+          var last = obj.children().last();
+          if(last.attr("id") ==  $(source).attr("id")){
+            last = last.prev();
+          }
+          if(last.length == 0){
+            $(".indicator").css({
+              display:'block',
+              left:obj.offset().left,
+              top:obj.offset().top - 10
+            });
+          }else{
+            curTmpInfo.id = last.attr("id");
+            curTmpInfo.tp = "after";
+            $(".indicator").css({
+              display:'block',
+              left:last.offset().left,
+              top:last.offset().top + last.height()
+            });
+          }	
+        },
+        drop:function(e, ui){
+          //alert(ui); 
+        }
+      });
     }
-  },
-  watch: {},
-  beforeMount() {},
-  beforeDestroy() {},
+  }
 };
 </script>
 
@@ -239,5 +351,35 @@ table.r_layout {
 	height:10px;
 	display:none;
 	color:red;
+}
+.ibox-title {
+    height: 30px;
+    border-color: #edf1f2;
+    background-color: #f6f8f8;
+    color: #333;
+    font-weight: 700;
+    padding: 8px 15px 3px 15px;
+    border-bottom: 1px solid transparent;
+    display: block;
+    clear: both;
+    cursor: move;
+}
+.ibox-title h5 {
+    display: inline-block;
+    font-size: 14px;
+    margin: 0 0 7px;
+    padding: 0;
+    text-overflow: ellipsis;
+    float: left;
+}
+.ibox-tools {
+    display: inline-block;
+    float: right;
+    margin-top: 0;
+    position: relative;
+    padding: 0;
+}
+#optarea .ibox {
+    margin-bottom: 10px !important;
 }
 </style>

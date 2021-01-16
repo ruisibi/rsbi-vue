@@ -49,6 +49,7 @@ export default {
   },
   methods: {
      setLayout(){
+       this.layoutId = this.pageInfo.layout;
        this.show = true;
      },
      selectRadio(l){
@@ -59,10 +60,13 @@ export default {
        if(l === 6){  //自定义
 
        }else{
+         let comps = layout.findAllComps(this.pageInfo);
          let json = layout.layout["l"+l];
          this.pageInfo.layout = l;
          this.pageInfo.body = json;
+         json['tr1'][0].children = comps;  //都放入第一个布局td
          this.show = false;
+         this.$parent.isbindTdEvent = true;
        }
      }
   }

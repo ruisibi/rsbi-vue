@@ -64,7 +64,8 @@ export default {
           name:[
 						{ required: true, message: '必填', trigger: 'blur' }
           ]
-         }
+        },
+        isbindTdEvent:false  //是否给布局器table的 td 绑定拖拽事件
     }
   },
   methods: {
@@ -76,6 +77,7 @@ export default {
         type:"GET",
         success:(resp)=>{
           this.pageInfo = JSON.parse(resp.rows);
+          this.isbindTdEvent = true; //需要重新绑定事件
         }
 
       }, this);
