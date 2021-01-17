@@ -28,7 +28,8 @@ export default {
       ctx:"",
       title:"",
       show:false,
-      layoutId:null
+      layoutId:null,
+      comp:null
     }
   },
   mounted(){
@@ -37,22 +38,30 @@ export default {
   computed: {
   },
   methods: {
-    insertText(tp, layoutId){
+    insertText(tp, layoutId, comp){
       this.title = "请输入文本内容 - 文本框";
       this.show = true;
       this.ctx = "";
       this.layoutId = layoutId;
+      this.comp = comp;
+      if(comp){
+        this.ctx = comp.desc;
+      }
     },
     save(){
       if(this.ctx.length === 0 ){
         Message.error({message:"请录入文本内容", type:"error",showClose: true});
         return;
       }
-      var obj = {"id":newGuid(), type:'text', name:"文本", desc:this.ctx};
-      this.show = false;
-      this.$parent.addComp(this.layoutId, obj);
+      if(this.comp){
+        this.comp.desc = this.ctx;
+      }else{
+        var obj = {"id":newGuid(), type:'text', name:"文本", desc:this.ctx};
+        this.$parent.addComp(this.layoutId, obj);
+      }
       this.$parent.setUpdate();
       this.$parent.$forceUpdate();
+      this.show = false;
     }
   }
 }

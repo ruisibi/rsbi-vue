@@ -88,3 +88,33 @@ export const findAllComps = (pageInfo)=>{
 	}
 	return ret;
 }
+/**
+//从布局器中查询组件
+ * @param {*} pageInfo 
+ * @param {*} compId 
+ * @param {*} remove  是否移除查找到的对象
+ */
+export const findCompById = (pageInfo, compId, remove)=>{
+	let ret = null;
+	for(var i=1; true; i++){
+		var tr = pageInfo.body["tr"+i];
+		if(!tr || tr == null){
+		  break;
+		}
+		for(var j=0; j<tr.length; j++){
+		  var td = tr[j];
+		  if(td.children){
+			  $(td.children).each((a, b)=>{
+				if(b.id === compId){
+					ret = b;
+					if(remove){
+						td.children.splice(a, 1);
+					}
+					return false;
+				}
+			  });
+		  }
+		}
+	}
+	return ret;
+}

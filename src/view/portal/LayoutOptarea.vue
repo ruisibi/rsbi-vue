@@ -1,6 +1,6 @@
 <!-- 布局器 -->
 <script>
-import { baseUrl } from "@/common/biConfig";
+import { baseUrl, newGuid } from "@/common/biConfig";
 import PortalText from "./PortalText.vue"
 import $ from "jquery";
 import * as utils from './Utils'
@@ -93,13 +93,108 @@ export default {
     },
     renderComp(comp, h, layoutId){
       let tools = [
-        h('button', {class:"btn btn-outline btn-success btn-xs", attrs:{title:"设置组件"}, on:{click:()=>{alert(3)}}}, [h('i', {class:"fa fa-wrench"})]),
+        h('button', {class:"btn btn-outline btn-success btn-xs", attrs:{title:"设置组件"}, on:{click:()=>{this.showCompMenu(comp, layoutId)}}}, [h('i', {class:"fa fa-wrench"})]),
         h('span',' '),
         h('button', {class:"btn btn-outline btn-danger btn-xs", attrs:{title:"删除组件"}, on:{click:()=>{this.deleteComp(comp, layoutId)}}}, [h('i', {class:"fa fa-times"})])
       ];
       let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', comp.name)]), h('div', {class:"ibox-tools"}, tools)]);
       let ctx = h('div', {class:"cctx ibox-content", style:{padding:"3px"}}, [h('div', {class:"ccctx"}, comp.desc)]);
       return h('div', {attrs:{class:"ibox", id:"c_" + comp.id}}, [title, ctx]);
+    },
+    showCompMenu(comp, layoutId){
+      let ts = this;
+        //移除菜单
+        $.contextMenu( 'destroy');
+        var items = null;
+        var divId = "";
+        if(comp.type == "chart"){
+          divId = "chart_menu";
+          items = {
+                    "tblx": {name: "图表类型",callback:function(){
+                      setcharttype(false)
+                    }},
+                    "data": {name: "数据", icon:"fa-database", callback:function(){
+                      ts.editComp(comp, layoutId);
+                    }},
+                    "filter": {name: "筛选",icon:"fa-filter", callback:function(){
+                      setcompfilter();
+                    }},
+                    "event": {name: "事件",icon:"fa-bolt", callback:function(){
+                      compevent();
+                    }},
+                    "prop": {name: "属性", callback:function(){
+                      setComp();
+                    }}
+                };
+        }else if(comp.type == "table"){
+          divId = "table_menu";
+          items = {
+                    "data": {name: "数据", icon:"fa-database", callback:function(){
+                      ts.editComp(comp, layoutId);
+                    }},
+                    "filter": {name: "筛选",icon:"fa-filter", callback:function(){
+                      setcompfilter();
+                    }},
+                    "event": {name: "事件",icon:"fa-bolt", callback:function(){
+                      compevent();
+                    }},
+                    "prop": {name: "属性", callback:function(){
+                      setComp();
+                    }}
+                };
+        }else if(comp.type == "text"){
+          divId = "text_menu";
+          items = {
+                    "data": {name: "编辑", icon:"fa-edit", callback:function(){
+                      ts.editComp(comp, layoutId);
+                    }},
+                    "prop": {name: "属性", callback:function(){
+                      setComp();
+                    }}
+                };
+        }else if(comp.type == "grid"){
+          divId = "grid_menu";
+          items = {
+                  "data": {name: "数据", icon:"fa-database", callback:function(){
+                      ts.editComp(comp, layoutId);
+                    }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
+                      setcompfilter();
+                    }},"prop": {name: "属性", callback:function(){
+                      setComp();
+                    }}
+                };
+        }else if(comp.type == "box" || comp.type == "mbox"){
+          divId = "box_menu";
+          items = {
+                    "sjklx": {name: "数据块类型", callback:function(){
+                      boxTypeChg();
+                    }},"data": {name: "数据", icon:"fa-database", callback:function(){
+                      ts.editComp(comp, layoutId);
+                    }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
+                      setcompfilter();
+                    }},"prop": {name: "属性", callback:function(){
+                      setComp();
+                    }}
+                };
+        }
+        
+        $.contextMenu({
+              selector: 'div.ibox div.ibox-title button.btn-success', 
+              className: "m_" + divId,
+              trigger: 'left',
+              delay: 500,
+              zIndex:9999,
+              autoHide:true,
+              callback: function(key, opt) {
+                
+              },
+              items: items
+          });
+    },
+    editComp(comp, layoutId){
+      if(comp.type === 'text'){
+        this.$refs['portalTextForm'].insertText("update", layoutId, comp);
+      }
     },
     deleteComp(comp, layoutId){
       if(!confirm("是否确认删除组件？")){
@@ -116,6 +211,7 @@ export default {
       }
       td.children.splice(compIdx, 1);
       this.setUpdate();
+      this.$forceUpdate();
     },
     //table 布局器拖拽事件
     bindTdEvent(){
@@ -163,19 +259,39 @@ export default {
           delete curTmpInfo.tp;
         },
        drop:function(e, ui){
+         //拖拽drop后的动作
+         const execf = (layoutId, comp)=>{
+           if(!curTmpInfo.mouseOnDiv){
+                  var layout = utils.findLayoutById(layoutId, ts.pageInfo);
+                  if(!layout.children){
+                    layout.children = [];
+                  }
+                  layout.children.push(comp);
+              }else{
+                var layout = utils.findLayoutById(layoutId, ts.pageInfo);
+                $(layout.children).each((c, d)=>{  //调整JSON
+                  if("c_"+d.id === curTmpInfo.id){
+                    if(curTmpInfo.tp == "before"){
+                        layout.children.splice(c, 0, comp);
+                      }else{
+                        layout.children.splice(c + 1, 0, comp);
+                      }
+                    return false;
+                  }
+                });
+              }
+            ts.$nextTick(()=>ts.bindCompEvent(comp));
+         }
+
           $(".indicator").hide();
           var source = ui.draggable[0];
+          var layoutId = $(this).attr("id").split("_")[1];
+          var compId = $(source).attr("id").replace("c_", "");
           if($(source).hasClass("ibox")){
+            var comp = utils.findCompById(ts.pageInfo, compId, true);
             //组件间的拖拽
-            if(!curTmpInfo.mouseOnDiv){
-              $(this).append(source);
-            }else{
-              if(curTmpInfo.tp == "before"){
-                $("#"+curTmpInfo.id).before(source);
-              }else{
-                $("#"+curTmpInfo.id).after(source);
-              }
-            }
+            execf(layoutId, comp);
+            curTmpInfo.mouseOnDiv = false;  //清空 mouseOnDiv 
             /**
             window.setTimeout(function(){
               var id = $(source).attr("id").replace("c_", "");
@@ -194,59 +310,23 @@ export default {
             var layoutId = $(this).attr("id").split("_")[1];
             var tp = node.id;
             if(tp == "text"){
-              ts.$refs['portalTextForm'].insertText("insert", layoutId, '', curTmpInfo.id, curTmpInfo.tp);
+              ts.$refs['portalTextForm'].insertText("insert", layoutId);
             }else if(tp == "table"){
               var comp = {"id":newGuid(), "name":"交叉表", "type":"table"};
-              var str = addComp(comp, layoutId, true);
-              if(!curTmpInfo.id){
-                $("#layout_"+layoutId).append(str);
-              }else{
-                if(curTmpInfo.tp == "before"){
-                  $("#"+curTmpInfo.id).before(str);
-                }else{
-                  $("#"+curTmpInfo.id).after(str);
-                }
-              }
-              //注册拖放事件
-              bindCompEvent(comp);
-              bindResizeEvent(comp.id, 'table');
+              execf(layoutId, comp);
             }else if(tp == "chart"){
-              setcharttype(true, layoutId, curTmpInfo.id, curTmpInfo.tp)					
+              //setcharttype(true, layoutId, curTmpInfo.id, curTmpInfo.tp)					
             }else if(tp == "grid"){
               var comp = {"id":newGuid(), "name":"表格", "type":"grid"};
-              var str = addComp(comp, layoutId, true);
-              if(!curTmpInfo.id){
-                $("#layout_"+layoutId).append(str);
-              }else{
-                if(curTmpInfo.tp == "before"){
-                  $("#"+curTmpInfo.id).before(str);
-                }else{
-                  $("#"+curTmpInfo.id).after(str);
-                }
-              }
-              //注册拖放事件
-              bindCompEvent(comp);
-              bindResizeEvent(comp.id, 'grid');
+              execf(layoutId, comp);
             }else if(tp == "box"){
               var comp = {"id":newGuid(), "name":"数据块", "type":"box"};
-              var str = addComp(comp, layoutId, true);
-              if(!curTmpInfo.id){
-                $("#layout_"+layoutId).append(str);
-              }else{
-                if(curTmpInfo.tp == "before"){
-                  $("#"+curTmpInfo.id).before(str);
-                }else{
-                  $("#"+curTmpInfo.id).after(str);
-                }
-              }
-              //注册拖放事件
-              bindCompEvent(comp);
-              //resize事件
-              bindResizeEvent(comp.id, 'box');
+               execf(layoutId, comp);
             }
             
           }
           ts.setUpdate();
+          ts.$forceUpdate();
         }
 
       });
@@ -320,6 +400,9 @@ export default {
         }
       });
     }
+  },
+  watch:{
+   
   }
 };
 </script>

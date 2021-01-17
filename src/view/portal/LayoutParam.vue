@@ -52,10 +52,12 @@ export default {
        return name + '('+tools.getParamTypeDesc(type)+')';
      },
      deleteParam(pid){
-       let idx = tools.findParamById(this.pageInfo, pid, true);
-       this.pageInfo.params.splice(idx, 1);
-       this.$forceUpdate();
-       this.setUpdate();
+       if(confirm('是否确认删除？')){
+        let idx = tools.findParamById(this.pageInfo, pid, true);
+        this.pageInfo.params.splice(idx, 1);
+        this.$forceUpdate();
+        this.setUpdate();
+       }
      },
      optParam(id){
        let ts = this;
