@@ -172,12 +172,12 @@ export default {
 
         });
     },
-    initdset(){
+    initdset(table){
         let ref = $("#tabletree").jstree(true);
         if(ref){
             ref.destroy();
         }
-        if (!this.pageInfo.table) {
+        if (!table) {
             $('#tabletree').jstree({
                 core: {
                     data: {
@@ -212,7 +212,6 @@ export default {
                     }
                 });
             }
-            let table = this.pageInfo.table;
             var dt = {id:table.dsetId, text:table.dsetName+"("+table.priTable+")", state:{opened:true},icon:'fa fa-table', children:[]};;
             ajax({
                 url:"model/getDatasetCfg.action",
@@ -244,12 +243,12 @@ export default {
             }, this);
         }
     },
-    initcubes(){
+    initcubes(cubeId){
         let ref = $("#datasettree").jstree(true);
         if(ref){
             ref.destroy();
         }
-        if (!this.pageInfo.selectDs) {
+        if (!cubeId) {
             $('#datasettree').jstree({
                 core: {
                     data: {
@@ -287,7 +286,7 @@ export default {
             $('#datasettree').jstree({
                 core: {
                     data: {
-                        url: 'model/treeCube.action?cubeId=' + this.pageInfo.selectDs + '&t=' + Math.random()
+                        url: 'model/treeCube.action?cubeId=' + cubeId + '&t=' + Math.random()
                     },
                     check_callback: false
                 },

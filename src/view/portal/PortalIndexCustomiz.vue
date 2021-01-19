@@ -15,6 +15,7 @@
         <layout-param ref="paramForm" :pageInfo="pageInfo"></layout-param>
         <layout-optarea ref="optarea" :pageInfo="pageInfo"></layout-optarea>
       </div>
+      <layoutBottom :pageInfo="pageInfo" ref="layoutBottomForm"></layoutBottom>
       <portal-layout :pageInfo="pageInfo" ref="layout"></portal-layout>
       <selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
       <select-dset ref="selectDsetForm"></select-dset>
@@ -43,12 +44,14 @@ import SelectDset from "./SelectDset"
 import layoutParam from "./LayoutParam.vue"
 import LayoutOptarea from './LayoutOptarea.vue'
 import LayoutParamAdd from './LayoutParamAdd.vue'
+import LayoutBottom from './LayoutBottom.vue'
+import $ from 'jquery'
 import "jquery-contextmenu";
 import "jquery-contextmenu/dist/jquery.contextMenu.min.css";
 
 export default {
   name: "customizer",
-  components: {layoutLeft, PortalLayout, selectCube, SelectDset, layoutParam, LayoutOptarea, LayoutParamAdd},
+  components: {layoutLeft, PortalLayout, selectCube, SelectDset, layoutParam, LayoutOptarea, LayoutParamAdd, LayoutBottom},
   props: {
 
   },
@@ -57,6 +60,7 @@ export default {
         pageInfo:{"layout":1,"body":{tr1:[{colspan:1, rowspan:1, width:100, height:100, id:1}]}},
         isupdate:false,
         saveShow:false,
+        dataPanelShow:false,
         saveInfo:{
           name:null
         },
@@ -78,9 +82,17 @@ export default {
         success:(resp)=>{
           this.pageInfo = JSON.parse(resp.rows);
           this.isbindTdEvent = true; //需要重新绑定事件
+
+          let o = this.$refs['layoutleftForm'];
+          o.initdset( this.pageInfo.table);
+          o.initcubes( this.pageInfo.selectDs);
         }
 
       }, this);
+    },
+    //显示数据面板
+    showDataPanel(comp){
+        this.$refs['layoutBottomForm'].showPanel(comp);
     },
     handleSelect(key, keyPath){
       if(key === 'back'){
@@ -118,7 +130,7 @@ export default {
       this.pageInfo.selectDs = cubeId;
       var o = this.$refs['layoutleftForm'];
       o.tabActive = 'data-tab-2';
-      o.initcubes();
+      o.initcubes(cubeId);
     },
     savePage(){
       let ts = this;

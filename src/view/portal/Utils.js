@@ -51,6 +51,22 @@ export const getParamTypeDesc = (paramType)=>{
 	return tpname;
 }
 
+export const getCompTypeDesc = (compType)=>{
+	var name = "";
+	if(compType === 'text'){
+		name = "文本";
+	}else if(compType === 'box'){
+		name = "数据块";
+	}else if(compType === 'chart'){
+		name = "图形";
+	}else if(compType === 'grid'){
+		name = "表格";
+	}else if(compType === 'table'){
+		name = "交叉表";
+	}
+	return name;
+}
+
 //从布局器中查询td(容器)
 export const findLayoutById = (layoutId, pageInfo)=>{
 	var ret = null;

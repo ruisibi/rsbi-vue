@@ -4,10 +4,12 @@ import { baseUrl, newGuid } from "@/common/biConfig";
 import PortalText from "./PortalText.vue"
 import $ from "jquery";
 import * as utils from './Utils'
+import BoxView from "./view/Box.vue"
 
 export default {
   components: {
-    PortalText
+    PortalText,
+    BoxView
   },
   props: {
     pageInfo: {
@@ -98,7 +100,11 @@ export default {
         h('button', {class:"btn btn-outline btn-danger btn-xs", attrs:{title:"删除组件"}, on:{click:()=>{this.deleteComp(comp, layoutId)}}}, [h('i', {class:"fa fa-times"})])
       ];
       let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', comp.name)]), h('div', {class:"ibox-tools"}, tools)]);
-      let ctx = h('div', {class:"cctx ibox-content", style:{padding:"3px"}}, [h('div', {class:"ccctx"}, comp.desc)]);
+      let compctx = [];
+      if(comp.type === 'box'){
+        compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}, ''));
+      }
+      let ctx = h('div', {class:"cctx ibox-content", style:{padding:"3px"}}, [h('div', {class:"ccctx"}, comp.type=='text'?comp.desc:compctx)]);
       return h('div', {attrs:{class:"ibox", id:"c_" + comp.id}}, [title, ctx]);
     },
     showCompMenu(comp, layoutId){
@@ -166,9 +172,7 @@ export default {
         }else if(comp.type == "box" || comp.type == "mbox"){
           divId = "box_menu";
           items = {
-                    "sjklx": {name: "数据块类型", callback:function(){
-                      boxTypeChg();
-                    }},"data": {name: "数据", icon:"fa-database", callback:function(){
+                    "data": {name: "数据", icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
                     }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
                       setcompfilter();
@@ -192,8 +196,11 @@ export default {
           });
     },
     editComp(comp, layoutId){
+      this.$parent.$refs['layoutleftForm'].tabActive = 'data-tab-2';
       if(comp.type === 'text'){
         this.$refs['portalTextForm'].insertText("update", layoutId, comp);
+      }else{
+        this.$parent.showDataPanel(comp);
       }
     },
     deleteComp(comp, layoutId){
@@ -464,5 +471,9 @@ table.r_layout {
 }
 #optarea .ibox {
     margin-bottom: 10px !important;
+}
+.tipinfo {
+	color:#999;
+	padding:10px;
 }
 </style>

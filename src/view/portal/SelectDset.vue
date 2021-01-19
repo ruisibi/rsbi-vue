@@ -58,9 +58,9 @@ export default {
             return false;
           }
         });
-        this.$parent.pageInfo.table = {dsetId:dset.dsetId, dsid:dset.dsid,dsetName:dset.name,priTable:dset.priTable};
+        let table = this.$parent.pageInfo.table = {dsetId:dset.dsetId, dsid:dset.dsid,dsetName:dset.name,priTable:dset.priTable};
         this.$parent.$refs['layoutleftForm'].tabActive = 'data-tab-3';
-        this.$parent.$refs['layoutleftForm'].initdset();
+        this.$parent.$refs['layoutleftForm'].initdset(table);
      },
      loadData(){
 				ajax({
