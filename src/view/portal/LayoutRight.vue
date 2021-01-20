@@ -1,17 +1,15 @@
 <template>
-     <div class="layout-bottom" v-show="show">
-        <div class="ibox" style="margin-bottom:0px;">
-          <div class="ibox-title" style="height:30px;">
-            <h5> {{ title }} </h5>
+     <div class="layout-right" v-show="show">
+        <div class="ibox">
+          <div class="ibox-title">
+            <h5>{{title}}</h5>
             <div class="ibox-tools">
-            <button class="btn btn-outline btn-danger btn-xs" @click="closeDatapanel()"><i class="fa fa-times"></i></button>
+              <button class="btn btn-outline btn-danger btn-xs" @click="closeproperty()"><i class="fa fa-times"></i></button>
             </div>
           </div>
-          <div class="ibox-content" style="padding:0px; overflow:auto; height:150px;">
-            <dbox v-if="showBox" :comp="comp" ref="boxForm"></dbox>
-            <dchart v-if="showChart" :comp="comp" ref="chartForm"></dchart>
-            <dgrid v-if="showGrid" :comp="comp" ref="gridForm"></dgrid>
-            <dtable v-if="showTable" :comp="comp" ref="tableForm"></dtable>
+          <div class="ibox-content" style="padding:0;">
+            <pbox v-if="showBox" ref="boxForm" :comp="comp"></pbox>
+            <ptext v-if="showText" ref="textForm" :comp="comp"></ptext>
           </div>
         </div>
       </div>
@@ -21,14 +19,12 @@
 import {baseUrl} from '@/common/biConfig'
 import $ from 'jquery'
 import * as utils from './Utils'
-import dbox from './data/Box'
-import dchart from './data/Chart'
-import dgrid from './data/Grid'
-import dtable from './data/Table'
+import pbox from './prop/Box'
+import ptext from './prop/Text'
 
 export default {
   components:{
-    dbox, dchart, dgrid, dtable
+    pbox,ptext
   },
   props:{
       pageInfo:{
@@ -38,12 +34,13 @@ export default {
   },
   data(){
     return {
-      title:"数据面板",
+      title:"属性面板",
       show:false,
       showBox:false,
       showChart:false,
       showGrid:false,
       showTable:false,
+      showText:false,
       comp:null
     }
   },
@@ -55,30 +52,34 @@ export default {
   },
   methods: {
     showPanel(comp){
-      this.title = utils.getCompTypeDesc(comp.type) + "数据面板";
-      $(".layout-left").css("height", "calc(100% - 296px)");
-      $(".layout-center").css("height", "calc(100% - 180px)");
+      this.title = utils.getCompTypeDesc(comp.type) + "属性面板";
       this.show = true;
+      this.comp = comp;
 
       this.showBox = false;
       this.showChart = false;
       this.showGrid = false;
       this.showTable = false;
+      this.showText = false;
+
+      $(".layout-center").css("margin-right","220px");
 
       if(comp.type === 'box'){
         this.showBox = true;
+        this.$nextTick(()=> this.$refs['boxForm'].init());
       }else if(comp.type === 'chart'){
         this.showChart = true;
       }else if(comp.type ==='grid'){
         this.showGrid = true;
       }else if(comp.type === 'table'){
         this.showTable = true;
+      }else if(comp.type === 'text'){
+        this.showText = true;
+        this.$nextTick(()=>this.$refs['textForm'].init());
       }
-      this.comp = comp;
     },
-   closeDatapanel(){
-      $(".layout-left").css("height", "100%");
-      $(".layout-center").css("height", "100%");
+   closeproperty(){
+      $(".layout-center").css("margin-right","");
       this.show = false;
    }
   },
@@ -95,6 +96,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .layout-right {
+	  position: fixed;
+    width: 217px;
+    height: 100%;
+    right: 0;
+    .ibox {
+      	height: 100%;
+	      margin-bottom:0px;
+	      overflow:auto;
+    }
+
   .ibox-title h5 {
     display: inline-block;
     font-size: 14px;
@@ -109,5 +121,6 @@ export default {
     margin-top: -3px;
     position: relative;
     padding: 0;
+}
 }
 </style>

@@ -10,12 +10,15 @@
           <el-menu-item index="data-2">选择数据表</el-menu-item>
         </el-submenu>
       </el-menu>
-      <layout-left :pageInfo="pageInfo" ref="layoutleftForm"></layout-left>
-      <div class="layout-center">
-        <layout-param ref="paramForm" :pageInfo="pageInfo"></layout-param>
-        <layout-optarea ref="optarea" :pageInfo="pageInfo"></layout-optarea>
+      <div class="report-layut">
+        <layout-left :pageInfo="pageInfo" ref="layoutleftForm"></layout-left>
+        <layout-right :pageInfo="pageInfo" ref="layoutRightForm"></layout-right>
+        <div class="layout-center">
+          <layout-param ref="paramForm" :pageInfo="pageInfo"></layout-param>
+          <layout-optarea ref="optarea" :pageInfo="pageInfo"></layout-optarea>
+        </div>
+        <layoutBottom :pageInfo="pageInfo" ref="layoutBottomForm"></layoutBottom>
       </div>
-      <layoutBottom :pageInfo="pageInfo" ref="layoutBottomForm"></layoutBottom>
       <portal-layout :pageInfo="pageInfo" ref="layout"></portal-layout>
       <selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
       <select-dset ref="selectDsetForm"></select-dset>
@@ -48,10 +51,11 @@ import LayoutBottom from './LayoutBottom.vue'
 import $ from 'jquery'
 import "jquery-contextmenu";
 import "jquery-contextmenu/dist/jquery.contextMenu.min.css";
+import LayoutRight from './LayoutRight.vue'
 
 export default {
   name: "customizer",
-  components: {layoutLeft, PortalLayout, selectCube, SelectDset, layoutParam, LayoutOptarea, LayoutParamAdd, LayoutBottom},
+  components: {layoutLeft, PortalLayout, selectCube, SelectDset, layoutParam, LayoutOptarea, LayoutParamAdd, LayoutBottom, LayoutRight},
   props: {
 
   },
@@ -93,6 +97,11 @@ export default {
     //显示数据面板
     showDataPanel(comp){
         this.$refs['layoutBottomForm'].showPanel(comp);
+        this.$refs['layoutRightForm'].closeproperty();
+    },
+    showPropPanel(comp){
+      this.$refs['layoutBottomForm'].closeDatapanel();
+      this.$refs['layoutRightForm'].showPanel(comp);
     },
     handleSelect(key, keyPath){
       if(key === 'back'){
@@ -187,6 +196,10 @@ export default {
   .layout-center {
         position: inherit;
         margin: 0 0 0 223px;
-        height: calc(100% - 35px);
+        height: 100%;
+    }
+    .report-layut {
+       width: 100%;
+       height: calc(100% - 35px);
     }
 </style>

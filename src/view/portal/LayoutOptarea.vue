@@ -104,7 +104,39 @@ export default {
       if(comp.type === 'box'){
         compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}, ''));
       }
-      let ctx = h('div', {class:"cctx ibox-content", style:{padding:"3px"}}, [h('div', {class:"ccctx"}, comp.type=='text'?comp.desc:compctx)]);
+      let style = {padding:"3px"};
+      let bgcolor = comp.bgcolor;
+      if(bgcolor){
+        style['background-color'] = bgcolor;
+      }
+      let bodys = {class:"ccctx", style:{}};
+      if(comp.type ==='text'){
+        bodys.domProps = {innerHTML:comp.desc.replace(/\n/g,"<br>")};
+        //处理 text 的 style
+        if(comp.style){
+          let s = comp.style;
+          let s2 = bodys.style;
+          if(s.talign){
+            s2['text-align'] = s.talign;
+          }
+          if(s.tfontsize){
+            s2['font-size'] = s.tfontsize + "px";
+          }
+          if(s.tfontcolor){
+            s2['color'] = s.tfontcolor;
+          }
+          if(s.tfontweight){
+            s2['font-weight'] = "bold";
+          }
+          if(s.titalic){
+            s2['font-style'] = 'italic';
+          }
+          if(s.tunderscore){
+            s2['text-decoration'] = 'underline';
+          }
+        }
+      }
+      let ctx = h('div', {class:"cctx ibox-content", style:style}, [h('div', bodys, comp.type=='text'?"":compctx)]);
       return h('div', {attrs:{class:"ibox", id:"c_" + comp.id}}, [title, ctx]);
     },
     showCompMenu(comp, layoutId){
@@ -129,7 +161,7 @@ export default {
                       compevent();
                     }},
                     "prop": {name: "属性", callback:function(){
-                      setComp();
+                      ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "table"){
@@ -145,7 +177,7 @@ export default {
                       compevent();
                     }},
                     "prop": {name: "属性", callback:function(){
-                      setComp();
+                      ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "text"){
@@ -155,7 +187,7 @@ export default {
                       ts.editComp(comp, layoutId);
                     }},
                     "prop": {name: "属性", callback:function(){
-                      setComp();
+                      ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "grid"){
@@ -166,7 +198,7 @@ export default {
                     }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
                       setcompfilter();
                     }},"prop": {name: "属性", callback:function(){
-                      setComp();
+                      ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "box" || comp.type == "mbox"){
@@ -177,7 +209,7 @@ export default {
                     }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
                       setcompfilter();
                     }},"prop": {name: "属性", callback:function(){
-                      setComp();
+                      ts.setComp(comp, layoutId);
                     }}
                 };
         }
@@ -202,6 +234,9 @@ export default {
       }else{
         this.$parent.showDataPanel(comp);
       }
+    },
+    setComp(comp, layoutId){
+      this.$parent.showPropPanel(comp);
     },
     deleteComp(comp, layoutId){
       if(!confirm("是否确认删除组件？")){

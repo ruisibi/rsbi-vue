@@ -23,7 +23,18 @@ export default {
     let ts = this;
     let comp = this.comp;
     if(this.data){
-      return h('div', {class:"boxcls", style:{"font-size":"32px", "text-align":"center"}}, this.data.value);
+      let size = this.data.fontsize;
+      let color = this.data.fontcolor;
+      if(size){
+        size += "px";
+      }else{
+        size = "32px";
+      }
+      let style = {"font-size":size, "text-align":"center"};
+      if(color){
+        style.color = color;
+      }
+      return h('div', {class:"boxcls", style:style}, this.data.value);
     }else{
       return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
     }

@@ -10,6 +10,49 @@ export const layout = {
     l5:{tr1:[{colspan:2, rowspan:1, width:100, height:20, id:1}],tr2:[{colspan:1, rowspan:1, width:50, height:20, id:2},{colspan:1, rowspan:1, width:50, height:20, id:3}], tr3:[{colspan:2, rowspan:1, width:100, height:20, id:4}],tr4:[{colspan:1, rowspan:1, width:50, height:20, id:5},{colspan:1, rowspan:1, width:50, height:20, id:6}],tr5:[{colspan:2, rowspan:1, width:100, height:20, id:7}]}
 }
 
+export const fmtJson = [{
+	"text":"整数",
+	"value":"#,##0"
+},{
+	"text":"小数(保留一位)",
+	"value":"#,##0.0"
+},{
+	"text":"小数(保留两位)",
+	"value":"#,##0.00"
+},{
+	"text":"小数(保留四位)",
+	"value":"#,##0.0000"
+},{
+	"text":"百分比",
+	"value":"#,##0%"
+},{
+	"text": "百分比(保留一位小数)",
+	"value": "#,##0.0%"
+}, {
+	"text": "百分比(保留两位小数)",
+	"value": "#,##0.00%"
+}, {
+	"text": "百分比(保留四位小数)",
+	"value": "#,##0.0000%"
+}];
+
+export const rates = [{
+	"text":"1",
+	"value":"1"
+},{
+	"text":"千",
+	"value":"1000"
+},{
+	"text":"万",
+	"value":"10000"
+},{
+	"text":"百万",
+	"value":"1000000"
+},{
+	"text":"亿",
+	"value":"100000000"
+}];
+
 export const msginfo = (msg, type)=>{
 	if(!type || type === 'error'){
 		Message.error({message:msg, type:"error",showClose: true});

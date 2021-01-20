@@ -315,7 +315,7 @@ export default {
     .layout-left {
         position: fixed;
         width: 220px;
-        height: calc(100% - 35px);
+        height: 100%;
         border-right: 1px solid #D3D3D3;
         padding-top: 3px;
         background-color: white;
