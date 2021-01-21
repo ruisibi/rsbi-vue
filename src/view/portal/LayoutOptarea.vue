@@ -2,6 +2,7 @@
 <script>
 import { baseUrl, newGuid } from "@/common/biConfig";
 import PortalText from "./PortalText.vue"
+import ChartDailog from './ChartDailog.vue'
 import $ from "jquery";
 import * as utils from './Utils'
 import BoxView from "./view/Box.vue"
@@ -9,7 +10,8 @@ import BoxView from "./view/Box.vue"
 export default {
   components: {
     PortalText,
-    BoxView
+    BoxView,
+    ChartDailog
   },
   props: {
     pageInfo: {
@@ -68,7 +70,8 @@ export default {
       [
         table, 
         h('div', {class:"indicator"}, '==>'),
-        h('PortalText',{ref:"portalTextForm"},'')
+        h('PortalText',{ref:"portalTextForm"},''),
+        h('ChartDailog', {ref:"chartDailogForm"})
       ]
     );
   },
@@ -357,6 +360,7 @@ export default {
               var comp = {"id":newGuid(), "name":"交叉表", "type":"table"};
               execf(layoutId, comp);
             }else if(tp == "chart"){
+              ts.$refs['chartDailogForm'].insertChart();
               //setcharttype(true, layoutId, curTmpInfo.id, curTmpInfo.tp)					
             }else if(tp == "grid"){
               var comp = {"id":newGuid(), "name":"表格", "type":"grid"};

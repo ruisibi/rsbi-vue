@@ -2,7 +2,7 @@
 <template>
   	<el-dialog title="切换图形类型" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		
-			<div class="row">
+		<div class="row">
 			<div class="col-sm-3">
 				<ul>
 				<template v-for="item in charts">
@@ -14,7 +14,7 @@
 				<template v-for="item in charts">
 					<div class="one" :key="item.cid"  v-show="item.show">
 						<template v-for="c in item.children">
-						<span :key="c.index">
+						<span :key="item.type + c.index" :class="c.select===true?'select':''" @click="selectone(c.index, item.type)">
 							<img :src="require('../../assets/chart/' + c.img)">
 							<br/>
 							{{ c.name }}
@@ -34,7 +34,6 @@
 				</template>
 			</div>
 		</div>
-
 		<div slot="footer" class="dialog-footer">
 			<el-button type="primary" @click="save()">确 定</el-button>
 			<el-button @click="show = false">取 消</el-button>
@@ -55,13 +54,16 @@
 				opts:{
 					areas:[]
 				},
-				chart:null,
 				charts:[
 					{cid:"1", cname:"曲线图", type:"line",show:true,children:[
-						{img:"c1.gif", index:"1", name:"曲线图"}
+						{img:"c1.gif", index:"1", name:"曲线图", select:true},
+						{img:"c12.gif", index:"2", name:"双轴曲线图"}
 					]},
 					{cid:"2", cname:"柱状图",type:"column",show:false,children:[
-						{img:"c2.gif",  index:"1", name:"柱状图"}
+						{img:"c2.gif",  index:"1", name:"柱状图"},
+						{img:"c22.gif", index:"2", name:"双轴柱状图"},
+						{img:"c23.gif",  index:"3", name:"堆积图"},
+						{img:"c24.gif", index:"4", name:"双轴堆积图"}
 					]},
 					{cid:"3", cname:"条形图",type:"bar",show:false,children:[
 						{img:"bar.gif",  index:"1", name:"条形图"}
@@ -70,7 +72,9 @@
 						{img:"area.gif", index:"1", name:"面积图"}
 					]},
 					{cid:"5", cname:"饼图",type:"pie", show:false,children:[
-						{img:"c3.gif", index:"1", name:"饼图"}
+						{img:"c3.gif", index:"1", name:"饼图"},
+						{img:"c32.gif", index:"2", name:"环形图"},
+						{img:"c33.gif", index:"3", name:"嵌套环形图"}
 					]},
 					{cid:"6", cname:"仪表盘",type:"gauge",show:false,children:[
 						{img:"c4.gif", index:"1", name:"仪表盘"}
@@ -85,7 +89,8 @@
 						{img:"c7.gif",  index:"1", name:"气泡图"}
 					]},
 					{cid:"10", cname:"地图",type:"map", show:false,children:[
-						{img:"c8.gif", index:"1", name:"地图"}
+						{img:"c8.gif", index:"1", name:"地图"},
+						{img:"c82.gif", index:"2", name:"地图散点图"}
 					]},
 				]
 			}
@@ -110,33 +115,51 @@
 			save(){
 				this.show = false;
 				let tp = null;
+				let index = null;
 				$(this.charts).each((a, b)=>{
-					if(b.show === true){
-						tp = b.type;
-					}
-				});
-				this.chart.chartJson.type = tp;
-				this.$parent.resetChart();
-				//重新绑定拖拽事件
-				this.$parent.initChartKpiDrop(2);
-				this.$parent.chartView();
-				this.$parent.setUpdate();
+					$(b.children).each((c, d)=>{
+						if(d.select === true){
+							tp = b.type;
+							index = d.index;
+						}
+					});
+				})
+				console.log(tp+","+index);
 			},
-			
-			open(chart){
+			insertChart(chart){
 				this.show = true;
-				this.chart = chart;
 			},
 			selectchart(chartId){
 				$(this.charts).each((a, b)=>{
+					$(b.children).each((c, d)=>{
+						d.select = false;
+					});
+				})
+
+				$(this.charts).each((a, b)=>{
 					if(b.cid == chartId){
 						b.show = true
+						//选中第一个
+						b.children[0].select = true;
 					}else{
 						b.show = false;
 					}
+					this.$forceUpdate();
 				});
+				
 			},
-			
+			selectone(index, type){
+				$(this.charts).each((a, b)=>{
+					$(b.children).each((c, d)=>{
+						if(b.type === type && d.index === index){
+							d.select = true;
+						}else{
+							d.select = false;
+						}
+					});
+				})
+				this.$forceUpdate();
+			}
 		},
 		watch: {
 		}
@@ -158,6 +181,9 @@
 		text-align:center;
 		cursor:pointer;
 	}
+	span.select {
+			border:solid 1px #666;
+		}
 }
 .row {
 	ul {
@@ -170,6 +196,7 @@
 			border-bottom:solid 1px #CCCCCC;
 			cursor:pointer;
 			list-style: none;
+			text-align: left;
 		}
 		li.select {
 			background-color:#FFF;
