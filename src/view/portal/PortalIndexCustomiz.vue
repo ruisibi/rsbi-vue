@@ -99,6 +99,10 @@ export default {
         this.$refs['layoutBottomForm'].showPanel(comp);
         this.$refs['layoutRightForm'].closeproperty();
     },
+    hidePanel(){
+      this.$refs['layoutRightForm'].closeproperty();
+      this.$refs['layoutBottomForm'].closeDatapanel();
+    },
     showPropPanel(comp){
       this.$refs['layoutBottomForm'].closeDatapanel();
       this.$refs['layoutRightForm'].showPanel(comp);

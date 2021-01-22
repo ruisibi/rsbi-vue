@@ -1,0 +1,93 @@
+<script>
+import {baseUrl, ajax, loopChartJson} from '@/common/biConfig'
+import $ from 'jquery'
+import * as utils from '@/view/portal/Utils'
+import { Loading } from 'element-ui'
+import * as echartsUtils from '@/common/echartsUtils'
+
+export default {
+  components:{    
+  },
+  data(){
+    return {
+      data:null
+    }
+  },
+  props:{
+      comp:{
+        type:Object,
+        required:true,
+        default:{}
+      }
+  },
+  render(h){
+    let ts = this;
+    let comp = this.comp;
+    if(this.data){
+      return h('div', {attrs:{id:"ct_"+comp.id}, style:{width:'100%', height:"250px"}});
+    }else{
+      return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+    }
+  },
+  mounted(){
+    this.chartView();
+    //放入window对象
+    window.echartsUtils = echartsUtils;
+    var echarts = require('echarts');
+    window.echarts = echarts;
+  },
+  computed: {
+  },
+  methods: {
+    chartView(){
+      let ts = this;
+      let json = this.comp;
+
+      if(json.kpiJson[0] == null){
+        return;
+      }
+      if(json.chartJson.type == "scatter" && json.kpiJson[1] == null  ){
+        return;
+      }
+      if(json.chartJson.type == "bubble" && json.kpiJson[2] == null  ){
+        return;
+      }
+
+      json = JSON.parse(JSON.stringify(json));
+	    //json.portalParams = pageInfo.params;
+      let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('#c_'+json.id+" div.ccctx")});
+      ajax({
+        url:"portal/ChartView.action",
+        type:"POST",
+        data:JSON.stringify(json),
+        postJSON:true,
+        success:(resp)=>{
+          ts.data = resp.rows;
+          loadingInstance.close();
+          //ts.$forceUpdate();
+          ts.$nextTick(()=>ts.showChart());
+        }
+      }, this);
+    },
+    /**
+     * 调用echarts渲染图形
+     */
+    showChart(){
+      let comp = this.comp;
+      let option = loopChartJson(this.data);
+      let myChart = echarts.getInstanceByDom(document.getElementById('ct_'+comp.id));
+      if(!myChart){
+        myChart = echarts.init(document.getElementById('ct_'+comp.id), "default");
+      }
+      myChart.setOption(option, true);
+    }
+  },
+  watch: {
+    
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

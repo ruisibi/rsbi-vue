@@ -41,6 +41,9 @@ export default {
     boxView(){
       this.$parent.$parent.$refs['optarea'].$refs['mv_'+this.comp.id].boxView();
     },
+    setUpdate(){
+      this.$parent.$parent.isupdate = true;
+    },
     bindBoxEvent(){
       let ts = this;
       $("#boxDataPanel .h_ctx").droppable({
@@ -86,6 +89,7 @@ export default {
           json.name = node.text;
           ts.boxView();
           ts.$forceUpdate();
+          ts.setUpdate();
         }
       });
     }

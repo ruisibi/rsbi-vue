@@ -42,7 +42,7 @@
 </template>
 
 <script>
-	import {ajax} from '@/common/biConfig'
+	import {ajax, newGuid} from '@/common/biConfig'
 	import $ from 'jquery'
 
 	export default {
@@ -51,6 +51,8 @@
 				show:false,
 				mapArea:null,
 				mapAreaname:null,
+				layoutId:null,
+				comp:null,
 				opts:{
 					areas:[]
 				},
@@ -124,10 +126,46 @@
 						}
 					});
 				})
-				console.log(tp+","+index);
+				if(this.comp){
+					let comp = this.comp;
+					comp.chartJson.type = tp;
+					comp.chartJson.maparea = this.mapArea;
+					comp.chartJson.typeIndex = index;
+					this.$parent.$refs['mv_'+comp.id].chartView();
+				}else{
+					var compId = newGuid();
+					var name = "图表";
+					var comp = {"id":compId, "name":name, "type":"chart"};
+					comp.chartJson = {"type":tp, maparea:this.mapArea, typeIndex:index, xcol:{}, ycol:{}, scol:{}, params:[],height:tp == 'map' ? '400':'250'};
+					comp.kpiJson = [null, null, null];
+
+					this.$parent.addComp(this.layoutId, comp);
+				}
 			},
-			insertChart(chart){
+			insertChart(layoutId, chart){
+				this.layoutId = layoutId;
 				this.show = true;
+				this.comp = null;
+			},
+			//更改图形类型
+			changeType(comp){
+				this.show = true;
+				this.comp = comp;
+				let type = comp.chartJson.type;
+				let index = comp.chartJson.typeIndex;
+				//选中值
+				$(this.charts).each((a, b)=>{
+					$(b.children).each((c, d)=>{
+						if(b.type === type && d.index === index){
+							d.select = true;
+							b.show = true;
+						}else{
+							d.select = false;
+							b.show = false;
+						}
+					});
+				})
+				//this.$forceUpdate();
 			},
 			selectchart(chartId){
 				$(this.charts).each((a, b)=>{

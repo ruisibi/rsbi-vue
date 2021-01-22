@@ -6,11 +6,13 @@ import ChartDailog from './ChartDailog.vue'
 import $ from "jquery";
 import * as utils from './Utils'
 import BoxView from "./view/Box.vue"
+import ChartView from "./view/Chart.vue"
 
 export default {
   components: {
     PortalText,
     BoxView,
+    ChartView,
     ChartDailog
   },
   props: {
@@ -105,7 +107,9 @@ export default {
       let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', comp.name)]), h('div', {class:"ibox-tools"}, tools)]);
       let compctx = [];
       if(comp.type === 'box'){
-        compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}, ''));
+        compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
+      }else if(comp.type ==='chart'){
+        compctx.push(h('chart-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
       }
       let style = {padding:"3px"};
       let bgcolor = comp.bgcolor;
@@ -152,7 +156,7 @@ export default {
           divId = "chart_menu";
           items = {
                     "tblx": {name: "图表类型",callback:function(){
-                      setcharttype(false)
+                      ts.$refs['chartDailogForm'].changeType(comp);
                     }},
                     "data": {name: "数据", icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
@@ -255,6 +259,8 @@ export default {
         }
       }
       td.children.splice(compIdx, 1);
+      //隐藏数据窗口
+      this.$parent.hidePanel();
       this.setUpdate();
       this.$forceUpdate();
     },
@@ -360,8 +366,7 @@ export default {
               var comp = {"id":newGuid(), "name":"交叉表", "type":"table"};
               execf(layoutId, comp);
             }else if(tp == "chart"){
-              ts.$refs['chartDailogForm'].insertChart();
-              //setcharttype(true, layoutId, curTmpInfo.id, curTmpInfo.tp)					
+              ts.$refs['chartDailogForm'].insertChart(layoutId);
             }else if(tp == "grid"){
               var comp = {"id":newGuid(), "name":"表格", "type":"grid"};
               execf(layoutId, comp);
