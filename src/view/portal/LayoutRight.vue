@@ -10,6 +10,7 @@
           <div class="ibox-content" style="padding:0;">
             <pbox v-if="showBox" ref="boxForm" :comp="comp"></pbox>
             <ptext v-if="showText" ref="textForm" :comp="comp"></ptext>
+            <pchart v-if="showChart" ref="chartForm" :comp="comp"></pchart>
           </div>
         </div>
       </div>
@@ -21,10 +22,11 @@ import $ from 'jquery'
 import * as utils from './Utils'
 import pbox from './prop/Box'
 import ptext from './prop/Text'
+import pchart from './prop/Chart'
 
 export default {
   components:{
-    pbox,ptext
+    pbox,ptext,pchart
   },
   props:{
       pageInfo:{
@@ -69,6 +71,7 @@ export default {
         this.$nextTick(()=> this.$refs['boxForm'].init());
       }else if(comp.type === 'chart'){
         this.showChart = true;
+        this.$nextTick(()=>this.$refs['chartForm'].init());
       }else if(comp.type ==='grid'){
         this.showGrid = true;
       }else if(comp.type === 'table'){

@@ -53,6 +53,10 @@ export const rates = [{
 	"value":"100000000"
 }];
 
+export const pielabels = [{"text":"名称","value":"n"},{"text":"名称+值","value":"nv"},{"text":"名称+比例","value":"np"}];
+
+export const legendpos = [{text: '右上', value: 'righttop'},{text: '中上', value: 'centertop'},{text: '中下', value: 'centerbottom'}];
+
 export const msginfo = (msg, type)=>{
 	if(!type || type === 'error'){
 		Message.error({message:msg, type:"error",showClose: true});

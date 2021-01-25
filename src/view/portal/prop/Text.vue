@@ -8,7 +8,7 @@
             <el-form-item label="标题" label-width="70px">
               <el-input v-model="prop.title" @blur="changevalue('title')"></el-input>
             </el-form-item>
-            <el-form-item label="位置" label-width="70px">
+            <el-form-item label="位置" label-width="80px">
               <el-radio-group v-model="prop.talign" size="mini" @change="changevalue('talign')">
               <el-radio-button label="left">左</el-radio-button>
               <el-radio-button label="center">中</el-radio-button>

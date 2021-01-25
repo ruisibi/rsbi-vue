@@ -84,6 +84,10 @@ export default {
   },
   watch: {
     
+  },
+  beforeDestroy(){
+    delete window.echartsUtils;
+    delete window.echarts;
   }
 }
 </script>
