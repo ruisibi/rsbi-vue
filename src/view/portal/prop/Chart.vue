@@ -42,6 +42,9 @@
           <el-form-item label="是否显示值" label-width="170px">
             <el-switch v-model="prop.dataLabel" @change="changevalue('dataLabel')"></el-switch>
           </el-form-item>
+          <el-form-item label="值的颜色" label-width="180px">
+              <el-color-picker v-model="prop.dataLabelColor" @change="changevalue('dataLabelColor')"></el-color-picker>
+            </el-form-item>
             <template v-if="ctp === 'pie'">
                 <el-form-item label="标签显示内容" label-width="106px">
                     <el-select v-model="prop.labelType" placeholder="请选择" @change="changevalue('labelType')">
@@ -182,6 +185,7 @@ export default {
         marginLeft:65,
         marginRight:10,
         dataLabel:false,
+        dataLabelColor:null,
         xdispName:"",
         tickInterval:null,
         routeXaxisLable:null,
@@ -229,6 +233,9 @@ export default {
       p.title = c.name;
       this.ctp = c.chartJson.type;
       this.typeIndex = c.chartJson.typeIndex;
+      if(c.chartJson.xcol){
+        p.xdispName = c.chartJson.xcol.xdispName;
+      }
     },
     chartView(){
       this.$parent.$parent.$refs['optarea'].$refs['mv_'+this.comp.id].chartView();
@@ -243,10 +250,33 @@ export default {
       if(prop === 'title'){
         c.name = v;
         this.$parent.$forceUpdate();
-      }else if(col === 'showLegend' || col == "legendLayout" || col == "legendpos" || col == "dataLabel" || col == "markerEnabled" || col == "marginLeft" || col == "marginRight"){
+      }else if(col === 'showLegend' || col == "legendLayout" || col == "legendpos" || col == "dataLabel"  || col ==='dataLabelColor' || col == "markerEnabled" || col == "marginLeft" || col == "marginRight"){
         c.chartJson[prop] = v;
         this.chartView();
+      }else if(col == "tickInterval" || col == "routeXaxisLable" || col == "xdispName" || col == "top"){
+        c.chartJson.xcol[prop] = v;
+         this.chartView();
+      }else if(col == "ydispName" || col == "unit" || col == "fmt" || col == "min" || col == "max" || col == "rate"){
+        var o = c.kpiJson[0];
+        o[col] = v;
+        this.chartView();
+      }else if(col == "y2dispName" || col == "unit2" || col == "fmt2" || col == "rate2" || col == "mergeData"){	//处理y2col y2轴
+        var o = c.kpiJson[1];
+				
+				if(col == "y2dispName"){
+					o.ydispName = v;
+				}else if(col == "unit2"){
+					o.unit = v;
+				}else if(col == "fmt2"){
+					o.fmt = v;
+				}else if(col == "rate2"){
+					o.rate = v;
+				}else if(col == "mergeData"){
+					o.mergeData = v;
+        }     
+        this.chartView();
       }
+
     }
   },
   watch: {

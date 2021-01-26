@@ -7,12 +7,14 @@ import $ from "jquery";
 import * as utils from './Utils'
 import BoxView from "./view/Box.vue"
 import ChartView from "./view/Chart.vue"
+import GridView from "./view/Grid.vue"
 
 export default {
   components: {
     PortalText,
     BoxView,
     ChartView,
+    GridView,
     ChartDailog
   },
   props: {
@@ -110,6 +112,8 @@ export default {
         compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
       }else if(comp.type ==='chart'){
         compctx.push(h('chart-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
+      }else if(comp.type === 'grid'){
+        compctx.push(h('grid-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
       }
       let style = {padding:"3px"};
       let bgcolor = comp.bgcolor;
