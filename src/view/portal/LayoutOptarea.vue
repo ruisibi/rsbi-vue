@@ -239,7 +239,11 @@ export default {
           });
     },
     editComp(comp, layoutId){
-      this.$parent.$refs['layoutleftForm'].tabActive = 'data-tab-2';
+      if(comp.type ==='grid'){
+        this.$parent.$refs['layoutleftForm'].tabActive = 'data-tab-3';
+      }else{
+        this.$parent.$refs['layoutleftForm'].tabActive = 'data-tab-2';
+      }
       if(comp.type === 'text'){
         this.$refs['portalTextForm'].insertText("update", layoutId, comp);
       }else{

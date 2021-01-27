@@ -4,7 +4,7 @@
         <template v-if="!comp.cols || comp.cols.length === 0">
           <div class="tipinfo">拖拽数据表字段到此处作为表格的列字段</div>
         </template>
-        <template v-if="comp.cols.length > 0">
+        <template v-if="comp.cols && comp.cols.length > 0">
           <b>
             表格字段：
           </b>
