@@ -3,7 +3,7 @@
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item title="文本属性" name="1">
             <el-form-item label="是否显示标题" label-width="170px">
-              <el-switch v-model="prop.showTitle"></el-switch>
+              <el-switch v-model="prop.showtitle" @change="changevalue('showtitle')"></el-switch>
             </el-form-item>
             <el-form-item label="标题" label-width="70px">
               <el-input v-model="prop.title" @blur="changevalue('title')"></el-input>
@@ -59,7 +59,7 @@ export default {
     return {
       activeName:"1",
       prop:{
-        showTitle:false,
+        showtitle:true,
         title:null,
         talign:"left",
         tfontsize:12,
@@ -91,6 +91,8 @@ export default {
       }
       if(prop === 'title'){
         c.name = v;
+      }else if(prop === 'showtitle'){
+        c.showtitle = v;
       }else if(prop === 'talign' || prop === 'tfontsize' || prop ==='tfontcolor' || prop === 'tunderscore' 
         || prop ==='titalic' || prop ==='tfontweight'){
         c.style[prop] = v;

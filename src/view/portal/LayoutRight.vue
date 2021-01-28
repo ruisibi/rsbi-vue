@@ -11,6 +11,7 @@
             <pbox v-if="showBox" ref="boxForm" :comp="comp"></pbox>
             <ptext v-if="showText" ref="textForm" :comp="comp"></ptext>
             <pchart v-if="showChart" ref="chartForm" :comp="comp"></pchart>
+            <pgrid v-if="showGrid" ref="gridForm" :comp="comp"></pgrid>
           </div>
         </div>
       </div>
@@ -23,10 +24,12 @@ import * as utils from './Utils'
 import pbox from './prop/Box'
 import ptext from './prop/Text'
 import pchart from './prop/Chart'
+import pgrid from './prop/Grid'
+
 
 export default {
   components:{
-    pbox,ptext,pchart
+    pbox,ptext,pchart,pgrid
   },
   props:{
       pageInfo:{
@@ -74,16 +77,21 @@ export default {
         this.$nextTick(()=>this.$refs['chartForm'].init());
       }else if(comp.type ==='grid'){
         this.showGrid = true;
+        this.$nextTick(()=>this.$refs['gridForm'].init());
       }else if(comp.type === 'table'){
         this.showTable = true;
       }else if(comp.type === 'text'){
         this.showText = true;
         this.$nextTick(()=>this.$refs['textForm'].init());
       }
+      //激发resize 事件
+      $(window).trigger("resize");
     },
    closeproperty(){
       $(".layout-center").css("margin-right","");
       this.show = false;
+      //激发resize 事件
+      $(window).trigger("resize");
    }
   },
   watch: {

@@ -86,6 +86,9 @@ export default {
   },
   mounted() {
     this.bindTdEvent();
+    this.$nextTick(()=>{
+      $(window).resize(()=>this.resizeChart());
+    });
   },
   computed: {},
   methods: {
@@ -388,6 +391,21 @@ export default {
           ts.$forceUpdate();
         }
 
+      });
+    },
+    resizeChart(){
+      let comps = utils.findAllComps(this.pageInfo);
+      comps.forEach(m=>{
+        if(m.type === 'chart'){
+          let dom = document.getElementById("ct_"+m.id);
+          if(dom){
+            var chart = echarts.getInstanceByDom(dom);
+            if(chart){
+              chart.resize($(dom).width(), $(dom).height());
+            }
+          }
+          
+        }
       });
     },
     //绑定组件拖拽事件

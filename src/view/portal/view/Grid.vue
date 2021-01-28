@@ -53,7 +53,6 @@ export default {
         }
       let first = data.curPage <= 0;
       let end = data.curPage >= allpage - 1;
-      console.log(allpage);
       let pg = [
         h('button', {class:"btn btn-link btn-xs",attrs:{disabled:first},on:{click:()=>{
           if(!first){
@@ -82,7 +81,10 @@ export default {
       ];
 
       let pageinfo = h('div', {class:"pagesizeinfo"}, [h('div', {class:"pagesizeLeft"}, pg), h('div', {class:"pagesizeRight"}, '第'+(data.curPage + 1)+'页，共'+data.total+'条记录')]);
-      let cld = [h('div', {class:"lock-dg-header"}, [table1]), h('div', {class:"lock-dg-body"}, [table2]), pageinfo];
+      let cld = [h('div', {class:"lock-dg-header"}, [table1]), h('div', {class:"lock-dg-body"}, [table2])];
+      if(!(this.comp.isnotfy === true)){
+        cld.push(pageinfo);
+      }
       return h('div', {class:"lock-dg"}, cld);
       
     }

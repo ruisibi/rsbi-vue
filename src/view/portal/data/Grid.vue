@@ -49,6 +49,7 @@ export default {
   methods: {
      setUpdate(){
       this.$parent.$parent.isupdate = true;
+      this.$forceUpdate();
     },
     gridView(){
       this.$parent.$parent.$refs['optarea'].$refs['mv_'+this.comp.id].gridView();
