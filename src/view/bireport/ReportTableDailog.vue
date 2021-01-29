@@ -19,7 +19,7 @@
 			</template>
 			<template v-if="type === 'top'">
 				<el-form-item label="维度取Top" label-width="100px">
-					<el-input-number v-model="val.top" :min="1" :max="100" label="描述文字"></el-input-number>
+					<el-input-number v-model="val.top" :min="1" :max="100" label="描述文字" size="small"></el-input-number>
 				</el-form-item>
 				<el-form-item label="" label-width="100px">
 					<el-select v-model="val.topType" placeholder="请选择">
@@ -90,10 +90,10 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="值" label-width="100px">
-					<el-input-number v-model="val.value1" label="描述文字"></el-input-number>
+					<el-input-number v-model="val.value1" label="描述文字" size="small"></el-input-number>
 				</el-form-item>
 				<el-form-item label="值2" v-show="val.oper === 'between'" label-width="100px">
-					<el-input-number v-model="val.value2" label="描述文字"></el-input-number>
+					<el-input-number v-model="val.value2" label="描述文字" size="small"></el-input-number>
 				</el-form-item>
 			</template>
 			<template v-if="type === 'kpiwarning'">
@@ -128,7 +128,7 @@
 						>
 						</el-option>
 					</el-select>
-					<el-input-number v-model="val.value1" controls-position="right" @change="handleChange(1)"></el-input-number>
+					<el-input-number v-model="val.value1" controls-position="right" @change="handleChange(1)" size="small"></el-input-number>
 				</el-form-item>
 				<el-form-item label-width="160px">
 					<span slot="label">
@@ -144,7 +144,7 @@
 						>
 						</el-option>
 					</el-select>
-					<el-input-number v-model="val.value2" controls-position="right" @change="handleChange(2)"></el-input-number>
+					<el-input-number v-model="val.value2" controls-position="right" @change="handleChange(2)" size="small"></el-input-number>
 				</el-form-item>
 				<el-form-item label-width="160px">
 					<span slot="label">

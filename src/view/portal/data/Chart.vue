@@ -4,6 +4,7 @@ import {baseUrl} from '@/common/biConfig'
 import $ from 'jquery'
 import * as utils from '@/view/portal/Utils'
 import * as chartUtils from '@/view/bireport/chartUtils'
+import * as tools from '@/view/bireport/bireportUtils'
 
 export default {
   components:{
@@ -114,7 +115,37 @@ export default {
     },
     chartView(){
       this.$parent.$parent.$refs['optarea'].$refs['mv_'+this.comp.id].chartView();
-    },
+	},
+	chartmenu(o, pos){
+		const ts = this;
+		$.contextMenu( 'destroy');
+		$.contextMenu({
+			selector: 'a.charticon', 
+			className: "chartDimOpt",
+			trigger: 'left',
+			delay: 500,
+			autoHide:true,
+			callback: function(key, opt) {
+				var comp = ts.comp;
+				if(key == 'asc' || key == 'desc'){
+					chartUtils.chartsort(key, pos, comp, ()=>{
+						ts.setUpdate();
+						ts.chartView();
+					});
+				}else if(key == "remove"){
+					chartUtils.delChartKpiOrDim(pos, comp, ()=>{
+						ts.setUpdate();
+						ts.chartView();
+					});
+				}
+			},
+			items: {
+				"asc": {name: "升序", icon: "fa-sort-amount-asc"},
+				"desc": {name: "降序", icon: 'fa-sort-amount-desc'},
+				"remove": {name: "清除",icon:"fa-remove"}
+			}
+		});
+	},
     initChartKpiDrop(){
         const ts = this;
         let comp = this.comp;

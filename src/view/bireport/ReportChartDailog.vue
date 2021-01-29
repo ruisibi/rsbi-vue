@@ -4,7 +4,7 @@
 		  <el-form :model="val" ref="valForm" label-position="left">
 			<template v-if="type === 'top'">
 				<el-form-item label="维度取Top" label-width="100px">
-					<el-input-number v-model="val.top" :min="1" :max="100" label="描述文字"></el-input-number>
+					<el-input-number v-model="val.top" :min="1" :max="100" label="描述文字" size="small"></el-input-number>
 				</el-form-item>
 			</template>
 			<template v-if="type === 'kpiprop'">
@@ -65,10 +65,10 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="值" label-width="100px">
-					<el-input-number v-model="val.value1" label="描述文字"></el-input-number>
+					<el-input-number v-model="val.value1" label="描述文字" size="small"></el-input-number>
 				</el-form-item>
 				<el-form-item label="值2" v-show="val.oper === 'between'" label-width="100px">
-					<el-input-number v-model="val.value2" label="描述文字"></el-input-number>
+					<el-input-number v-model="val.value2" label="描述文字" size="small"></el-input-number>
 				</el-form-item>
 			</template>
 		  </el-form>

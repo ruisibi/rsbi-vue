@@ -25,7 +25,7 @@ export default {
     if(data){
       let ths = [];
       data.header.forEach(element => {
-        ths.push(h('th', {class:"grid3-td",attrs:{align:element.align?element.align:"center"}}, [h('div', {class:"dg-cell"}, element.desc)]));
+        ths.push(h('th', {class:"grid3-td"}, [h('div', {class:"dg-cell"}, element.desc)]));
       });
       let table1 = h('table', {class:"lockgrid"}, [h('thead', [h("tr", ths)])]);
 

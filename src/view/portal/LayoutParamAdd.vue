@@ -9,7 +9,7 @@
               <el-input v-model="param.paramname"></el-input>
             </el-form-item>
             <el-form-item label="长度" label-width="100px">
-              <el-input-number v-model="param.size" :min="5" :max="30"></el-input-number>
+              <el-input-number v-model="param.size" :min="5" :max="30" size="small"></el-input-number>
             </el-form-item>
             <template v-if="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'">
               <el-form-item label="时间格式" label-width="100px">
@@ -29,7 +29,7 @@
               <el-input v-model="param.defvalue"></el-input>
             </el-form-item>
             <el-form-item label="隐藏参数" label-width="100px">
-              <el-switch v-model="param.hiddenprm" active-color="#13ce66" inactive-color="#dbdcdc" active-value="y" inactive-value="n">
+              <el-switch v-model="param.hiddenprm" active-value="y" inactive-value="n">
               </el-switch>
               <span class="text-warning"> 隐藏参数不会在页面中显示</span>
             </el-form-item>
