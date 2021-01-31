@@ -12,6 +12,7 @@
             <ptext v-if="showText" ref="textForm" :comp="comp"></ptext>
             <pchart v-if="showChart" ref="chartForm" :comp="comp"></pchart>
             <pgrid v-if="showGrid" ref="gridForm" :comp="comp"></pgrid>
+            <ptable v-if="showTable" ref="tableForm" :comp="comp"></ptable>
           </div>
         </div>
       </div>
@@ -25,11 +26,11 @@ import pbox from './prop/Box'
 import ptext from './prop/Text'
 import pchart from './prop/Chart'
 import pgrid from './prop/Grid'
-
+import ptable from './prop/Table'
 
 export default {
   components:{
-    pbox,ptext,pchart,pgrid
+    pbox,ptext,pchart,pgrid,ptable
   },
   props:{
       pageInfo:{
@@ -80,6 +81,7 @@ export default {
         this.$nextTick(()=>this.$refs['gridForm'].init());
       }else if(comp.type === 'table'){
         this.showTable = true;
+        this.$nextTick(()=>this.$refs['tableForm'].init());
       }else if(comp.type === 'text'){
         this.showText = true;
         this.$nextTick(()=>this.$refs['textForm'].init());
