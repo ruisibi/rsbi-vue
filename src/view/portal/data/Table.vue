@@ -9,7 +9,17 @@
           <span class="dimcol" :key="item.id">
             <span class="text">{{ item.dimdesc }}</span>
             <div class="ibox-tools">
-              <button class="btn btn-outline btn-success btn-xs"><i class="fa fa-wrench"></i>
+              <button class="btn btn-outline btn-success btn-xs" type="button" @click="showmenu(item,'row')"><i class="fa fa-wrench"></i>
+              </button>
+            </div>
+          </span>
+        </template>
+        <template v-for="item in comp.cols">
+          <b :key="item.id">列字段：</b>
+          <span class="dimcol" :key="item.id">
+            <span class="text">{{ item.dimdesc }}</span>
+            <div class="ibox-tools">
+              <button class="btn btn-outline btn-success btn-xs" type="button" @click="showmenu(item,'col')"><i class="fa fa-wrench"></i>
               </button>
             </div>
           </span>
@@ -18,7 +28,7 @@
           <span class="col" :key="item.kpi_id">
             <span class="text">{{ item.kpi_name }}</span>
             <div class="ibox-tools">
-              <button class="btn btn-outline btn-success btn-xs"><i class="fa fa-wrench"></i>
+              <button class="btn btn-outline btn-success btn-xs" type="button" @click="showmenu(item, 'kpi')"><i class="fa fa-wrench"></i>
               </button>
             </div>
           </span>
@@ -67,6 +77,210 @@ export default {
     },
     tableView(){
       this.$parent.$parent.$refs['optarea'].$refs['mv_'+this.comp.id].tableView();
+    },
+    showmenu(node, pos){
+      $.contextMenu( 'destroy');
+      let ts = this;
+      var comp = this.comp;
+      var items = null;
+      if(pos === 'row' || pos === 'col'){
+        items = {
+              "desc":{name:"升序", icon:""},
+              "asc":{name:"降序", icon:""},
+              "move":{name:"移动", icon:"fa-arrows-alt", items:{left:{name:"左移", icon:"fa-arrow-left"}, right:{name:"右移", icon:"fa-arrow-right"}, moveTo:{name:"移至"+(pos=='row'?'列':"行")+"字段", icon:""}}},
+              "aggre": {name: "聚合"},
+              "top": {name: "取Top"},
+              "clear": {name: "删除", icon:"fa-times"}
+          };
+        }
+        if(pos === 'kpi'){
+          items = {
+              "prop":{name:"属性", icon:""},
+              "sort":{name:"排序", icon:"", items:{
+                "desc":{name:"升序", icon:""},
+                "asc":{name:"降序", icon:""},
+                "def":{name:"默认", icon:""}
+              }},
+              "move":{name:"移动", icon:"fa-arrows-alt", items:{left:{name:"左移", icon:"fa-arrow-left"}, right:{name:"右移", icon:"fa-arrow-right"}}},
+              "clear": {name: "删除", icon:"fa-times"}
+          };
+        }
+        $.contextMenu({
+          selector: '#tableData button.btn', 
+          trigger: 'left',
+          delay: 500,
+          autoHide:true,
+          callback: function(opt) {
+            if(opt == "asc" || opt == "desc" || opt == 'def'){
+              if(opt == "def"){
+                opt = "";
+              }
+              if(pos === 'col' || pos === 'row'){
+                ts.dimsort(pos, node, opt);
+              }else{
+                ts.kpisort(node, opt);
+              }
+            }else if(opt == "prop"){
+              //ts.setGridColProp(comp, col);
+            }else if(opt == "clear"){
+              ts.delJsonKpiOrDim(pos, node);
+            }else if(opt == "left" || opt == "right"){
+              ts.dimkpimove(pos, opt, node);
+            }else if(opt == 'moveTo'){
+              ts.dimexchange(pos, opt, node);
+            }
+          },
+          items: items
+      });
+    },
+    //从交叉表JSON中删除KPI
+    delJsonKpiOrDim(pos, node){
+      let comp = this.comp;
+      if(pos == 'kpi'){
+        var kpis = comp.kpiJson;
+        var idx = -1;
+        for(var i=0; i<kpis.length; i++){
+          if(kpis[i].kpi_id == node.kpi_id){
+            idx = i;
+            break;
+          }
+        }
+        kpis.splice(idx, 1);
+      }
+      if(pos == 'col' || pos === 'row'){
+        var dims = null;
+        if(pos == 'col'){
+          dims = comp.cols;
+        }else{
+          dims = comp.rows;
+        }
+        var idx = -1;
+        for(var i=0; i<dims.length; i++){
+          if(dims[i].id == node.id){
+            idx = i
+            break;
+          }
+        }
+        dims.splice(idx, 1);
+      }
+      this.setUpdate();
+      this.tableView();
+    },
+    dimkpimove(pos, tp, node){
+      var comp = this.comp;
+      var dims = null;
+      if(pos == 'col'){
+        dims = comp.cols;
+      }else if(pos =="row"){
+        dims = comp.rows;
+      }else if(pos == "kpi"){
+        dims = comp.kpiJson;
+      }
+      if(dims.length <= 1){
+        utils.msginfo('无效移动。');
+        return;
+      }
+      let id = pos === 'kpi'?node.kpi_id:node.id;
+      for(var i=0; i<dims.length; i++){
+        if((pos=="kpi"?dims[i].kpi_id:dims[i].id) == id){
+          if(tp == 'left'){
+            if(i <= 0){
+              utils.msginfo('无效移动。');
+              return;
+            }else{
+              var tp = dims[i - 1];
+              dims[i - 1] = dims[i];
+              dims[i] = tp;
+             
+            }
+          }else
+          if(tp == 'right'){
+            if( i >= dims.length - 1){
+              utils.msginfo('无效移动。');
+              return;
+            }else{
+              var tp = dims[i + 1];
+              dims[i + 1] = dims[i];
+              dims[i] = tp;
+             
+            }
+          }
+          break;
+        }
+      }
+      this.setUpdate();
+      this.tableView();
+    },
+    dimexchange(pos, opt, node){
+      let dimid = node.id;
+      let comp = this.comp;
+      if(pos == 'col'){
+        //先移除维度
+        var idx = 0;
+        var tmp = null;
+        var dims = comp.cols;
+        for(var i=0; i<dims.length; i++){
+          if(dims[i].id == dimid){
+            idx = i;
+            tmp = dims[i];
+            break;
+          }
+        }
+        comp.cols.splice(idx, 1);
+        //再添加维度
+        comp.rows.push(tmp);
+      }
+      if(pos == 'row'){
+        //先移除维度
+        var idx = 0;
+        var tmp = null;
+        var dims = comp.rows;
+        for(var i=0; i<dims.length; i++){
+          if(dims[i].id == dimid){
+            idx = i;
+            tmp = dims[i];
+            break;
+          }
+        }
+        comp.rows.splice(idx, 1);
+        //再添加维度
+        comp.cols.push(tmp);
+      }
+      this.setUpdate();
+      this.tableView();
+    },
+    dimsort(pos, node, tp){
+      let comp = this.comp;
+      var dims = null;
+      if(pos == 'col'){
+        dims = comp.cols;
+      }else{
+        dims = comp.rows;
+      }
+      for(var i=0; i<dims.length; i++){
+        if(dims[i].id == node.id){
+          dims[i].dimord = tp;
+          break;
+        }
+      }
+      //进行维度排序时，清除度量的排序信息
+      for(let i=0; comp.kpiJson && i<comp.kpiJson.length; i++){
+        delete comp.kpiJson[i].sort;
+      }
+      this.setUpdate();
+      this.tableView();
+    },
+    kpisort(node, tp){
+      let comp = this.comp;
+      for(let i=0; i<comp.kpiJson.length; i++){
+        if(comp.kpiJson[i].kpi_id == node.kpi_id){
+          comp.kpiJson[i].sort = tp;
+        }else{
+          delete comp.kpiJson[i].sort;
+        }
+      }
+      this.setUpdate();
+      this.tableView();
     },
     bindDropEvent(){
       let ts = this;
