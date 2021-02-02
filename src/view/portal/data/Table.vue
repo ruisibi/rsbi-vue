@@ -34,6 +34,7 @@
           </span>
         </template>
       </template>
+      <tableDailog ref="tableDailog"></tableDailog>
     </div>
 </template>
 
@@ -43,10 +44,12 @@ import $ from 'jquery'
 import * as utils from '@/view/portal/Utils'
 import * as tableUtils from '@/view/bireport/tableUtils'
 import * as tools from '@/view/bireport/bireportUtils'
+import tableDailog from '@/view/portal/PortalTableDailog'
+
 
 export default {
   components:{
-    
+    tableDailog
   },
   props:{
       comp:{
@@ -121,7 +124,7 @@ export default {
                 ts.kpisort(node, opt);
               }
             }else if(opt == "prop"){
-              //ts.setGridColProp(comp, col);
+              ts.$refs['tableDailog'].kpiProperty(node, comp);
             }else if(opt == "clear"){
               ts.delJsonKpiOrDim(pos, node);
             }else if(opt == "left" || opt == "right"){
