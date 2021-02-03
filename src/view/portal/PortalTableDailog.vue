@@ -3,6 +3,11 @@
   	<el-dialog :title="title" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  <el-form :model="val" ref="valForm" label-position="left">
 			<template v-if="type === 'dimAggre'">
+				<el-form-item label="自动聚合" label-width="100px">
+					<el-switch v-model="val.autoaggre"></el-switch>
+					(设置后，聚合方式的选择功能既无效) 
+				</el-form-item>
+				<template v-if="val.autoaggre == false">
 				<el-form-item label="聚合方式" label-width="100px">
 					<el-select v-model="val.aggreType" style="width:100%" placeholder="请选择">
 						<el-option
@@ -13,6 +18,7 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+				</template>
 				<el-form-item label-width="100px">
 					<button type="button" class="btn btn-danger btn-rounded btn-outline btn-xs" @click="clearAggre()">清除聚合</button>
 				</el-form-item>
@@ -128,8 +134,9 @@
 				},
 				val:{
 					aggreType:"",
+					autoaggre:false,
 					top:null,
-					topType:"number",
+					topType:null,
 					unit:null,
 					fmt:null,
 					oper:null,
@@ -149,17 +156,19 @@
 				this.type = "dimAggre";
 				this.show = true;
 				this.dim = dim;
-				if(this.type === 'dimAggre'){
 					this.val.aggreType = dim.aggre;
+				if(dim.aggre === 'auto'){
+					this.val.autoaggre = true;
 				}
 			},
+			
 			dimTop(dim, comp){
 				this.title = "维度取Top";
 				this.type = "top";
 				this.show = true;
 				this.dim = dim;
 				this.val.top = dim.top;
-				this.val.topType = dim.topType;
+				this.val.topType = dim.topType?dim.topType:"number";
 			},
 			kpiProperty(kpi, comp){
 				this.title = "度量属性";
@@ -176,15 +185,23 @@
 				}
 				this.val.code = kpi.code?unescape(kpi.code):null;
 			},
+			clearAggre(){
+				let dim = this.dim;
+				dim.issum = 'n';
+				delete dim.aggre;
+				this.show = false;
+				let p = this.$parent;
+				p.setUpdate();
+				p.tableView();
+			},
 			save(){
 				let dim = this.dim;
 				let kpi = this.kpi;
 				if(this.type === 'dimAggre'){
-					if(dim.issum == 'y'){
-						dim.issum = "n";
-						delete dim.aggre;
+					dim.issum = 'y';
+					if(this.val.autoaggre===true){
+						dim.aggre = "auto";
 					}else{
-						dim.issum = 'y';
 						dim.aggre = this.val.aggreType;
 					}
 				}else if(this.type === 'top'){

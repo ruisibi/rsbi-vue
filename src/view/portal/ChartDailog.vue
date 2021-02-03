@@ -1,12 +1,12 @@
 <!-- 表格对话框都放这里面 -->
 <template>
-  	<el-dialog title="切换图形类型" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+  	<el-dialog title="选择图形类型" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		
 		<div class="row">
 			<div class="col-sm-3">
 				<ul>
 				<template v-for="item in charts">
-					<li :key="item.cid" :class="item.show?'select':''" @click="selectchart(item.cid)">{{item.cname}}</li>
+					<li :key="item.cid" :class="item.show==true?'select':''" @click="selectchart(item.cid)">{{item.cname}}</li>
 				</template>
 				</ul>
 			</div>
@@ -57,7 +57,7 @@
 					areas:[]
 				},
 				charts:[
-					{cid:"1", cname:"曲线图", type:"line",show:true,children:[
+					{cid:"1", cname:"曲线图", type:"line",show:false,children:[
 						{img:"c1.gif", index:"1", name:"曲线图", select:true},
 						{img:"c12.gif", index:"2", name:"双轴曲线图"}
 					]},
@@ -146,6 +146,14 @@
 				this.layoutId = layoutId;
 				this.show = true;
 				this.comp = null;
+				//选中第一个
+				$(this.charts).each((a, b)=>{
+					b.show=false;
+					$(b.children).each((c, d)=>{
+						d.select = false;
+					});
+				});
+				this.charts[0].show = true;
 			},
 			//更改图形类型
 			changeType(comp){
@@ -153,19 +161,23 @@
 				this.comp = comp;
 				let type = comp.chartJson.type;
 				let index = comp.chartJson.typeIndex;
+				$(this.charts).each((a, b)=>{
+					b.show=false;
+					$(b.children).each((c, d)=>{
+						d.select = false;
+					});
+				});
 				//选中值
 				$(this.charts).each((a, b)=>{
 					$(b.children).each((c, d)=>{
-						if(b.type === type && d.index === index){
+						if(b.type === type && d.index == index){
 							d.select = true;
 							b.show = true;
-						}else{
-							d.select = false;
-							b.show = false;
+							return false;
 						}
 					});
 				})
-				//this.$forceUpdate();
+				this.$forceUpdate();
 			},
 			selectchart(chartId){
 				$(this.charts).each((a, b)=>{
@@ -189,7 +201,7 @@
 			selectone(index, type){
 				$(this.charts).each((a, b)=>{
 					$(b.children).each((c, d)=>{
-						if(b.type === type && d.index === index){
+						if(b.type === type && d.index == index){
 							d.select = true;
 						}else{
 							d.select = false;

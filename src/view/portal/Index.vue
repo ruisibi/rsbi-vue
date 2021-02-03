@@ -9,6 +9,8 @@
 import {baseUrl} from '@/common/biConfig'
 import PortalIndex from "./PortalIndex.vue"
 import PortalIndexCustomiz from "./PortalIndexCustomiz.vue"
+import 'jquery-ui-dist/jquery-ui'
+import 'jquery-ui-dist/jquery-ui.css'
 
 export default {
   components:{PortalIndex,PortalIndexCustomiz},

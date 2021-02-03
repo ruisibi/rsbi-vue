@@ -109,7 +109,7 @@ export default {
           };
         }
         $.contextMenu({
-          selector: '#tableData button.btn', 
+          selector: '#tableData .ibox-tools button.btn', 
           trigger: 'left',
           delay: 500,
           autoHide:true,
@@ -131,6 +131,10 @@ export default {
               ts.dimkpimove(pos, opt, node);
             }else if(opt == 'moveTo'){
               ts.dimexchange(pos, opt, node);
+            }else if(opt === 'top'){
+              ts.$refs['tableDailog'].dimTop(node, comp);
+            }else if(opt === 'aggre'){
+               ts.$refs['tableDailog'].dimAggre(node, comp);
             }
           },
           items: items

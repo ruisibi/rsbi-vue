@@ -122,10 +122,13 @@ export default {
       }else if(comp.type === 'table'){
         compctx.push(h('table-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
       }
-      let style = {padding:"3px"};
+      let style = {padding:"1px", width:"100%"};
       let bgcolor = comp.bgcolor;
       if(bgcolor){
         style['background-color'] = bgcolor;
+      }
+      if(comp.height){
+        style['height'] =  comp.height + "px";
       }
       let bodys = {class:"ccctx", style:{}};
       if(comp.type ==='text'){
@@ -154,6 +157,7 @@ export default {
           }
         }
       }
+      //let winSizeGrip = h('div', {class:"win-size-grip"});
       let ctx = h('div', {class:"cctx ibox-content", style:style}, [h('div', bodys, comp.type=='text'?"":compctx)]);
       return h('div', {attrs:{class:"ibox", id:"c_" + comp.id}}, [title, ctx]);
     },
@@ -480,6 +484,19 @@ export default {
           //alert(ui); 
         }
       });
+      //注册resize事件
+      $("#c_" + obj.id+" .ibox-content").resizable({
+        autoHide: false ,
+        handles:"s",
+        minHeight:50,
+        grid: [ 10, 10 ],
+        stop:function(event, ui){
+          let id = $(ui.element).parent().attr("id");
+          id = id.replace("c_", "");
+          let comp = utils.findCompById(ts.pageInfo, id);
+          comp.height = ui.size.height;
+        }
+      });
     }
   },
   watch:{
@@ -546,8 +563,21 @@ table.r_layout {
 #optarea .ibox {
     margin-bottom: 10px !important;
 }
+.cctx {
+  overflow: auto;
+}
 .tipinfo {
 	color:#999;
 	padding:10px;
+}
+.win-size-grip {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	padding: 4px;
+	bottom: 0;
+	right: 0;
+	cursor: nwse-resize;
+	background: url(../../assets/image/wingrip.png) no-repeat;
 }
 </style>
