@@ -6,7 +6,7 @@
       <template v-if="!hasData()">
         <b>交叉表字段：</b>
         <template v-for="item in comp.rows">
-          <span class="dimcol" :key="item.id">
+          <span class="dimcol" :key="'p' + item.id">
             <span class="text">{{ item.dimdesc }}</span>
             <div class="ibox-tools">
               <button class="btn btn-outline btn-success btn-xs" type="button" @click="showmenu(item,'row')"><i class="fa fa-wrench"></i>
@@ -16,7 +16,7 @@
         </template>
         <template v-for="item in comp.cols">
           <b :key="item.id">列字段：</b>
-          <span class="dimcol" :key="item.id">
+          <span class="dimcol" :key="'c' + item.id">
             <span class="text">{{ item.dimdesc }}</span>
             <div class="ibox-tools">
               <button class="btn btn-outline btn-success btn-xs" type="button" @click="showmenu(item,'col')"><i class="fa fa-wrench"></i>

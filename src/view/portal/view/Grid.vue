@@ -81,11 +81,23 @@ export default {
       ];
 
       let pageinfo = h('div', {class:"pagesizeinfo"}, [h('div', {class:"pagesizeLeft"}, pg), h('div', {class:"pagesizeRight"}, '第'+(data.curPage + 1)+'页，共'+data.total+'条记录')]);
-      let cld = [h('div', {class:"lock-dg-header"}, [table1]), h('div', {class:"lock-dg-body"}, [table2])];
+      let bodysyl = {"overflow":"auto"};
+      if(comp.height){
+        let height = comp.height;
+        height = height - 28;  //组件高度减去 head 的高度
+        if(!(comp.isnotfy == true)){  //分页
+          height = height - 30; //减去分页高度
+        }
+        bodysyl.height = height + "px";
+      }else{
+        bodysyl.height = "220px";
+      }
+      
+      let cld = [h('div', {class:"lock-dg-header"}, [table1]), h('div', {class:"lock-dg-body", style:bodysyl}, [table2])];
       if(!(this.comp.isnotfy === true)){
         cld.push(pageinfo);
       }
-      return h('div', {class:"lock-dg"}, cld);
+      return h('div', {class:"lock-dg", attrs:{id:comp.id}}, cld);
       
     }
     return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
@@ -96,6 +108,14 @@ export default {
   computed: {
   },
   methods: {
+    bindScrollEvent(){
+      let comp = this.comp;
+      //注册table的scroll事件
+      $("#"+comp.id+" .lock-dg-body").unbind("scroll").bind("scroll", function(){
+        var left = $(this).scrollLeft();
+        $("#"+comp.id+" .lock-dg-header").css("margin-left", "-"+left+"px");
+      });
+    },
     gridView(){
       let ts = this;
       let comp = this.comp;
@@ -110,6 +130,7 @@ export default {
             success:(resp)=>{
               ts.data = resp.rows;
               loadingInstance.close();
+              ts.$nextTick(()=>ts.bindScrollEvent());
             }
           }, this);
       }

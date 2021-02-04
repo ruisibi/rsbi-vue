@@ -88,9 +88,10 @@ export default {
   },
   mounted() {
     this.bindTdEvent();
-    this.$nextTick(()=>{
-      $(window).resize(()=>this.resizeChart());
-    });
+    $(window).resize(()=>this.resizeChart());
+  },
+  beforeDestroy(){
+    $(window).unbind("resize");
   },
   computed: {},
   methods: {
@@ -401,7 +402,10 @@ export default {
 
       });
     },
-    resizeChart(){
+    /**
+     * 调整图形大小,comp存在表示子调整当前组件，不存在表示调整所有组件
+     */
+    resizeChart(comp){
       let comps = utils.findAllComps(this.pageInfo);
       comps.forEach(m=>{
         if(m.type === 'chart'){
@@ -409,10 +413,10 @@ export default {
           if(dom){
             var chart = echarts.getInstanceByDom(dom);
             if(chart){
-              chart.resize($(dom).width(), $(dom).height());
+              let height = m.height?m.height:$(dom).height();
+              chart.resize($(dom).width(), height);
             }
           }
-          
         }
       });
     },
@@ -486,15 +490,18 @@ export default {
       });
       //注册resize事件
       $("#c_" + obj.id+" .ibox-content").resizable({
-        autoHide: false ,
+        autoHide: true ,
         handles:"s",
         minHeight:50,
         grid: [ 10, 10 ],
-        stop:function(event, ui){
+        resize:( event, ui )=>{
           let id = $(ui.element).parent().attr("id");
           id = id.replace("c_", "");
           let comp = utils.findCompById(ts.pageInfo, id);
-          comp.height = ui.size.height;
+          comp.height = Math.round(ui.size.height);  //更新组件高度
+        },
+        stop:function(event, ui){
+          
         }
       });
     }
@@ -564,20 +571,18 @@ table.r_layout {
     margin-bottom: 10px !important;
 }
 .cctx {
-  overflow: auto;
+  overflow: hidden;
 }
 .tipinfo {
 	color:#999;
 	padding:10px;
 }
-.win-size-grip {
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	padding: 4px;
-	bottom: 0;
-	right: 0;
-	cursor: nwse-resize;
-	background: url(../../assets/image/wingrip.png) no-repeat;
+</style>
+<style lang="less">
+.ui-resizable-s {
+  height:18px;
+  background-image: url(../../assets/image/wingrip.png);
+  background-position: right;
+  background-repeat: no-repeat;
 }
 </style>

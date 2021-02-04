@@ -24,7 +24,8 @@ export default {
     let ts = this;
     let comp = this.comp;
     if(this.data){
-      return h('div', {attrs:{id:"ct_"+comp.id}, style:{width:'100%', height:"250px"}});
+      let height = comp && comp.height?comp.height:250;
+      return h('div', {attrs:{id:"ct_"+comp.id}, style:{width:'100%', height: height + "px"}});
     }else{
       return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
     }

@@ -13,9 +13,7 @@
 
 <p>3.数据报表</p>
 
-<p>4.移动BI</p>
-
-<p>5.权限管理</p>
+<p>4.权限管理</p>
 
 <br/>
 <p class="text-warning">如果您需要更多功能，可以<button class="btn btn-primary btn-sm" onclick="window.open('https://www.ruisitech.com/product.html')">购买企业版</button></p>

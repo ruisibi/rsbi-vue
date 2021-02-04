@@ -34,6 +34,9 @@ export default {
       if(color){
         style.color = color;
       }
+      if(comp.height){
+        style['line-height'] = comp.height + "px";
+      }
       return h('div', {class:"boxcls", style:style}, this.data.value);
     }else{
       return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});

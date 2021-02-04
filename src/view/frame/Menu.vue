@@ -24,7 +24,7 @@
 				     	<el-input v-model="menu.menuUrl" placeholder="如果创建目录则不用填写URL"></el-input>
 				    </el-form-item>
 					<el-form-item label="排序" label-width="100px">
-						<el-input-number v-model="menu.menuOrder" :min="0" :max="100"></el-input-number>
+						<el-input-number v-model="menu.menuOrder" :min="0" :max="100" size="small"></el-input-number>
 					</el-form-item>
 					<el-form-item label="备注" label-width="100px">
 				     	<el-input v-model="menu.menuDesc" ></el-input>

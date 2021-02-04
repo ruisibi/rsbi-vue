@@ -45,8 +45,16 @@ export default {
       });
       let table2 = h('table', {class:"lockgrid"}, [h('thead', tbodytrs)]);
 
-      let cld = [h('div', {class:"lock-dg-header"}, [table1]), h('div', {class:"lock-dg-body"}, [table2])];
-      return h('div', {class:"lock-dg"}, cld);
+      let bodysyl = {"overflow":"auto"};
+      if(comp.height){
+        let height = comp.height;
+        height = height - this.data.colLevel * 28;  //组件高度减去 head 的高度
+        bodysyl.height = height + "px";
+      }else{
+        bodysyl.height = "220px";
+      }
+      let cld = [h('div', {class:"lock-dg-header"}, [table1]), h('div', {class:"lock-dg-body", style:bodysyl}, [table2])];
+      return h('div', {class:"lock-dg", attrs:{id:comp.id}}, cld);
 
     }else{
       return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
@@ -58,6 +66,14 @@ export default {
   computed: {
   },
   methods: {
+    bindScrollEvent(){
+      let comp = this.comp;
+      //注册table的scroll事件
+      $("#"+comp.id+" .lock-dg-body").unbind("scroll").bind("scroll", function(){
+        var left = $(this).scrollLeft();
+        $("#"+comp.id+" .lock-dg-header").css("margin-left", "-"+left+"px");
+      });
+    },
     tableView(){
       let ts = this;
       let comp = this.comp;
@@ -72,6 +88,7 @@ export default {
             success:(resp)=>{
               ts.data = resp.rows;
               loadingInstance.close();
+              ts.$nextTick(()=>ts.bindScrollEvent());
             }
           }, this);
       }
