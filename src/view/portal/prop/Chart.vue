@@ -179,7 +179,7 @@ export default {
         unit:null,
         fmt:null,
         rate:null,
-        showLegend:true,
+        showLegend:false,
         legendLayout:"horizontal",
         markerEnabled:false,
         marginLeft:65,

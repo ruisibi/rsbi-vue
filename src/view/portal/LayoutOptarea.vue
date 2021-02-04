@@ -3,6 +3,7 @@
 import { baseUrl, newGuid } from "@/common/biConfig";
 import PortalText from "./PortalText.vue"
 import ChartDailog from './ChartDailog.vue'
+import CompFilter from './CompFilter.vue'
 import $ from "jquery";
 import * as utils from './Utils'
 import BoxView from "./view/Box.vue"
@@ -17,7 +18,8 @@ export default {
     ChartView,
     GridView,
     TableView,
-    ChartDailog
+    ChartDailog,
+    CompFilter
   },
   props: {
     pageInfo: {
@@ -77,7 +79,8 @@ export default {
         table, 
         h('div', {class:"indicator"}, '==>'),
         h('PortalText',{ref:"portalTextForm"},''),
-        h('ChartDailog', {ref:"chartDailogForm"})
+        h('ChartDailog', {ref:"chartDailogForm"}),
+        h('CompFilter', {ref:"compFilterForm", props:{pageInfo:this.pageInfo}})
       ]
     );
   },
@@ -178,7 +181,7 @@ export default {
                       ts.editComp(comp, layoutId);
                     }},
                     "filter": {name: "筛选",icon:"fa-filter", callback:function(){
-                      setcompfilter();
+                      ts.$refs['compFilterForm'].init(comp);
                     }},
                     "event": {name: "事件",icon:"fa-bolt", callback:function(){
                       compevent();
@@ -194,7 +197,7 @@ export default {
                       ts.editComp(comp, layoutId);
                     }},
                     "filter": {name: "筛选",icon:"fa-filter", callback:function(){
-                      setcompfilter();
+                      ts.$refs['compFilterForm'].init(comp);
                     }},
                     "event": {name: "事件",icon:"fa-bolt", callback:function(){
                       compevent();
@@ -219,7 +222,7 @@ export default {
                   "data": {name: "数据", icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
                     }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
-                      setcompfilter();
+                      ts.$refs['compFilterForm'].init(comp);
                     }},"prop": {name: "属性", callback:function(){
                       ts.setComp(comp, layoutId);
                     }}
@@ -230,7 +233,7 @@ export default {
                     "data": {name: "数据", icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
                     }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
-                      setcompfilter();
+                      ts.$refs['compFilterForm'].init(comp);
                     }},"prop": {name: "属性", callback:function(){
                       ts.setComp(comp, layoutId);
                     }}

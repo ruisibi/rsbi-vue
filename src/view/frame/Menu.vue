@@ -16,7 +16,7 @@
 	<operationDailog mainDiv="mainDiv"  :title="operDailogTitle" ref="operForm" :callback="saveMenu">
 		<div class="row">
 			<div class="col-sm-6">
-				<el-form :model="menu" :rules="rules" ref="menuForm">
+				<el-form :model="menu" :rules="rules" ref="menuForm" size="small">
 				    <el-form-item label="名称" label-width="100px" prop="menuName">
 				     	<el-input v-model="menu.menuName" ></el-input>
 				    </el-form-item>

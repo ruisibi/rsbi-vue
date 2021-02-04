@@ -51,7 +51,7 @@
 			  </div>
 		  </div>
 		  	<el-dialog :title="dialogTitle" :visible.sync="addUserDailog">
-			  	<el-form :model="user" :rules="rules" ref="userForm">
+			  	<el-form :model="user" :rules="rules" ref="userForm" size="small">
 					  <template v-if="isupdate">
 						  <el-form-item label="用户标识" label-width="100px" prop="userId">
 							<el-input readOnly="true" v-model="user.userId"></el-input>

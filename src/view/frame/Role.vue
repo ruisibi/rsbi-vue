@@ -42,7 +42,7 @@
 		  </div>
 
 		  <el-dialog :title="dialogTitle" :visible.sync="addRoleDailog">
-			  	<el-form :model="role" :rules="rules" ref="roleForm">
+			  	<el-form :model="role" :rules="rules" ref="roleForm" size="small">
 					 
 				    <el-form-item label="角色名称" label-width="100px" prop="roleName">
 				     	<el-input v-model="role.roleName" ></el-input>
