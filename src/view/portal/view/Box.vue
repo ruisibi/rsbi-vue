@@ -17,6 +17,11 @@ export default {
         type:Object,
         required:true,
         default:{}
+      },
+      editor:{
+        type:Boolean,
+        required:true,
+        default:true
       }
   },
   render(h){
@@ -39,11 +44,17 @@ export default {
       }
       return h('div', {class:"boxcls", style:style}, this.data.value);
     }else{
-      return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+      if(this.editor === true){
+        return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+      }else{
+        return h('div','数据加载中...');
+      }
     }
   },
   mounted(){
-    this.boxView();
+    if(this.editor === true){
+      this.boxView();
+    }
   },
   computed: {
   },
@@ -60,10 +71,10 @@ export default {
             data:JSON.stringify(json),
             postJSON:true,
             success:(resp)=>{
-              ts.data = resp.rows[0];
+              ts.data = resp.rows;
               loadingInstance.close();
             }
-          }, this);
+          }, this, loadingInstance);
       }
     }
   },

@@ -19,8 +19,7 @@
 			</el-table-column>
 		</el-table>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="filtersSave()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="filtersSave()">关 闭</el-button>
 		</div>
 
 		<el-dialog :title="title" width="40%" :visible.sync="addShow" append-to-body>
@@ -163,7 +162,18 @@
 				}
 			},
 			filtersSave(){
+				let comp = this.comp;
 				this.show = false;
+				let c = this.$parent.$refs['mv_' + comp.id];
+				if(comp.type == 'table'){
+					c.tableView();
+				}else if(comp.type == 'chart'){
+					c.chartView();
+				}else if(comp.type === 'grid'){
+					c.gridView();
+				}else if(comp.type === 'box'){
+					c.boxView();
+				}
 			},
 			fmtvalue(row, column, cellValue, index){
 				if(row.usetype === 'param'){

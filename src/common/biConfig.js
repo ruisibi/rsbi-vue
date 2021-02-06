@@ -44,14 +44,8 @@ export const ajax = (cfg, ts, loadingObj) => {
 					ts.$router.push("/");
 				//}
 			}else{
-				/** 
-				ts.$notify.error({
-					title: '系统出错',
-					message:resp.msg,
-					offset: 50
-				});
-				*/
-				Message.error({message:resp.msg, type:"error",showClose: true});
+				const h = ts.$createElement;
+				Message.error({message:h('div',[h('h5','系统错误'), h('div', resp.msg)]), type:"error",showClose: true});
 			}
 		},
 		error: function(){

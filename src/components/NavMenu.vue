@@ -20,8 +20,10 @@
                         <i class="fa fa-exchange"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
+                            <!--
                         <el-dropdown-item command="flash">刷新当前页面</el-dropdown-item>
                         <el-dropdown-item command="fullScreem">全屏当前页面</el-dropdown-item>
+                        -->
                         <el-dropdown-item command="closeother">关闭其他页面</el-dropdown-item>
                         <el-dropdown-item command="closeall">关闭全部页面</el-dropdown-item>
                         </el-dropdown-menu>

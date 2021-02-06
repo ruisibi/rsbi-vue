@@ -16,7 +16,7 @@
               <h2>报表列表</h2>
             </div>
             <div class="btn-group optbtncls" role="group">
-            <button type="button" class="btn btn-outline btn-default" title="查看" @click="addUser(false)">
+            <button type="button" class="btn btn-outline btn-default" title="查看" @click="viewReport(false)">
               <i class="glyphicon glyphicon-file" aria-hidden="true"></i>
             </button>
             <button type="button" class="btn btn-outline btn-default" title="定制" @click="customization()">
@@ -97,9 +97,19 @@ export default {
 					success:function(resp){
 						ts.tableData = resp.rows;
             ts.total = resp.total;
-            ts.checked = null;
 					}
       }, this);
+    },
+    viewReport(){
+      let ts = this;
+        if(!ts.checked){
+          ts.$notify.error({
+                  title: '未勾选数据',
+                  offset: 50
+                });
+          return false;
+        }
+        this.$router.push({path:"/portal/View", query:{id:ts.checked}});
     },
     customization(){
       let ts = this;
@@ -110,7 +120,7 @@ export default {
                 });
           return false;
         }
-        ts.customizationAction();
+        this.$router.push({path:"/portal/Customiz", query:{id:ts.checked}});
     },
     deleteReport(){
       let ts = this;
@@ -137,17 +147,14 @@ export default {
         }
     },
     newReport(){
-         this.$parent.showIndex = false;
-    },
-    customizationAction(){
-      this.$parent.showIndex = false;
-      this.$nextTick(()=>{
-        this.$parent.$refs['customizForm'].init(this.checked);
-      });
+      this.$router.push("/portal/Customiz");
     }
   },
   mounted(){
-    this.loadDatas();
+    //this.loadDatas();
+  },
+  beforeRouteEnter(to, from, next){
+    next(vm=>vm.loadDatas());
   },
   watch: {
 

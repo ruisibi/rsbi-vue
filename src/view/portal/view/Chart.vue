@@ -18,6 +18,11 @@ export default {
         type:Object,
         required:true,
         default:{}
+      },
+      editor:{
+        type:Boolean,
+        required:true,
+        default:true
       }
   },
   render(h){
@@ -27,11 +32,17 @@ export default {
       let height = comp && comp.height?comp.height:250;
       return h('div', {attrs:{id:"ct_"+comp.id}, style:{width:'100%', height: height + "px"}});
     }else{
-      return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+      if(this.editor === true){
+        return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+      }else{
+        return h('div','数据加载中...');
+      }
     }
   },
   mounted(){
-    this.chartView();
+    if(this.editor === true){
+      this.chartView();
+    }
     //放入window对象
     window.echartsUtils = echartsUtils;
     var echarts = require('echarts');
@@ -68,7 +79,7 @@ export default {
           //ts.$forceUpdate();
           ts.$nextTick(()=>ts.showChart());
         }
-      }, this);
+      }, this, loadingInstance);
     },
     /**
      * 调用echarts渲染图形

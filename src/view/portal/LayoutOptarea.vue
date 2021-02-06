@@ -25,7 +25,8 @@ export default {
     pageInfo: {
       type: Object,
       required: true,
-    },
+      default:{}
+    }
   },
   render(h) {
     //在render函数执行后绑定拖拽事件
@@ -39,7 +40,7 @@ export default {
       }
     });
 
-    var json = this.pageInfo.body;
+    var json = this.pageInfo.body || {};
     var trs = [];
     for (var i = 1; true; i++) {
       var tr = json["tr" + i];
@@ -118,13 +119,13 @@ export default {
       let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', comp.name)]), h('div', {class:"ibox-tools"}, tools)]);
       let compctx = [];
       if(comp.type === 'box'){
-        compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
+        compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp, editor:true}}));
       }else if(comp.type ==='chart'){
-        compctx.push(h('chart-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
+        compctx.push(h('chart-view',{ref:'mv_'+comp.id, attrs:{comp:comp, editor:true}}));
       }else if(comp.type === 'grid'){
-        compctx.push(h('grid-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
+        compctx.push(h('grid-view',{ref:'mv_'+comp.id, attrs:{comp:comp, editor:true}}));
       }else if(comp.type === 'table'){
-        compctx.push(h('table-view',{ref:'mv_'+comp.id, attrs:{comp:comp}}));
+        compctx.push(h('table-view',{ref:'mv_'+comp.id, attrs:{comp:comp, editor:true}}));
       }
       let style = {padding:"1px", width:"100%"};
       let bgcolor = comp.bgcolor;

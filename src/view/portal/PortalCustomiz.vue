@@ -51,6 +51,9 @@ import LayoutBottom from './LayoutBottom.vue'
 import $ from 'jquery'
 import "jquery-contextmenu";
 import "jquery-contextmenu/dist/jquery.contextMenu.min.css";
+import 'jquery-ui-dist/jquery-ui'
+import 'jquery-ui-dist/jquery-ui.css'
+  
 import LayoutRight from './LayoutRight.vue'
 
 export default {
@@ -109,8 +112,7 @@ export default {
     },
     handleSelect(key, keyPath){
       if(key === 'back'){
-        this.$parent.showIndex = true;
-        this.$parent.$refs['indexForm'].loadDatas();
+        this.$router.push("/portal/Index");
       }
       if(key ==='layout'){
         this.$refs['layout'].setLayout();
@@ -184,11 +186,15 @@ export default {
   watch: {
     
   },
-  filters: {
-
-  },
   mounted() {
-
+    let id =  this.$route.query.id;
+    if(id){
+      this.init(id);
+    }
+  },
+  beforeRouteLeave: function(to, from, next) {
+    this.$destroy();
+    next();
   }
 }
 </script>

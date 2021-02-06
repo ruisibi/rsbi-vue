@@ -17,6 +17,11 @@ export default {
         type:Object,
         required:true,
         default:{}
+      },
+      editor:{
+        type:Boolean,
+        required:true,
+        default:true
       }
   },
   render(h){
@@ -100,10 +105,16 @@ export default {
       return h('div', {class:"lock-dg", attrs:{id:comp.id}}, cld);
       
     }
-    return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+     if(this.editor === true){
+        return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+     }else{
+        return h('div','数据加载中...');
+     }
   },
   mounted(){
-    this.gridView();
+    if(this.editor === true){
+      this.gridView();
+    }
   },
   computed: {
   },
@@ -132,7 +143,7 @@ export default {
               loadingInstance.close();
               ts.$nextTick(()=>ts.bindScrollEvent());
             }
-          }, this);
+          }, this, loadingInstance);
       }
     }
   },

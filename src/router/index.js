@@ -9,7 +9,9 @@ import RoleMenu from '@/view/frame/RoleMenu'
 import User from '@/view/frame/User'
 import UserMenu from '@/view/frame/UserMenu'
 import Model from '@/view/model/Index'
-import Portal from '@/view/portal/Index'
+import PortalIndex from '@/view/portal/PortalIndex'
+import PortalCustomiz from '@/view/portal/PortalCustomiz'
+import PortalView from '@/view/portal/PortalView'
 import ReportDesign from '@/view/bireport/ReportDesign'
 import BireportPrint from '@/view/bireport/Print'
 import NotFind from '@/view/NoFind'
@@ -69,8 +71,18 @@ let router = new Router({
         },
         {
           path:'/portal/Index',
-          name:'portal',
-          component:Portal
+          name:'portalIndex',
+          component:PortalIndex
+        },
+        {
+          path:'/portal/View',
+          name:'portalView',
+          component:PortalView
+        },
+        {
+          path:"/portal/Customiz",
+          name:"PortalCustomiz",
+          component:PortalCustomiz
         }
         ,
         {
