@@ -13,6 +13,9 @@
 			</el-submenu>
 			<el-menu-item index="4"><i class="fa fa-print"></i> 打印</el-menu-item>
 		</el-menu>
+    <!-- 参数区域 -->
+    <portal-param-view ref="paramViewForm" :pms="pms"></portal-param-view>
+    <!-- 组件区域 -->
     <layout-view ref="optarea" :pageInfo="pageInfo"></layout-view>
    
   </div>
@@ -21,11 +24,13 @@
 import {baseUrl, ajax} from '@/common/biConfig'
 import { Loading } from 'element-ui'
 import LayoutView from './LayoutView.vue'
+import PortalParamView from './PortalParamView.vue'
 
 export default {
   name: "portalMain",
   components: {
-    LayoutView
+    LayoutView,
+    PortalParamView
   },
   props: {
 
@@ -33,7 +38,8 @@ export default {
   data() {
     return {
       reportId:null,
-      pageInfo:{}
+      pageInfo:{},
+      pms:[]
     }
   },
 
@@ -54,6 +60,8 @@ export default {
         type:"get",
         success:(resp)=>{
           this.pageInfo = JSON.parse(resp.rows);
+          //初始化参数字段
+          this.$refs['paramViewForm'].initReportParam(this.pageInfo.params);
           this.getReport();
         }
       });
@@ -67,6 +75,7 @@ export default {
         success:(resp)=>{
           //渲染组件
           this.$refs['optarea'].setCompData(resp.rows);
+          this.pms = resp.rows.pms;
         }
       }, this, loadingInstance);
     }

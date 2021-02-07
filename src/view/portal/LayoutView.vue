@@ -171,6 +171,8 @@ export default {
               o.data = datas[comp.id];
               if(comp.type === 'chart'){
                 this.$nextTick(()=>o.showChart());
+              }else if(comp.type === 'table' || comp.type === 'grid'){
+                this.$nextTick(()=>o.bindScrollEvent());
               }
             }
           }

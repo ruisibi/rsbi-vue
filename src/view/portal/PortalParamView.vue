@@ -1,0 +1,110 @@
+<template>
+    <div>
+      <!-- 参数区域 -->
+      <template v-if="pms.length > 0 ">
+        <el-form :model="reportParam" ref="paramForm" size="small" label-position="left" >
+          <div class="ibox reportParams" style="margin:5px;">
+              <div class="row">
+                <div class="ibox-content" style="padding:5px;border:none;">
+                    <template v-for="item in pms">
+                      <div class="col-sm-3" :key="item.id">
+                            <el-form-item :label="item.desc" label-width="80px">
+                              <template v-if="item.type==='text'">
+                                <el-input v-model="reportParam[item.id]" placeholder="请录入"></el-input>
+                              </template>
+                              <template v-if="item.type==='select'">
+                                <el-select v-model="reportParam[item.id]" clearable placeholder="请选择" style="width:100%">
+                                  <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </template>
+                              <template v-if="item.type==='mselect'">
+                                <el-select v-model="reportParam[item.id]" multiple clearable placeholder="请选择" style="width:100%">
+                                  <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </template>
+                              <template v-if="item.type === 'dateSelect'">
+                                <el-date-picker v-model="reportParam[item.id]" :format="item.dateFormat" 
+                                style="width:100%" :type="item.dateType" placeholder="选择日期" :value-format="item.dateFormat"></el-date-picker>
+                              </template>
+                            </el-form-item>
+                      </div>
+                    </template>
+                    <div class="col-sm-3">
+                          <button type="button" class="btn btn-info btn-sm" @click="search">查询</button>
+                          <button type="button" class="btn btn-success btn-sm" @click="cleardata">清除</button>
+                    </div>
+                </div>
+              </div>
+          </div>
+        </el-form>
+      </template>
+    </div>
+</template>
+<script>
+import {baseUrl, ajax} from '@/common/biConfig'
+import LayoutView from './LayoutView.vue'
+import { Loading } from 'element-ui'
+import $ from 'jquery'
+
+export default {
+  name: "portalParamView",
+  components: {
+    LayoutView
+  },
+  props: {
+    pms:{
+        type:Array,
+        required:true,
+        default:[]
+     }
+  },
+  data() {
+    return {
+      reportParam:{
+
+      }
+    }
+  },
+
+  methods: {
+    cleardata(){
+      $(this.pms).each((a, b)=>{
+        this.reportParam[b.id] = null;
+      });
+    },
+    search(){
+      let dt = JSON.parse(JSON.stringify(this.reportParam));
+      let reportId = this.$parent.reportId;
+      dt['serviceid'] = "ext.sys.tab.ajax";
+      dt['t_from_id'] = "mv_" + reportId;
+      dt['mvid'] = "mv_" + reportId;
+      let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
+      ajax({
+        url:"control/extControl",
+        data:dt,
+        type:"POST",
+        success:(resp)=>{
+          //重新渲染报表
+          this.$parent.$refs['optarea'].setCompData(resp.rows);
+        }
+      }, this, loadingInstance);
+    },
+    //初始化参数字段
+    initReportParam(reportParam){
+      let ts = this;
+      
+    }
+  },
+  mounted(){
+    
+  },
+  watch: {
+
+  }
+}
+</script>
+<style lang="less" scoped>
+
+</style>
