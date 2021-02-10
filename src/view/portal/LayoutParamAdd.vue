@@ -8,9 +8,11 @@
              <el-form-item label="显示名称" label-width="100px" prop="paramname">
               <el-input v-model="param.paramname"></el-input>
             </el-form-item>
+            <!--
             <el-form-item label="长度" label-width="100px">
               <el-input-number v-model="param.size" :min="5" :max="30" size="small"></el-input-number>
             </el-form-item>
+            -->
             <template v-if="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'">
               <el-form-item label="时间格式" label-width="100px">
                 <el-select v-model="param.dtformat" placeholder="请选择" style="width:100%">

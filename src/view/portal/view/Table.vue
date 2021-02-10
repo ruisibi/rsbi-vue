@@ -22,6 +22,10 @@ export default {
         type:Boolean,
         required:true,
         default:true
+      },
+      portalParams:{
+        type:Array,
+        required:false
       }
   },
   render(h){
@@ -90,6 +94,7 @@ export default {
       let comp = this.comp;
       if(comp.kpiJson && comp.kpiJson.length > 0){
           let json = JSON.parse(JSON.stringify(comp));
+          json.portalParams = ts.portalParams;
           let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('#c_'+comp.id+" div.ccctx")});
           ajax({
             url:"portal/TableView.action",

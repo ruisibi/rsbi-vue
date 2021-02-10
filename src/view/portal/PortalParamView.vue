@@ -80,6 +80,13 @@ export default {
       dt['serviceid'] = "ext.sys.tab.ajax";
       dt['t_from_id'] = "mv_" + reportId;
       dt['mvid'] = "mv_" + reportId;
+      //处理多选参数
+      $(this.pms).each((a, b)=>{
+        if(b.type === 'mselect' && dt[b.id]){
+          dt[b.id] = dt[b.id].join(",");
+        }
+      });
+
       let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
       ajax({
         url:"control/extControl",
@@ -98,7 +105,7 @@ export default {
     }
   },
   mounted(){
-    
+
   },
   watch: {
 

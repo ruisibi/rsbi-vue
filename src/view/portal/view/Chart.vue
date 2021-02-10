@@ -23,6 +23,10 @@ export default {
         type:Boolean,
         required:true,
         default:true
+      },
+      portalParams:{
+        type:Array,
+        required:false
       }
   },
   render(h){
@@ -66,7 +70,7 @@ export default {
       }
 
       json = JSON.parse(JSON.stringify(json));
-	    //json.portalParams = pageInfo.params;
+      json.portalParams = ts.portalParams;
       let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('#c_'+json.id+" div.ccctx")});
       ajax({
         url:"portal/ChartView.action",

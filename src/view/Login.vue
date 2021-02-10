@@ -27,6 +27,7 @@
 							<el-form-item>
 								<el-button type="primary" v-loading.fullscreen.lock="fullscreenLoading" @click="submitForm('loginForm')" class="submit_btn">登录</el-button>
 							</el-form-item>
+							<div>账号/密码： admin/123456</div>
 						</div>
 					</div>
 				</el-form>

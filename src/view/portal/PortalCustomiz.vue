@@ -9,6 +9,7 @@
           <el-menu-item index="data-1">选择立方体</el-menu-item>
           <el-menu-item index="data-2">选择数据表</el-menu-item>
         </el-submenu>
+        <el-menu-item index="view"><i class="glyphicon glyphicon-file"></i> 预览</el-menu-item>
       </el-menu>
       <div class="report-layut">
         <layout-left :pageInfo="pageInfo" ref="layoutleftForm"></layout-left>
@@ -48,6 +49,7 @@ import layoutParam from "./LayoutParam.vue"
 import LayoutOptarea from './LayoutOptarea.vue'
 import LayoutParamAdd from './LayoutParamAdd.vue'
 import LayoutBottom from './LayoutBottom.vue'
+import * as utils from './Utils'
 import $ from 'jquery'
 import "jquery-contextmenu";
 import "jquery-contextmenu/dist/jquery.contextMenu.min.css";
@@ -123,21 +125,21 @@ export default {
       if(key === 'data-2'){
         this.$refs['selectDsetForm'].select();
       }
+      if(key === 'view'){
+        if(!this.pageInfo.id){
+          this.$notify.error({
+            title: '报表还未保存，不能预览!',
+            offset: 50
+          });
+          return;
+        }
+        this.$router.push({path:"/portal/View", query:{id:this.pageInfo.id}});
+      }
       if(key === 'save'){
         if(!this.pageInfo.id){
           this.saveShow = true;
         }else{
-           ajax({
-            url:"portal/save.action",
-            type:"POST",
-            data:{"pageInfo": JSON.stringify(this.pageInfo), pageId:this.pageInfo.id},
-            success:(resp)=>{
-              this.$notify.success({
-                title: '更新成功!',
-                offset: 50
-              });
-            }
-          }, this);
+           this.savePage();
         }
       }
     },
@@ -150,6 +152,10 @@ export default {
     savePage(){
       let ts = this;
       var pageId = this.pageInfo.id;
+      //删除组件分页信息
+      utils.findAllComps(this.pageInfo).forEach(element => {
+        delete element.curPage;
+      });
       if(!pageId){
         this.$refs['saveForm'].validate((valid) => {
            if(valid){

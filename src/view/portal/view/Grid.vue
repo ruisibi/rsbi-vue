@@ -22,6 +22,10 @@ export default {
         type:Boolean,
         required:true,
         default:true
+      },
+      portalParams:{
+        type:Array,
+        required:false
       }
   },
   render(h){
@@ -33,54 +37,71 @@ export default {
         ths.push(h('th', {class:"grid3-td"}, [h('div', {class:"dg-cell"}, element.desc)]));
       });
       let table1 = h('table', {class:"lockgrid"}, [h('thead', [h("tr", ths)])]);
-
-
-      
-
+    
       let trs = [];
-      data.datas.forEach((e, idx) => {
-        let tds = []
-        $(data.header).each((c, d)=>{
-          let hd = d;
-          let nd = e[d.name];
-          tds.push(h('td', {class:"lockgrid-td",attrs:{align:hd.align?hd.align:"center"}}, [h('div', {class:"dg-cell"}, nd.value)]));
+      if(data.datas){
+        data.datas.forEach((e, idx) => {
+          let tds = []
+          $(data.header).each((c, d)=>{
+            let hd = d;
+            let nd = e[d.name];
+            tds.push(h('td', {class:"lockgrid-td",attrs:{align:hd.align?hd.align:"center"}}, [h('div', {class:"dg-cell"}, nd.value)]));
+          });
+          trs.push(h('tr', tds));
         });
-        trs.push(h('tr', tds));
-      });
+      }else{
+        trs = [h('tr',{attrs:{colspan:data.header.length, align:"center"}}, '无数据')];
+      }
       let table2 = h('table', {class:"lockgrid"}, [h('thead', trs)]);
 
-        //分页信息
-        let allpage = 0;
-        if (data.total % data.pageSize === 0) {
-          allpage = data.total / data.pageSize;
-        } else {
-          allpage = Math.floor(data.total / data.pageSize) + 1;
-        }
+      //分页信息
+      let allpage = 0;
+      if (data.total % data.pageSize === 0) {
+        allpage = data.total / data.pageSize;
+      } else {
+        allpage = Math.floor(data.total / data.pageSize) + 1;
+      }
       let first = data.curPage <= 0;
       let end = data.curPage >= allpage - 1;
       let pg = [
         h('button', {class:"btn btn-link btn-xs",attrs:{disabled:first},on:{click:()=>{
           if(!first){
             this.comp.curPage = 0;
-            this.gridView();
+            if(this.editor === true){
+              this.gridView();
+            }else{
+              this.fy();
+            }
           }
         }},domProps:{innerHTML:"<i class='fa fa-angle-double-left'></i>"}}),
         h('button', {class:"btn btn-link btn-xs", on:{click:()=>{
           if(!first){
             this.comp.curPage = data.curPage - 1;
-            this.gridView();
+             if(this.editor === true){
+              this.gridView();
+            }else{
+              this.fy();
+            }
           }
         }},attrs:{disabled:first},domProps:{innerHTML:"<i class='fa fa-angle-left'></i>"}}),
         h('button', {class:"btn btn-link btn-xs",attrs:{disabled:end},on:{click:()=>{
           if(!end){
             this.comp.curPage = data.curPage + 1;
-            this.gridView();
+             if(this.editor === true){
+              this.gridView();
+            }else{
+              this.fy();
+            }
           }
         }},domProps:{innerHTML:"<i class='fa fa-angle-right'></i>"}}),
         h('button', {class:"btn btn-link btn-xs",attrs:{disabled:end}, on:{click:()=>{
           if(!end){
             this.comp.curPage = allpage - 1;
-            this.gridView();
+             if(this.editor === true){
+              this.gridView();
+            }else{
+              this.fy();
+            }
           }
         }},domProps:{innerHTML:"<i class='fa fa-angle-double-right'></i>"}})
       ];
@@ -127,9 +148,33 @@ export default {
         $("#"+comp.id+" .lock-dg-header").css("margin-left", "-"+left+"px");
       });
     },
+    //查看模式，分页方法
+    fy(){
+      let dt = {};
+      let reportId = this.$parent.pageInfo.id;
+      dt['serviceid'] = "ext.sys.fenye.ajax";
+      dt['t_from_id'] = "mv_" + reportId;
+      dt['currPage'] = this.comp.curPage;
+      dt['id'] = this.comp.id;
+      dt['pageSize'] = this.comp.pageSize;
+
+      let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
+      ajax({
+        url:"control/extControl",
+        data:dt,
+        type:"POST",
+        success:(resp)=>{
+          console.log(resp.rows);
+          //重新渲染表格
+          this.data = resp.rows;
+        }
+      }, this, loadingInstance);
+    },
     gridView(){
       let ts = this;
       let comp = this.comp;
+      comp = JSON.parse(JSON.stringify(comp));
+      comp.portalParams = ts.portalParams;
       if(comp.cols && comp.cols.length > 0){
           let json = JSON.parse(JSON.stringify(comp));
           let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('#c_'+comp.id+" div.ccctx")});
