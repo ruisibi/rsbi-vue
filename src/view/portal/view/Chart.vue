@@ -89,6 +89,7 @@ export default {
      * 调用echarts渲染图形
      */
     showChart(){
+      let ts = this;
       let comp = this.comp;
       let option = loopChartJson(this.data);
       let myChart = echarts.getInstanceByDom(document.getElementById('ct_'+comp.id));
@@ -96,6 +97,11 @@ export default {
         myChart = echarts.init(document.getElementById('ct_'+comp.id), "default");
       }
       myChart.setOption(option, true);
+      if(this.editor === true){  //编辑模式，设置图形显示颜色
+          myChart.off("click").on('click', function(params){
+            ts.$parent.$refs['ChartSeriesColorForm'].showDailog(comp, params);
+          });
+      }
     }
   },
   watch: {

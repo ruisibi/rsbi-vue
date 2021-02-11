@@ -3,6 +3,7 @@
 import { baseUrl, newGuid } from "@/common/biConfig";
 import PortalText from "./PortalText.vue"
 import ChartDailog from './ChartDailog.vue'
+import ChartSeriesColor from './ChartSeriesColor.vue'
 import CompFilter from './CompFilter.vue'
 import $ from "jquery";
 import * as utils from './Utils'
@@ -19,7 +20,8 @@ export default {
     GridView,
     TableView,
     ChartDailog,
-    CompFilter
+    CompFilter,
+    ChartSeriesColor
   },
   props: {
     pageInfo: {
@@ -81,6 +83,7 @@ export default {
         h('div', {class:"indicator"}, '==>'),
         h('PortalText',{ref:"portalTextForm"},''),
         h('ChartDailog', {ref:"chartDailogForm"}),
+        h('ChartSeriesColor', {ref:"ChartSeriesColorForm"}),
         h('CompFilter', {ref:"compFilterForm", props:{pageInfo:this.pageInfo}})
       ]
     );

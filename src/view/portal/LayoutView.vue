@@ -104,6 +104,9 @@ export default {
       if(comp.height){
         style['height'] =  comp.height + "px";
       }
+      if(comp.showtitle === false){
+        style['border'] = 'none';
+      }
       let bodys = {class:"ccctx", style:{}};
       if(comp.type ==='text'){
         bodys.domProps = {innerHTML:comp.desc.replace(/\n/g,"<br>")};
@@ -132,7 +135,7 @@ export default {
         }
       }
       let ctx = h('div', {class:"cctx ibox-content", style:style}, [h('div', bodys, comp.type=='text'?"":compctx)]);
-      return h('div', {attrs:{class:"ibox", id:"c_" + comp.id}}, [title, ctx]);
+      return h('div', {attrs:{class:"ibox", id:"c_" + comp.id}}, comp.showtitle===false?[ctx]:[title, ctx]);
     },
     /**
      * 调整图形大小,comp存在表示子调整当前组件，不存在表示调整所有组件
