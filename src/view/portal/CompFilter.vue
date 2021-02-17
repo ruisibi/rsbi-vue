@@ -1,6 +1,7 @@
 <!-- 组件筛选，和查询条件关联 -->
 <template>
   	<el-dialog title="组件筛选" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+		  <div class="el-dialog-div">
 		 <div align="left" style="margin:10px;">
 			<button type="button" class="btn btn-primary" @click="addFilter()">
 				<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>新增筛选条件
@@ -18,6 +19,7 @@
 				</template>
 			</el-table-column>
 		</el-table>
+		  </div>
 		<div slot="footer" class="dialog-footer">
 			<el-button type="primary" @click="filtersSave()">关 闭</el-button>
 		</div>
@@ -102,6 +104,7 @@
 <script>
 	import {ajax, newGuid} from '@/common/biConfig'
 	import $ from 'jquery'
+	import * as utils from './Utils'
 
 	export default {
 	    data(){
@@ -152,6 +155,10 @@
 		},
 		methods: {	
 			init(comp){
+				if(!(comp.dsetId || comp.cubeId)){
+					utils.msginfo("组件还未定义数据，不能定义筛选。");
+					return;
+				}
 				this.comp = comp;
 				this.show = true;
 				this.getCols();

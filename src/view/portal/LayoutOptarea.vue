@@ -5,6 +5,7 @@ import PortalText from "./PortalText.vue"
 import ChartDailog from './ChartDailog.vue'
 import ChartSeriesColor from './ChartSeriesColor.vue'
 import CompFilter from './CompFilter.vue'
+import CompEvent from './CompEventDailog.vue'
 import $ from "jquery";
 import * as utils from './Utils'
 import BoxView from "./view/Box.vue"
@@ -21,7 +22,8 @@ export default {
     TableView,
     ChartDailog,
     CompFilter,
-    ChartSeriesColor
+    ChartSeriesColor,
+    CompEvent
   },
   props: {
     pageInfo: {
@@ -84,6 +86,7 @@ export default {
         h('PortalText',{ref:"portalTextForm"},''),
         h('ChartDailog', {ref:"chartDailogForm"}),
         h('ChartSeriesColor', {ref:"ChartSeriesColorForm"}),
+        h('CompEvent', {ref:"CompEventForm", props:{pageInfo:this.pageInfo}}),
         h('CompFilter', {ref:"compFilterForm", props:{pageInfo:this.pageInfo}})
       ]
     );
@@ -188,7 +191,7 @@ export default {
                       ts.$refs['compFilterForm'].init(comp);
                     }},
                     "event": {name: "事件",icon:"fa-bolt", callback:function(){
-                      compevent();
+                      ts.compevent(comp);
                     }},
                     "prop": {name: "属性", callback:function(){
                       ts.setComp(comp, layoutId);
@@ -204,7 +207,7 @@ export default {
                       ts.$refs['compFilterForm'].init(comp);
                     }},
                     "event": {name: "事件",icon:"fa-bolt", callback:function(){
-                      compevent();
+                      ts.compevent(comp);
                     }},
                     "prop": {name: "属性", callback:function(){
                       ts.setComp(comp, layoutId);
@@ -271,6 +274,9 @@ export default {
     },
     setComp(comp, layoutId){
       this.$parent.showPropPanel(comp);
+    },
+    compevent(comp){
+      this.$refs['CompEventForm'].openDailog(comp);
     },
     deleteComp(comp, layoutId){
       if(!confirm("是否确认删除组件？")){
