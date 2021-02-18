@@ -46,11 +46,21 @@ export default {
 
 			let tbodytrs = [];
 			$(this.data.datas).each((a, b)=>{
-				let tds = [];
+        let tds = [];
+        let curRowValue = null;
 				$(b).each((c, d)=>{
           tds.push(h('td', {attrs:{class:"lockgrid-td",colspan:d.colSpan, rowspan:d.rowSpan, align:d.isRow==true?"left":"right"}}, [h('div', {class:"dg-cell"}, d.value)]));
-				});
-				tbodytrs.push(h('tr', tds));
+          if(d.isRow === true){
+            curRowValue = d.value;
+          }
+        });
+        if(this.editor == false && comp.link && comp.link.target.length > 0){  //在浏览模式下有联动事件
+          tbodytrs.push(h('tr',{style:{cursor:"pointer"},on:{click:()=>{
+              ts.tableEvent(curRowValue);
+            }}}, tds));
+        }else{
+	        tbodytrs.push(h('tr', tds));
+        }
       });
       let table2 = h('table', {class:"lockgrid"}, [h('thead', tbodytrs)]);
 
@@ -88,6 +98,10 @@ export default {
         var left = $(this).scrollLeft();
         $("#"+comp.id+" .lock-dg-header").css("margin-left", "-"+left+"px");
       });
+    },
+    tableEvent(val){
+      let comp = this.comp;
+      utils.compFireEvent(comp.link, this, comp.link.paramName, val);
     },
     tableView(){
       let ts = this;

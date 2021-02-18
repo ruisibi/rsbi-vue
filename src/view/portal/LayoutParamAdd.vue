@@ -214,6 +214,7 @@ export default {
           this.param.dtformat = p.dtformat;
           this.param.minval = p.minval;
           this.param.maxval = p.maxval;
+          this.selectcube();
        }
      },
      save(){

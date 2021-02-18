@@ -17,13 +17,16 @@
             </div>
             <div class="btn-group optbtncls" role="group">
             <button type="button" class="btn btn-outline btn-default" title="查看" @click="viewReport(false)">
-              <i class="glyphicon glyphicon-file" aria-hidden="true"></i>
+              <i class="glyphicon glyphicon-file" aria-hidden="true"></i>查看
             </button>
             <button type="button" class="btn btn-outline btn-default" title="定制" @click="customization()">
-              <i class="glyphicon glyphicon-cog" aria-hidden="true"></i>
+              <i class="glyphicon glyphicon-cog" aria-hidden="true"></i>定制
             </button>
             <button type="button" class="btn btn-outline btn-default" title="删除" @click="deleteReport()">
-              <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+              <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
+            </button>
+            <button type="button" class="btn btn-outline btn-default" title="分享" @click="shareReport()">
+              <i class="glyphicon glyphicon-share" aria-hidden="true"></i>分享
             </button>
           </div>
           <el-table :data="tableData" @row-click="selectme" border style="width: 100%" header-row-class-name="tableHeadbg">
@@ -87,7 +90,10 @@ export default {
     },
     selectme:function(a, b){
 				this.checked = a.pageId;
-		},
+    },
+    shareReport(){
+      
+    },
     loadDatas(){
       let ts = this;
       ajax({

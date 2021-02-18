@@ -6,25 +6,25 @@
           <div class="ibox reportParams" style="margin:5px;">
               <div class="row">
                 <div class="ibox-content" style="padding:5px;border:none;">
-                    <template v-for="item in pms">
+                    <template v-for="item in pms.filter(m=>m.type != 'hidden')">
                       <div class="col-sm-3" :key="item.id">
                             <el-form-item :label="item.desc" label-width="80px">
-                              <template v-if="item.type==='text'">
+                              <template v-if="item.inputType==='text'">
                                 <el-input v-model="reportParam[item.id]" placeholder="请录入"></el-input>
                               </template>
-                              <template v-if="item.type==='select'">
+                              <template v-if="item.inputType==='select'">
                                 <el-select v-model="reportParam[item.id]" clearable placeholder="请选择" style="width:100%">
                                   <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
                                   </el-option>
                                 </el-select>
                               </template>
-                              <template v-if="item.type==='mselect'">
+                              <template v-if="item.inputType==='mselect'">
                                 <el-select v-model="reportParam[item.id]" multiple clearable placeholder="请选择" style="width:100%">
                                   <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
                                   </el-option>
                                 </el-select>
                               </template>
-                              <template v-if="item.type === 'dateSelect'">
+                              <template v-if="item.inputType === 'dateSelect'">
                                 <el-date-picker v-model="reportParam[item.id]" :format="item.dateFormat" 
                                 style="width:100%" :type="item.dateType" placeholder="选择日期" :value-format="item.dateFormat"></el-date-picker>
                               </template>
@@ -74,19 +74,26 @@ export default {
         this.reportParam[b.id] = null;
       });
     },
-    search(){
+    /**
+     * 获取参数值
+     */
+    getParamValues(){
       let dt = JSON.parse(JSON.stringify(this.reportParam));
+      //处理多选参数
+      $(this.pms).each((a, b)=>{
+        if(b.inputType === 'mselect' && dt[b.id]){
+          dt[b.id] = dt[b.id].join(",");
+        }
+      });
+      return dt;
+    },
+    search(){
+      let dt = this.getParamValues();
       let reportId = this.$parent.reportId;
       dt['serviceid'] = "ext.sys.tab.ajax";
       dt['t_from_id'] = "mv_" + reportId;
       dt['mvid'] = "mv_" + reportId;
-      //处理多选参数
-      $(this.pms).each((a, b)=>{
-        if(b.type === 'mselect' && dt[b.id]){
-          dt[b.id] = dt[b.id].join(",");
-        }
-      });
-
+     
       let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
       ajax({
         url:"control/extControl",

@@ -1,5 +1,6 @@
 import $ from 'jquery'
-import { Message } from 'element-ui'
+import { Message, Loading } from 'element-ui'
+import {baseUrl, ajax} from '@/common/biConfig'
 
 //默认5种布局
 export const layout = {
@@ -180,4 +181,41 @@ export const findCompById = (pageInfo, compId, remove)=>{
 		}
 	}
 	return ret;
+}
+/**
+ * 组件事件调用，目前只支持图形，交叉表
+ * @param {*} link 
+ */
+export const compFireEvent = (link, ts, paramName, value)=>{
+	let target = link.target;
+	let types = link.type.split(",");
+	$(target.split(",")).each((a, b)=>{
+		let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('#c_'+b+" div.ccctx")});
+		let dt = ts.$parent.$parent.$refs['paramViewForm'].getParamValues(); // 获取参数
+		let tp = types[a];
+		if(tp === 'chart'){
+		  dt['serviceid'] = "ext.sys.chart.rebuild";
+		}else if(tp ==='table'){
+		  dt['serviceid'] = "ext.sys.cross.rebuild";
+		}
+		dt['t_from_id'] = "mv_" + ts.$parent.pageInfo.id;
+		dt['id'] = b;
+		dt[paramName] = value;
+		ajax({
+		  url:"control/extControl",
+		  type:"POST",
+		  data:dt,
+		  success:(resp)=>{
+			loadingInstance.close();
+			if(tp === 'chart'){
+			  //更新图形
+			  let c = ts.$parent.$refs['mv_'+b];
+			  c.data = resp.rows;
+			  c.$nextTick(()=>c.showChart());
+			}else if(tp === 'table'){
+
+			}
+		  }
+		}, ts, loadingInstance);
+	});
 }

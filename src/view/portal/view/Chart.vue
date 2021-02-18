@@ -101,6 +101,12 @@ export default {
           myChart.off("click").on('click', function(params){
             ts.$parent.$refs['ChartSeriesColorForm'].showDailog(comp, params);
           });
+      }else{  //浏览模式，设置图形点击事件
+        if(comp.chartJson.link && comp.chartJson.link.target && comp.chartJson.link.target.length > 0){
+          myChart.off("click").on('click', function(params){
+              utils.compFireEvent(comp.chartJson.link, ts, comp.chartJson.link.paramName, params.name);
+          });
+        }
       }
     }
   },
