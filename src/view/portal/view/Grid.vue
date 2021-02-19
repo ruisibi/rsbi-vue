@@ -158,7 +158,7 @@ export default {
       dt['id'] = this.comp.id;
       dt['pageSize'] = this.comp.pageSize;
 
-      let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
+      let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('#c_'+this.comp.id+" div.ccctx")});
       ajax({
         url:"control/extControl",
         data:dt,

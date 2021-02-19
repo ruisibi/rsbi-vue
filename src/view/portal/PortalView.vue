@@ -25,6 +25,8 @@ import {baseUrl, ajax} from '@/common/biConfig'
 import { Loading } from 'element-ui'
 import LayoutView from './LayoutView.vue'
 import PortalParamView from './PortalParamView.vue'
+import $ from 'jquery'
+import * as utils from '@/view/portal/Utils'
 
 export default {
   name: "portalMain",
@@ -50,7 +52,9 @@ export default {
       }else if(key === '2'){  //定制
          this.$router.push({path:"/portal/Customiz", query:{id:this.reportId}});
       }else if(key === '4'){  //打印
-
+        
+      }else if(key === 'html' || key === 'csv' || key === 'excel' || key === 'pdf' || key === 'word'){  //导出
+        this.exportReport(key);
       }
     },
     getCfg(){
@@ -78,6 +82,38 @@ export default {
           this.pms = resp.rows.pms;
         }
       }, this, loadingInstance);
+    },
+    exportReport(tp){
+      //var pms = getPageParam();
+      let pageId = this.reportId;
+      let burl = baseUrl;
+      var ctx = `
+      <form name='expff' method='post' action="${burl}/portal/export.action" id='expff'>
+      <input type='hidden' name='type' id='type' value='${tp}'>
+      <input type='hidden' name='pageId' id='pageId' value='${pageId}'>
+      <input type='hidden' name='picinfo' id='picinfo'>
+      </form>`;
+      if($("#expff").length == 0 ){
+        $(ctx).appendTo("body");
+      }
+      //把图形转换成图片
+      var strs = "";
+      if(tp == "pdf" || tp == "excel" || tp == "word"){
+        let comps = utils.findAllComps(this.pageInfo).filter(m=>m.type ==='chart');
+        $(comps).each(function(index, element) {
+          var id = element.id;
+          var chart = echarts.getInstanceByDom(document.getElementById("ct_"+id));
+          var str = chart.getDataURL({type:'png', pixelRatio:1, backgroundColor: '#fff'});
+          str = str.split(",")[1]; //去除base64标记
+          str = element.id + "," + str+","+$("#ct_"+id).width(); //加上label标记,由于宽度是100%,需要加上宽度
+          strs = strs  +  str;
+          if(index != comps.length - 1){
+            strs = strs + "@";
+          }
+        });
+      }
+      $("#expff #picinfo").val(strs);
+      $("#expff").submit().remove();
     }
   },
   mounted(){

@@ -114,7 +114,13 @@ export default {
     },
     handleSelect(key, keyPath){
       if(key === 'back'){
-        this.$router.push("/portal/Index");
+        if(this.isupdate == true){
+          if(confirm("您还未保存报表，是否确认退出？")){
+            this.$router.push("/portal/Index");
+          }
+        }else{ //保存过了，直接退出
+          this.$router.push("/portal/Index");
+        }
       }
       if(key ==='layout'){
         this.$refs['layout'].setLayout();
@@ -170,6 +176,7 @@ export default {
                   });
                   ts.saveShow = false;
                   ts.pageInfo.id = resp.rows;
+                  ts.isupdate = false;
                }
              }, ts);
            }
@@ -184,6 +191,7 @@ export default {
               title: '更新成功!',
               offset: 50
             });
+            ts.isupdate = false;
           }
         }, ts);
       }
@@ -206,8 +214,8 @@ export default {
 </script>
 <style lang="less" scoped>
   .customizLayout {
-    height: 100%;
     width: 100%;
+    height: calc(100% - 32px);
   }
   .layout-center {
         position: inherit;

@@ -201,7 +201,7 @@ export default {
     },
     delGridCol(comp, id){
       if(comp.cols.length == 1){
-        msginfo("表格至少需要含有一个字段。");
+        utils.msginfo("表格至少需要含有一个字段。");
         return;
       }
       //从json移除
