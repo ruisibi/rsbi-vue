@@ -49,7 +49,7 @@ export default {
 				data:{pageInfo:JSON.stringify(pageInfo)},
 				type:"POST",
 				success:(resp)=>{
-					this.datas = resp.rows;
+					this.datas = resp.rows.comp;
 					if(cb){
 						cb();
 					}

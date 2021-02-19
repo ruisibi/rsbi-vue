@@ -56,7 +56,7 @@
 						data:{pageInfo:JSON.stringify(this.pageInfo)},
 						type:"POST",
 						success:(resp)=>{
-							let option = loopChartJson(resp.rows);
+							let option = loopChartJson(resp.rows.comp);
 							let myChart = echarts.getInstanceByDom(document.getElementById('printChart'+this.chartId));
 							if(!myChart){
 								myChart = echarts.init(document.getElementById('printChart'+this.chartId), "default", {width:640, height:320});

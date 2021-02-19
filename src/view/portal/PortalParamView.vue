@@ -108,7 +108,6 @@ export default {
     //初始化参数字段
     initReportParam(reportParam){
       let ts = this;
-      
     }
   },
   mounted(){

@@ -52,7 +52,10 @@ export default {
       }else if(key === '2'){  //定制
          this.$router.push({path:"/portal/Customiz", query:{id:this.reportId}});
       }else if(key === '4'){  //打印
-        
+          let p = this.$refs['paramViewForm'].getParamValues();
+          p.id = this.reportId;  //参数
+          let routeData = this.$router.resolve({path:"/portal/Print", query:p});
+          window.open(routeData.href, '_blank');
       }else if(key === 'html' || key === 'csv' || key === 'excel' || key === 'pdf' || key === 'word'){  //导出
         this.exportReport(key);
       }
@@ -65,7 +68,7 @@ export default {
         success:(resp)=>{
           this.pageInfo = JSON.parse(resp.rows);
           //初始化参数字段
-          this.$refs['paramViewForm'].initReportParam(this.pageInfo.params);
+          //this.$refs['paramViewForm'].initReportParam(this.pageInfo.params);
           this.getReport();
         }
       });

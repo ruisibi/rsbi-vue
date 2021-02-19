@@ -514,7 +514,7 @@ export default {
           comp.height = Math.round(ui.size.height);  //更新组件高度
         },
         stop:function(event, ui){
-          
+          ts.setUpdate();
         }
       });
     }
