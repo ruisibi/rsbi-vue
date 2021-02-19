@@ -10,7 +10,8 @@ export default {
   },
   data(){
     return {
-      data:null
+      data:null,
+      islink:false //是否做了事件联动
     }
   },
   props:{
@@ -34,7 +35,14 @@ export default {
     let comp = this.comp;
     if(this.data){
       let height = comp && comp.height?comp.height:250;
-      return h('div', {attrs:{id:"ct_"+comp.id}, style:{width:'100%', height: height + "px"}});
+      let ch = h('div', {attrs:{id:"ct_"+comp.id}, style:{width:'100%', height: height + "px"}});
+      if(this.islink == true){  //添加返回按钮
+        return h('div', [h('span', {class:"eventback"}, [h('span', {class:"label label-success", on:{click:()=>{
+          this.linkBack();
+        }}, domProps:{innerHTML:"<i class=\"fa fa-arrow-left\"></i>返回"}})]), ch]);
+      }else{
+        return h('div', [ch]);
+      }
     }else{
       if(this.editor === true){
         return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
@@ -85,6 +93,11 @@ export default {
         }
       }, this, loadingInstance);
     },
+    //事件点击返回按钮
+    linkBack(){
+      this.islink = false;
+      utils.compBackEvent(this.comp.chartJson.link, this);
+    },
     /**
      * 调用echarts渲染图形
      */
@@ -105,6 +118,7 @@ export default {
         if(comp.chartJson.link && comp.chartJson.link.target && comp.chartJson.link.target.length > 0){
           myChart.off("click").on('click', function(params){
               utils.compFireEvent(comp.chartJson.link, ts, comp.chartJson.link.paramName, params.name);
+              ts.islink = true;
           });
         }
       }
@@ -121,5 +135,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.eventback {
+	position:absolute;
+	width:50px;
+	right:5px;
+  cursor:pointer;
+  display:block;
+	z-index:9999;
+}
 </style>

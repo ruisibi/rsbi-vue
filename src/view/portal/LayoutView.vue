@@ -84,8 +84,13 @@ export default {
   computed: {},
   methods: {
     renderComp(comp, h, layoutId){
-      
-      let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', comp.name)])]);
+      let hasLink = false;
+      if(comp.type === 'chart' && comp.chartJson.link && comp.chartJson.link.target){
+        hasLink = true;
+      }else if(comp.type === 'table' && comp.link && comp.link.target){
+        hasLink = true;
+      }
+      let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', {domProps:{innerHTML:comp.name+(hasLink?" <i class='glyphicon glyphicon-link'></i>":"")}})])]);
       let compctx = [];
       if(comp.type === 'box'){
         compctx.push(h('box-view',{ref:'mv_'+comp.id, attrs:{comp:comp, editor:false}}));

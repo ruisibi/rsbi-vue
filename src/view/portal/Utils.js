@@ -195,7 +195,7 @@ export const compFireEvent = (link, ts, paramName, value)=>{
 		let tp = types[a];
 		if(tp === 'chart'){
 		  dt['serviceid'] = "ext.sys.chart.rebuild";
-		}else if(tp ==='table'){
+		}else if(tp ==='cross'){
 		  dt['serviceid'] = "ext.sys.cross.rebuild";
 		}
 		dt['t_from_id'] = "mv_" + ts.$parent.pageInfo.id;
@@ -212,8 +212,50 @@ export const compFireEvent = (link, ts, paramName, value)=>{
 			  let c = ts.$parent.$refs['mv_'+b];
 			  c.data = resp.rows;
 			  c.$nextTick(()=>c.showChart());
-			}else if(tp === 'table'){
+			}else if(tp === 'cross'){
+				//更新交叉表
+				let c = ts.$parent.$refs['mv_'+b];
+				c.data = resp.rows;
+			}
+		  }
+		}, ts, loadingInstance);
+	});
+}
 
+/**
+ * 点击返回按钮触发事件返回
+ * @param {*} link 
+ * @param {*} ts 
+ */
+export const compBackEvent = (link, ts)=>{
+	let target = link.target;
+	let types = link.type.split(",");
+	$(target.split(",")).each((a, b)=>{
+		let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('#c_'+b+" div.ccctx")});
+		let dt = ts.$parent.$parent.$refs['paramViewForm'].getParamValues(); // 获取参数
+		let tp = types[a];
+		if(tp === 'chart'){
+		  dt['serviceid'] = "ext.sys.chart.rebuild";
+		}else if(tp ==='cross'){
+		  dt['serviceid'] = "ext.sys.cross.rebuild";
+		}
+		dt['t_from_id'] = "mv_" + ts.$parent.pageInfo.id;
+		dt['id'] = b;
+		ajax({
+		  url:"control/extControl",
+		  type:"POST",
+		  data:dt,
+		  success:(resp)=>{
+			loadingInstance.close();
+			if(tp === 'chart'){
+			  //更新图形
+			  let c = ts.$parent.$refs['mv_'+b];
+			  c.data = resp.rows;
+			  c.$nextTick(()=>c.showChart());
+			}else if(tp === 'cross'){
+				//更新交叉表
+				let c = ts.$parent.$refs['mv_'+b];
+				c.data = resp.rows;
 			}
 		  }
 		}, ts, loadingInstance);

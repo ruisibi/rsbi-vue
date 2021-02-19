@@ -9,7 +9,8 @@ export default {
   },
   data(){
     return {
-      data:null
+      data:null,
+      islink:false //是否做了事件联动
     }
   },
   props:{
@@ -73,7 +74,14 @@ export default {
         bodysyl.height = "220px";
       }
       let cld = [h('div', {class:"lock-dg-header"}, [table1]), h('div', {class:"lock-dg-body", style:bodysyl}, [table2])];
-      return h('div', {class:"lock-dg", attrs:{id:comp.id}}, cld);
+      let ret = h('div', {class:"lock-dg", attrs:{id:comp.id}}, cld);
+      if(ts.islink == true){  //添加返回按钮
+        return h('div', [h('span', {class:"eventback"}, [h('span', {class:"label label-success", on:{click:()=>{
+          this.linkBack();
+        }}, domProps:{innerHTML:"<i class=\"fa fa-arrow-left\"></i>返回"}})]), ret]);
+      }else{
+        return h('div', [ret]);
+      }
 
     }else{
       if(this.editor === true){
@@ -101,7 +109,12 @@ export default {
     },
     tableEvent(val){
       let comp = this.comp;
+      this.islink = true;
       utils.compFireEvent(comp.link, this, comp.link.paramName, val);
+    },
+    linkBack(){
+      this.islink = false;
+      utils.compBackEvent(this.comp.link, this);
     },
     tableView(){
       let ts = this;
@@ -131,5 +144,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.eventback {
+	position:absolute;
+	width:50px;
+	right:5px;
+  cursor:pointer;
+  display:block;
+	z-index:9999;
+}
 </style>
