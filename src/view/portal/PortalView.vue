@@ -14,7 +14,7 @@
 			<el-menu-item index="4"><i class="fa fa-print"></i> 打印</el-menu-item>
 		</el-menu>
     <!-- 参数区域 -->
-    <portal-param-view ref="paramViewForm" :pms="pms"></portal-param-view>
+    <portal-param-view ref="paramViewForm" :showSearchBtn="true" :pms="pms"></portal-param-view>
     <!-- 组件区域 -->
     <layout-view ref="optarea" :pageInfo="pageInfo"></layout-view>
    
@@ -67,8 +67,6 @@ export default {
         type:"get",
         success:(resp)=>{
           this.pageInfo = JSON.parse(resp.rows);
-          //初始化参数字段
-          //this.$refs['paramViewForm'].initReportParam(this.pageInfo.params);
           this.getReport();
         }
       });
@@ -87,7 +85,6 @@ export default {
       }, this, loadingInstance);
     },
     exportReport(tp){
-      //var pms = getPageParam();
       let pageId = this.reportId;
       let burl = baseUrl;
       var ctx = `
@@ -95,7 +92,13 @@ export default {
       <input type='hidden' name='type' id='type' value='${tp}'>
       <input type='hidden' name='pageId' id='pageId' value='${pageId}'>
       <input type='hidden' name='picinfo' id='picinfo'>
-      </form>`;
+      `;
+      let pms = this.$refs['paramViewForm'].getParamValues();
+      $(this.pageInfo.params).each((a, b)=>{
+        let v = pms[b.id];
+        ctx += `<input type='hidden' name='${b.id}' value="${v}">`;
+      });
+      ctx += `</form>`;
       if($("#expff").length == 0 ){
         $(ctx).appendTo("body");
       }

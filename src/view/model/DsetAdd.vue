@@ -199,6 +199,9 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
+        <el-tab-pane label="数据预览" name="dview">
+          <dsetView ref="dsetViewForm"></dsetView>
+        </el-tab-pane>
       </el-tabs>
     </el-form>
 </template>
@@ -206,6 +209,7 @@
 <script>
 import { baseUrl, ajax, newGuid } from "@/common/biConfig";
 import dsetTableJoin from "@/view/model/DsetTableJoin";
+import dsetView from "@/view/model/DsetView";
 import { Loading } from "element-ui";
 import $ from "jquery";
 
@@ -235,7 +239,7 @@ export default {
     };
   },
   components: {
-    dsetTableJoin,
+    dsetTableJoin,dsetView
   },
   mounted() {
     this.loadDsource();
@@ -395,6 +399,8 @@ export default {
         ds.joininfo.forEach((v) => {
           ts.selectTables.push({ id: v.ref, name: v.ref });
         });
+        //预览数据
+        this.$refs['dsetViewForm'].loadData(ds.dsetId, ds.dsid);
       } else {
         this.selectTables = [];
       }
@@ -403,10 +409,12 @@ export default {
       if (isupdate) {
         $("#tab-cols").show();
         $("#tab-dyna").show();
+        $("#tab-dview").show();
       } else {
         //新增状态隐藏 表字段/动态字段
         $("#tab-cols").hide();
         $("#tab-dyna").hide();
+        $("#tab-dview").hide();
       }
       if (isupdate) {
         this.cols = ds.cols;

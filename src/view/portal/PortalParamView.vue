@@ -10,31 +10,33 @@
                       <div class="col-sm-3" :key="item.id">
                             <el-form-item :label="item.desc" label-width="80px">
                               <template v-if="item.inputType==='text'">
-                                <el-input v-model="reportParam[item.id]" placeholder="请录入"></el-input>
+                                <el-input v-model="reportParam[item.id]" :disabled="!showSearchBtn" placeholder="请录入"></el-input>
                               </template>
                               <template v-if="item.inputType==='select'">
-                                <el-select v-model="reportParam[item.id]" clearable placeholder="请选择" style="width:100%">
+                                <el-select v-model="reportParam[item.id]" :disabled="!showSearchBtn" clearable placeholder="请选择" style="width:100%">
                                   <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
                                   </el-option>
                                 </el-select>
                               </template>
                               <template v-if="item.inputType==='mselect'">
-                                <el-select v-model="reportParam[item.id]" multiple clearable placeholder="请选择" style="width:100%">
+                                <el-select v-model="reportParam[item.id]" :disabled="!showSearchBtn" multiple clearable placeholder="请选择" style="width:100%">
                                   <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
                                   </el-option>
                                 </el-select>
                               </template>
                               <template v-if="item.inputType === 'dateSelect'">
-                                <el-date-picker v-model="reportParam[item.id]" :format="item.dateFormat" 
+                                <el-date-picker v-model="reportParam[item.id]" :disabled="!showSearchBtn" :format="item.dateFormat" 
                                 style="width:100%" :type="item.dateType" placeholder="选择日期" :value-format="item.dateFormat"></el-date-picker>
                               </template>
                             </el-form-item>
                       </div>
                     </template>
-                    <div class="col-sm-3">
-                          <button type="button" class="btn btn-info btn-sm" @click="search">查询</button>
-                          <button type="button" class="btn btn-success btn-sm" @click="cleardata">清除</button>
-                    </div>
+                    <template v-if="showSearchBtn==true">
+                      <div class="col-sm-3">
+                            <button type="button" class="btn btn-info btn-sm" @click="search">查询</button>
+                            <button type="button" class="btn btn-success btn-sm" @click="cleardata">清除</button>
+                      </div>
+                    </template>
                 </div>
               </div>
           </div>
@@ -58,6 +60,11 @@ export default {
         type:Array,
         required:true,
         default:[]
+     },
+     showSearchBtn:{
+       type:Boolean,
+       required:true,
+       default:true
      }
   },
   data() {
@@ -106,8 +113,15 @@ export default {
       }, this, loadingInstance);
     },
     //初始化参数字段
-    initReportParam(reportParam){
-      let ts = this;
+    initReportParam(urlParam, pms){
+      $(pms).each((a, b)=>{
+        if(b.type === 'checkbox' && urlParam[b.id]){
+          let v = urlParam[b.id];
+          this.reportParam[b.id] = v.split(",");
+        }else{
+          this.reportParam[b.id] = urlParam[b.id];
+        }
+      });
     }
   },
   mounted(){

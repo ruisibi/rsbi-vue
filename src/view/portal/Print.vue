@@ -1,7 +1,7 @@
 <template>
   <div>
 	<!-- 参数区域 -->
-    <portal-param-view ref="paramViewForm" :pms="pms"></portal-param-view>
+    <portal-param-view ref="paramViewForm" :showSearchBtn="false" :pms="pms"></portal-param-view>
     <!-- 组件区域 -->
     <layout-view ref="optarea" :pageInfo="pageInfo"></layout-view>
   </div>
@@ -46,23 +46,26 @@
 					success:(resp)=>{
 						this.pageInfo = JSON.parse(resp.rows);
 						//初始化参数字段
-						this.$refs['paramViewForm'].initReportParam(this.pageInfo.params);
-						this.getReport();
+						let urlParam = JSON.parse(JSON.stringify(this.$route.query));
+						delete urlParam.id;
+						this.$refs['paramViewForm'].initReportParam(urlParam, this.pageInfo.params);
+						this.getReport(urlParam);
 					}
 				});
 			},
-			getReport(){
+			getReport(urlParam){
+				urlParam.pageId = this.reportId;
 				let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
 				ajax({
 					url:"portal/view.action",
 					type:"GET",
-					data:{pageId:this.reportId},
+					data:urlParam,
 					success:(resp)=>{
+						this.pms = resp.rows.pms;
 						//渲染组件
 						this.$refs['optarea'].setCompData(resp.rows);
-						this.pms = resp.rows.pms;
 						this.$nextTick(()=>{
-							window.print();
+							//window.print();
 						});
 					}
 				}, this, loadingInstance);
