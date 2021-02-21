@@ -69,7 +69,7 @@ export default {
           this.pageInfo = JSON.parse(resp.rows);
           this.getReport();
         }
-      });
+      }, this);
     },
     getReport(){
       let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
@@ -85,41 +85,8 @@ export default {
       }, this, loadingInstance);
     },
     exportReport(tp){
-      let pageId = this.reportId;
-      let burl = baseUrl;
-      var ctx = `
-      <form name='expff' method='post' action="${burl}/portal/export.action" id='expff'>
-      <input type='hidden' name='type' id='type' value='${tp}'>
-      <input type='hidden' name='pageId' id='pageId' value='${pageId}'>
-      <input type='hidden' name='picinfo' id='picinfo'>
-      `;
-      let pms = this.$refs['paramViewForm'].getParamValues();
-      $(this.pageInfo.params).each((a, b)=>{
-        let v = pms[b.id];
-        ctx += `<input type='hidden' name='${b.id}' value="${v}">`;
-      });
-      ctx += `</form>`;
-      if($("#expff").length == 0 ){
-        $(ctx).appendTo("body");
-      }
-      //把图形转换成图片
-      var strs = "";
-      if(tp == "pdf" || tp == "excel" || tp == "word"){
-        let comps = utils.findAllComps(this.pageInfo).filter(m=>m.type ==='chart');
-        $(comps).each(function(index, element) {
-          var id = element.id;
-          var chart = echarts.getInstanceByDom(document.getElementById("ct_"+id));
-          var str = chart.getDataURL({type:'png', pixelRatio:1, backgroundColor: '#fff'});
-          str = str.split(",")[1]; //去除base64标记
-          str = element.id + "," + str+","+$("#ct_"+id).width(); //加上label标记,由于宽度是100%,需要加上宽度
-          strs = strs  +  str;
-          if(index != comps.length - 1){
-            strs = strs + "@";
-          }
-        });
-      }
-      $("#expff #picinfo").val(strs);
-      $("#expff").submit().remove();
+      let paramViewForm = this.$refs['paramViewForm'];;
+      utils.exportReport(tp, this.reportId, paramViewForm, this.pageInfo);
     }
   },
   mounted(){

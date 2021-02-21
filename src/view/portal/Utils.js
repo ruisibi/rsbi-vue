@@ -261,3 +261,47 @@ export const compBackEvent = (link, ts)=>{
 		}, ts, loadingInstance);
 	});
 }
+/**
+ * 
+ * @param {报表导出} tp 
+ * @param {*} reportId 
+ * @param {*} paramViewForm 
+ * @param {*} pageInfo 
+ */
+export const exportReport = (tp, reportId, paramViewForm, pageInfo)=>{
+	let pageId = reportId;
+	let burl = baseUrl;
+	var ctx = `
+	<form name='expff' method='post' action="${burl}/portal/export.action" id='expff'>
+	<input type='hidden' name='type' id='type' value='${tp}'>
+	<input type='hidden' name='pageId' id='pageId' value='${pageId}'>
+	<input type='hidden' name='picinfo' id='picinfo'>
+	`;
+	let pms = paramViewForm.getParamValues();
+	$(pageInfo.params).each((a, b)=>{
+	  let v = pms[b.id];
+	  ctx += `<input type='hidden' name='${b.id}' value="${v}">`;
+	});
+	ctx += `</form>`;
+	if($("#expff").length == 0 ){
+	  $(ctx).appendTo("body");
+	}
+	//把图形转换成图片
+	var strs = "";
+	if(tp == "pdf" || tp == "excel" || tp == "word"){
+	  let comps = findAllComps(pageInfo).filter(m=>m.type ==='chart');
+	  $(comps).each(function(index, element) {
+		var id = element.id;
+		var chart = echarts.getInstanceByDom(document.getElementById("ct_"+id));
+		var str = chart.getDataURL({type:'png', pixelRatio:1, backgroundColor: '#fff'});
+		str = str.split(",")[1]; //去除base64标记
+		str = element.id + "," + str+","+$("#ct_"+id).width(); //加上label标记,由于宽度是100%,需要加上宽度
+		strs = strs  +  str;
+		if(index != comps.length - 1){
+		  strs = strs + "@";
+		}
+	  });
+	}
+	$("#expff #picinfo").val(strs);
+	$("#expff").submit().remove();
+  }

@@ -7,7 +7,7 @@
           <el-tab-pane label="直接生成URL" name="url">
             <el-form-item label="有效期">
               <el-radio v-model="form.yxq" label="1" border>一小时</el-radio>
-              <el-radio v-model="form.yxq" label="2" border>一天</el-radio>
+              <el-radio v-model="form.yxq" label="24" border>一天</el-radio>
               <el-radio v-model="form.yxq" label="-1" border>永久有效</el-radio>
             </el-form-item>
           </el-tab-pane>
@@ -94,6 +94,14 @@ export default {
         }, this);
         this.show = false;
       }else if(this.activeName==='url'){  //推送URL
+        ajax({
+          type:"POST",
+          data:{yxq:this.form.yxq, reportId:this.reportId, islogin:0},
+          url:"portal/copyUrl.action",
+          success:(resp)=>{
+            this.$notify.success({ title: '分享成功。', offset: 50});
+          }
+        }, this);
         this.show = false;
       }
       

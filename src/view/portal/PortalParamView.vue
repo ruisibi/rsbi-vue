@@ -89,7 +89,11 @@ export default {
       //处理多选参数
       $(this.pms).each((a, b)=>{
         if(b.inputType === 'mselect' && dt[b.id]){
-          dt[b.id] = dt[b.id].join(",");
+          if(dt[b.id]){
+           dt[b.id] = dt[b.id].join(",");
+          }else{
+            dt[b.id] = '';
+          }
         }
       });
       return dt;

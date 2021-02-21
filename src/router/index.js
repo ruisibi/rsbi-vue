@@ -16,6 +16,7 @@ import ReportDesign from '@/view/bireport/ReportDesign'
 import BireportPrint from '@/view/bireport/Print'
 import PortalPrint from '@/view/portal/Print'
 import PortalPushView from '@/view/portal/PortalPushView'
+import PortalShareView from '@/view/portal/PortalShareView'
 import NotFind from '@/view/NoFind'
 
 Vue.use(Router)
@@ -108,6 +109,11 @@ let router = new Router({
       path:"/portal/Print",
       name:"portalPrint",
       component:PortalPrint
+    },
+    {
+      path:"/portal/ShareView",
+      name:"portalShareView",
+      component:PortalShareView
     }
   ]
 })
