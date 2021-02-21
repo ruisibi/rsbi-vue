@@ -15,6 +15,7 @@ import PortalView from '@/view/portal/PortalView'
 import ReportDesign from '@/view/bireport/ReportDesign'
 import BireportPrint from '@/view/bireport/Print'
 import PortalPrint from '@/view/portal/Print'
+import PortalPushView from '@/view/portal/PortalPushView'
 import NotFind from '@/view/NoFind'
 
 Vue.use(Router)
@@ -90,6 +91,11 @@ let router = new Router({
           path:'/bireport/ReportDesign',
           name:'bireport',
           component:ReportDesign
+        },
+        {
+          path:'/portal/PushView',
+          name:'portalPushView',
+          component:PortalPushView
         }
       ]
     },

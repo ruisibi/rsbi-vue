@@ -58,14 +58,18 @@
         </div>
       </div>
     </div>
+    <portalShare ref="portalShareForm"></portalShare>
   </div>
 </template>
 <script>
 import {baseUrl, ajax} from '@/common/biConfig'
+import portalShare from "./PortalShare.vue"
 
 export default {
   name: "portalMain",
-  components: {},
+  components: {
+    portalShare
+  },
   props: {
 
   },
@@ -92,7 +96,15 @@ export default {
 				this.checked = a.pageId;
     },
     shareReport(){
-      
+      let ts = this;
+      if(!ts.checked){
+        ts.$notify.error({
+                title: '未勾选数据',
+                offset: 50
+              });
+        return false;
+      }
+      this.$refs['portalShareForm'].share(ts.checked);
     },
     loadDatas(){
       let ts = this;

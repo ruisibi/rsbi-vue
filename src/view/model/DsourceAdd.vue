@@ -246,7 +246,5 @@ export default {
 </script>
 
 <style lang="css">
-.nopadding .el-dialog__body{
-  padding: 5px;
-}
+
 </style>

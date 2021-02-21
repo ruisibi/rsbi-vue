@@ -65,7 +65,7 @@
 						//渲染组件
 						this.$refs['optarea'].setCompData(resp.rows);
 						this.$nextTick(()=>{
-							//window.print();
+							window.print();
 						});
 					}
 				}, this, loadingInstance);
