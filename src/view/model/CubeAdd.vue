@@ -122,7 +122,7 @@ export default {
 		
 	},
   mounted() {
-    this.loadDset();
+    
   },
   computed: {},
   methods: {
@@ -142,6 +142,7 @@ export default {
       if(this.$refs['cubeForm']){
         this.$refs['cubeForm'].resetFields();
      }
+     this.loadDset();
       if(isupdate){
         ajax({
           type:"GET",

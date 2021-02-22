@@ -242,7 +242,7 @@ export default {
     dsetTableJoin,dsetView
   },
   mounted() {
-    this.loadDsource();
+    
   },
   computed: {},
   methods: {
@@ -277,6 +277,12 @@ export default {
       let ret = true;
       let ts = this;
       this.$refs["dsetForm"].validate((valid) => {
+        if(!ts.dset.master){
+          ts.$notify.error("未选择主表");
+          ts.active = "join";
+          ret = false;
+          return;
+        }
         if (valid) {
           if (ts.selectTables.length === 0) {
             ts.$notify.error("请选择表");
@@ -374,6 +380,7 @@ export default {
       if (this.$refs["dsetForm"]) {
         this.$refs["dsetForm"].resetFields();
       }
+      this.loadDsource();
       let ds = null;
       let ts = this;
       if (isupdate) {
