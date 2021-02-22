@@ -7,11 +7,24 @@
 					<template v-for="(item) in menus">
 						<el-submenu v-if="item.children&&item.children.length>0" :key="item.menuId" :index=" 'p' + item.menuId">
 							<template slot="title">
-								<i :class="item.avatar"></i>
-								<span>{{item.menuName}}</span>
+								<i :class="item.avatar"></i><span>{{item.menuName}}</span>
 							</template>
 							<template v-for="(sub) in item.children">
-								<el-menu-item :index="sub.menuUrl" :key="sub.menuId">{{sub.menuName}}</el-menu-item>
+								<template v-if="sub.children&&sub.children.length>0">
+									<el-submenu :key="sub.menuId" :index=" 'p' + sub.menuId" >
+										<template slot="title">
+											<i :class="sub.avatar"></i><span>{{sub.menuName}}</span>
+										</template>
+										<template v-for="(sub2) in sub.children">
+											<el-menu-item :index="sub2.menuUrl" :key="sub2.menuId">
+												<i :class="sub2.avatar"></i><span slot="title">{{sub2.menuName}}</span>
+											</el-menu-item>
+										</template>
+									</el-submenu>
+								</template>
+								<template v-else>
+									<el-menu-item :index="sub.menuUrl" :key="sub.menuId"><i :class="sub.avatar"></i>{{sub.menuName}}</el-menu-item>
+								</template>
 							</template>
 						</el-submenu>
 						<el-menu-item v-else :key="item.menuId" :index="item.menuUrl"><i :class="item.avatar"></i>{{item.menuName}}</el-menu-item>						

@@ -87,9 +87,26 @@ export default {
   computed: {},
   methods: {
 	  addMenu:function(node, isupdate){
+      if(isupdate == false){
+        let ref = this.treeRef;
+        //新增只能配置3级菜单
+        var p1 = node.parent;
+        if(p1 != null){
+          var p2 = ref.get_node(p1).parent;
+          if(p2 != null){
+            var p3 = ref.get_node(p2).parent
+            if(p3 == "0"){
+              this.$notify.error({title: '菜单只能建3级',offset: 50});
+              return;
+            }
+          }
+        }
+      }
+
 		  this.operDailogTitle = isupdate?"修改菜单":"创建菜单";
       this.$refs.operForm.showDailog();
       this.isupdate = isupdate;
+      
       if(isupdate){
         const node = this.treeRef.get_selected(true)[0];
         //回写值
