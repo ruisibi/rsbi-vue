@@ -136,6 +136,9 @@ export const findLayoutById = (layoutId, pageInfo)=>{
 //查询布局器中所以组件
 export const findAllComps = (pageInfo)=>{
 	let ret = [];
+	if(!pageInfo.body){
+		return ret;
+	}
 	for(var i=1; true; i++){
 		var tr = pageInfo.body["tr"+i];
 		if(!tr || tr == null){

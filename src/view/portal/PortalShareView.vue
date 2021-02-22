@@ -3,7 +3,7 @@
      <!-- 参数区域 -->
     <portal-param-view ref="paramViewForm" :showSearchBtn="true" :pms="pms"></portal-param-view>
     <!-- 组件区域 -->
-    <layout-view ref="optarea" :pageInfo="pageInfo"></layout-view>
+    <layout-view ref="optarea" :selfAdaption="true" :pageInfo="pageInfo"></layout-view>
    
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
   data() {
     return {
       token:null,
+      reportId:null,
       pageInfo:{},
       pms:[]
     }
@@ -35,11 +36,12 @@ export default {
   methods: {
     getCfg(){
       ajax({
-        url:"portal/get.action",
+        url:"portal/share/get.action",
         data:{token:this.token},
         type:"get",
         success:(resp)=>{
           this.pageInfo = JSON.parse(resp.rows);
+          this.reportId = this.pageInfo.id;
           this.getReport();
         }
       }, this);
@@ -47,7 +49,7 @@ export default {
     getReport(){
       let loadingInstance = Loading.service({fullscreen:false, target:document.querySelector('.wrapper-content-nomargin')});
       ajax({
-        url:"portal/view.action",
+        url:"portal/share/view.action",
         type:"GET",
         data:{token:this.token},
         success:(resp)=>{

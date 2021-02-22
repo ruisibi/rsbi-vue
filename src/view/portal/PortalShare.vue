@@ -90,19 +90,30 @@ export default {
           url:"frame/menu/save.action",
           success:(resp)=>{
              this.$notify.success({ title: '推送成功。', offset: 50});
+             this.show = false;
           }
         }, this);
-        this.show = false;
+        
       }else if(this.activeName==='url'){  //推送URL
         ajax({
           type:"POST",
           data:{yxq:this.form.yxq, reportId:this.reportId, islogin:0},
           url:"portal/copyUrl.action",
           success:(resp)=>{
-            this.$notify.success({ title: '分享成功。', offset: 50});
+            let base = window.location.href.split("#")[0];
+            let u = base + '#' + "/portal/ShareView?token=" + resp.rows;
+            window.setTimeout(()=>{
+              this.$alert('<a target="_blank" href="'+u+'">'+u+'</a><br/><img src="portal/generateqrcode.action?url='+escape(u)+'">','生成URL成功', {
+                center: true,
+                confirmButtonText: '确定',
+                dangerouslyUseHTMLString: true
+              });
+            }, 200);
+           
+            this.show = false;
           }
         }, this);
-        this.show = false;
+        
       }
       
     },

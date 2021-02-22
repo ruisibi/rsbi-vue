@@ -26,42 +26,56 @@ export default {
       type: Object,
       required: true,
       default:{}
+    },
+    selfAdaption:{  //布局自适应
+      type:Boolean,
+      default:false
     }
   },
   render(h) {
     var json = this.pageInfo.body || {};
     var trs = [];
-    for (var i = 1; true; i++) {
-      var tr = json["tr" + i];
-      if (!tr || tr == null) {
-        break;
+    let width = $(window).width();
+    if(this.selfAdaption == true && width <= 450){
+      let comps = utils.findAllComps(this.pageInfo);
+      let tds = [];
+      for(let comp of comps){
+        tds.push(this.renderComp(comp, h, "1"));
       }
-      var tds = [];
-      for (var j = 0; j < tr.length; j++) {
-        var td = tr[j];
-        
-        let cmps = [];
-        if(td.children){
-          for(var k=0; k<td.children.length; k++){
-            var comp = td.children[k];
-            cmps.push(this.renderComp(comp, h, td.id));
-          }
+      trs.push(h('tr', tds));
+    }else{
+      for (var i = 1; true; i++) {
+        var tr = json["tr" + i];
+        if (!tr || tr == null) {
+          break;
         }
+        var tds = [];
+        for (var j = 0; j < tr.length; j++) {
+          var td = tr[j];
+          
+          let cmps = [];
+          if(td.children){
+            for(var k=0; k<td.children.length; k++){
+              var comp = td.children[k];
+              cmps.push(this.renderComp(comp, h, td.id));
+            }
+          }
 
-        tds.push(
-          h("td", {
-            attrs: {
-              class: "laytd",
-              id:"layout_" + td.id,
-              height: td.height + "%",
-              width: td.width + "%",
-              colspan: td.colspan,
-              rowspan: td.rowspan,
-            },
-          }, cmps)
-        );
+          tds.push(
+            h("td", {
+              attrs: {
+                class: "laytd",
+                id:"layout_" + td.id,
+                height: td.height + "%",
+                width: td.width + "%",
+                colspan: td.colspan,
+                rowspan: td.rowspan,
+              },
+            }, cmps)
+          );
+        }
+        trs.push(h('tr', {}, tds));
       }
-      trs.push(h('tr', {}, tds));
     }
     let table = h('table', {attrs:{border:"0", cellspacing:"0", cellpadding:"0", class:"r_layout", id:"layout_table"}}, [h('tbody', trs)]);
     return h("div", {attrs:{id:"optarea", class:"layout-center-body", align:"center"}}, 
@@ -76,7 +90,13 @@ export default {
     };
   },
   mounted() {
-    $(window).resize(()=>this.resizeChart());
+    $(window).resize(()=>{
+       this.resizeChart();
+       if(this.selfAdaption == true){
+         this.$forceUpdate();
+       }
+      }
+    );
   },
   beforeDestroy(){
     $(window).unbind("resize");

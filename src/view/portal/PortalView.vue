@@ -5,7 +5,9 @@
       <el-menu-item index="2"><i class="fa fa-edit"></i> 定制</el-menu-item>
 			<el-submenu index="3">
 				<template slot="title"><i class="fa fa-file-excel-o"></i> 导出</template>
+        <!--
 				<el-menu-item index="html">HTML</el-menu-item>
+        -->
 				<el-menu-item index="csv">CSV</el-menu-item>
 				<el-menu-item index="excel">EXCEL</el-menu-item>
 				<el-menu-item index="word">WORD</el-menu-item>
