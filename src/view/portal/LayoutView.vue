@@ -92,9 +92,11 @@ export default {
   mounted() {
     $(window).resize(()=>{
        this.resizeChart();
+       /**
        if(this.selfAdaption == true){
          this.$forceUpdate();
        }
+       **/
       }
     );
   },
