@@ -113,8 +113,18 @@ export default {
         this.$notify.error("请选择字段再点关联");
         return;
       }
-      this.masterCol = node[0].id;
+      node = node[0];
+      this.masterCol = node.id;
       this.showDailog = true;
+      if(node.li_attr.ref){ //回写值
+        this.join.ref = node.li_attr.ref;
+        this.join.refKey = node.li_attr.refKey;
+        this.join.jtype = node.li_attr.jtype;
+      }else{
+        this.join.ref = null;
+        this.join.refKey = null;
+        this.join.jtype = null;
+      }
     },
     savejoin(){
       var ref = $("#masterTableTree").jstree(true);

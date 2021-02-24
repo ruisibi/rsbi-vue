@@ -306,11 +306,12 @@ export default {
           refMaster.get_node("#").children.forEach((element) => {
             let node = refMaster.get_node(element);
             if (node.li_attr.ref) {
+              console.log(node.li_attr);
               json.joininfo.push({
                 col: node.id,
                 ref: node.li_attr.ref,
                 refKey: node.li_attr.refKey,
-                jtype: node.li_attr.jstype,
+                jtype: node.li_attr.jtype,
               });
               joins.push(node.li_attr.ref);
             }
