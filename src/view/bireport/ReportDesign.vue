@@ -76,6 +76,7 @@
 	import * as tools from '@/view/bireport/bireportUtils'
 	import reportSave from './ReportSave.vue';
 	import reportList from './ReportList.vue';
+	import ChildA from '@/view/bireport/Table2ChartDailog'
 
 	export default {
 		name:"reportDesign",
@@ -270,6 +271,9 @@
 				}
 				$("#expff #picinfo").val(strs);
 				$("#expff").submit().remove();
+			},
+			table2chart(){
+				alert(3);
 			}
 		},
 		watch: {

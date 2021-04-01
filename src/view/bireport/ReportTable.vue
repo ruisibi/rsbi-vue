@@ -6,6 +6,7 @@ import * as tools from '@/view/bireport/bireportUtils'
 import * as tableUtils from '@/view/bireport/tableUtils'
 import { Loading } from "element-ui";
 import reportTableDailog from '@/view/bireport/ReportTableDailog'
+import table2chart from '@/view/bireport/Table2ChartDailog'
 import detailLink from '@/view/bireport/TableDetailLink'
 
 export default {
@@ -23,7 +24,7 @@ export default {
     },
   },
   components:{
-	reportTableDailog,detailLink
+	reportTableDailog,detailLink,table2chart
   },
   render(h){
 	  let tdborder = "1px solid #dee5e7";
@@ -35,7 +36,7 @@ export default {
 	  let tr = [h('tr', [trtd1, trtd2])];
 	  let tr2 = [h('tr', [tr2td1, tr2td2])];
 	  let table = h('table', {class:"d_table"}, [h('tbody', [tr, tr2])]);
-	  return h('div', {attrs:{tp:"table", class:"comp_table", id:"T"+this.tableId}}, [table, h('reportTableDailog',{ref:"tableDailog"}, ''), h('detailLink', {ref:"detailLinkForm"})]);
+	  return h('div', {attrs:{tp:"table", class:"comp_table", id:"T"+this.tableId}}, [table, h('reportTableDailog',{ref:"tableDailog"}, ''), h('detailLink', {ref:"detailLinkForm"}), h('table2chart', {ref:"table2chartForm"})]);
   },
   mounted() {
 	  this.bindDropEvent(this.tableId);
@@ -441,7 +442,7 @@ export default {
 					ts.$refs['tableDailog'].kpiProperty(kpi, comp);
 				}else if(key == "chart"){
 					//let linkpms = o.attr("toCharPms");
-					crtChartfromTab(JSON.parse(linkpms));
+					ts.crtChartfromTab(kpi, comp);
 				}else if(key == "filter"){
 					ts.$refs['tableDailog'].kpiFilter(kpi, comp);
 				}else if(key == 'warn'){
@@ -639,6 +640,10 @@ export default {
 		
 		curTmpInfo.isupdate = true;
 		tableView(comp, comp.id);
+	},
+	crtChartfromTab(kpi, comp){
+		var o = this.$refs['table2chartForm'];
+		o.showDailog(kpi, comp);
 	}
   },
   watch: {},
