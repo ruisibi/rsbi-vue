@@ -49,12 +49,14 @@
 	    data(){
 			return {
 				show:false,
-				mapArea:null,
+				mapArea:"china",
 				mapAreaname:null,
 				layoutId:null,
 				comp:null,
 				opts:{
-					areas:[]
+					areas:[{
+						code:"china",name:"全国"
+					}]
 				},
 				charts:[
 					{cid:"1", cname:"曲线图", type:"line",show:false,children:[
@@ -104,12 +106,15 @@
 		},
 		methods: {	
 			initAreas(){
+				var ts = this;
 				ajax({
 					url:"bireport/listAreas.action",
 					data:{},
 					type:"GET",
 					success:(resp)=>{
-						this.opts.areas = resp.rows;
+						$(resp.rows).each((a, b)=>{
+							ts.opts.areas.push(b);
+						});
 					}
 
 				}, this);
@@ -140,9 +145,10 @@
 					comp.kpiJson = [null, null, null];
 
 					this.$parent.addComp(this.layoutId, comp);
+					this.$parent.$forceUpdate();
 				}
 			},
-			insertChart(layoutId, chart){
+			insertChart(layoutId){
 				this.layoutId = layoutId;
 				this.show = true;
 				this.comp = null;
@@ -177,6 +183,7 @@
 						}
 					});
 				})
+				this.mapArea = comp.chartJson.maparea;
 				this.$forceUpdate();
 			},
 			selectchart(chartId){

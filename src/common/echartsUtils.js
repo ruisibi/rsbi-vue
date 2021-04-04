@@ -1,5 +1,7 @@
 import $ from 'jquery'
 
+export let cityPosJson = {};  //城市的经纬度信息
+
 /**
  * 显示图形的 tooltip
  * @param params
@@ -198,3 +200,12 @@ export const bubbleSize = (maxval, minval, val, targetMax)=>{
 	var r = (targetMax-10)/(maxval-minval)*(val-minval)+10;
 	return r;
 }
+export const converMapData2 = (name, value) => {
+    var geoCoordMap = cityPosJson;
+    var res;
+    var geoCoord = geoCoordMap[name];
+    if (geoCoord) {
+        res = geoCoord.concat(value);
+    }
+    return res;
+};

@@ -399,7 +399,7 @@ export default {
               var comp = {"id":newGuid(), "name":"交叉表", "type":"table"};
               execf(layoutId, comp);
             }else if(tp == "chart"){
-              ts.$refs['chartDailogForm'].insertChart(layoutId);
+              ts.$refs['chartDailogForm'].insertChart(layoutId, execf);
             }else if(tp == "grid"){
               var comp = {"id":newGuid(), "name":"表格", "type":"grid"};
               execf(layoutId, comp);

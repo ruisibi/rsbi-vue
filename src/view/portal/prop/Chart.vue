@@ -32,7 +32,7 @@
           <el-switch v-model="prop.markerEnabled" @change="changevalue('markerEnabled')"></el-switch>
          </el-form-item>
         </template>
-         <template v-if="ctp == 'line' || ctp == 'column' || ctp == 'area' || ctp == 'bar' || ctp =='scatter' || ctp == 'bubble'">
+         <template v-if="ctp == 'line' || ctp == 'column' || ctp == 'area' || ctp == 'bar' || ctp =='scatter' || ctp == 'bubble' || ctp =='map'">
           <el-form-item label="左间距" label-width="70px">
             <el-slider v-model="prop.marginLeft" :max="300" :min="1" @change="changevalue('marginLeft')"></el-slider>
           </el-form-item>

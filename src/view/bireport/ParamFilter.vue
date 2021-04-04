@@ -1,7 +1,7 @@
 <template>
   	<el-dialog :title="title" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 
-		<template v-if="param.type === 'frd'">
+		<template v-if="!(param.type === 'month' || param.type === 'day')">
 			<el-input v-model="search"	size="mini" placeholder="输入关键字搜索">
 				<el-button slot="append" icon="el-icon-search" @click="searchme"></el-button>
 			</el-input>

@@ -166,7 +166,8 @@ export default {
           {value:"month",text:"月份"},
           {value:"day",text:"日期"},
           {value:"prov",text:"省份"},
-          {value:"city",text:"地市"}
+          {value:"city",text:"地市"},
+          {value:"town",text:"区县"}
         ],
         dateformat:[
           'yyyymmdd', 'yyyy-mm-dd', 'yyyy年mm月dd日', 'yyyymm', 'yyyy-mm', 'yyyy年mm月', 'yyyy', 'yyyy年'

@@ -104,23 +104,56 @@ export default {
     showChart(){
       let ts = this;
       let comp = this.comp;
-      let option = loopChartJson(this.data);
-      let myChart = echarts.getInstanceByDom(document.getElementById('ct_'+comp.id));
-      if(!myChart){
-        myChart = echarts.init(document.getElementById('ct_'+comp.id), "default");
-      }
-      myChart.setOption(option, true);
-      if(this.editor === true){  //编辑模式，设置图形显示颜色
-          myChart.off("click").on('click', function(params){
-            ts.$parent.$refs['ChartSeriesColorForm'].showDailog(comp, params);
-          });
-      }else{  //浏览模式，设置图形点击事件
-        if(comp.chartJson.link && comp.chartJson.link.target && comp.chartJson.link.target.length > 0){
-          myChart.off("click").on('click', function(params){
-              utils.compFireEvent(comp.chartJson.link, ts, comp.chartJson.link.paramName, params.name);
-              ts.islink = true;
-          });
+
+      const exec = ()=>{
+        let option = loopChartJson(this.data);
+        let myChart = echarts.getInstanceByDom(document.getElementById('ct_'+comp.id));
+        if(!myChart){
+          myChart = echarts.init(document.getElementById('ct_'+comp.id), "default");
         }
+        myChart.setOption(option, true);
+        if(this.editor === true){  //编辑模式，设置图形显示颜色
+            myChart.off("click").on('click', function(params){
+              ts.$parent.$refs['ChartSeriesColorForm'].showDailog(comp, params);
+            });
+        }else{  //浏览模式，设置图形点击事件
+          if(comp.chartJson.link && comp.chartJson.link.target && comp.chartJson.link.target.length > 0){
+            myChart.off("click").on('click', function(params){
+                utils.compFireEvent(comp.chartJson.link, ts, comp.chartJson.link.paramName, params.name);
+                ts.islink = true;
+            });
+          }
+        }
+      }
+      if(comp.chartJson.type === 'map' && comp.chartJson.typeIndex == 2){
+         var u = baseUrl + "chartjson/city-baidu.json";
+         if($.isEmptyObject(echartsUtils.cityPosJson)){
+            $.getJSON(u, {}, (cityjson)=>{
+              for(let k in cityjson){
+                echartsUtils.cityPosJson[k] = cityjson[k];
+              }
+              var u2 = baseUrl + "chartjson/"+comp.chartJson.maparea+".json";
+                $.getJSON(u2, {}, (resp)=>{
+                    echarts.registerMap(comp.chartJson.maparea, resp);
+                    exec();
+              });
+            });
+         }else{
+              var u2 = baseUrl + "chartjson/"+comp.chartJson.maparea+".json";
+                $.getJSON(u2, {}, (resp)=>{
+                    echarts.registerMap(comp.chartJson.maparea, resp);
+                    exec();
+              });
+         }
+         
+      }else if(comp.chartJson.type === 'map'){ //地图，需要加载地图JSON数据
+         var u = baseUrl + "chartjson/"+comp.chartJson.maparea+".json";
+         $.getJSON(u, {}, (resp)=>{
+            echarts.registerMap(comp.chartJson.maparea, resp);
+            exec();
+         });
+      }else{
+        exec();
       }
     }
   },

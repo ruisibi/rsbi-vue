@@ -50,10 +50,10 @@
 	    data(){
 			return {
 				show:false,
-				mapArea:null,
+				mapArea:"china",
 				mapAreaname:null,
 				opts:{
-					areas:[]
+					areas:[{code:"china",name:"全国"}]
 				},
 				chart:null,
 				charts:[
@@ -97,12 +97,15 @@
 		},
 		methods: {	
 			initAreas(){
+				let ts = this;
 				ajax({
 					url:"bireport/listAreas.action",
 					data:{},
 					type:"GET",
 					success:(resp)=>{
-						this.opts.areas = resp.rows;
+						$(resp.rows).each((a, b)=>{
+							ts.opts.areas.push(b);
+						});
 					}
 
 				}, this);
@@ -116,6 +119,9 @@
 					}
 				});
 				this.chart.chartJson.type = tp;
+				if(tp === 'map'){
+					this.chart.chartJson.maparea = this.mapArea;
+				}
 				this.$parent.resetChart();
 				//重新绑定拖拽事件
 				this.$parent.initChartKpiDrop(2);

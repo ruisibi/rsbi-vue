@@ -1,6 +1,6 @@
 <!-- 图形渲染类 -->
 <script>
-	import {ajax,loopChartJson} from '@/common/biConfig'
+	import {baseUrl, ajax,loopChartJson} from '@/common/biConfig'
 	import $ from 'jquery'
 	import { Loading } from "element-ui";
 	import * as tools from '@/view/bireport/bireportUtils'
@@ -312,6 +312,9 @@
 				if(!json.kpiJson || json.kpiJson.length == 0){
 					return;
 				}
+				if(json.kpiJson[0] == null){
+					return;
+				}
 				if(json.chartJson.type == "scatter" && (json.kpiJson.length < 2 || json.kpiJson[1] == null)  ){
 					return;
 				}
@@ -329,20 +332,32 @@
 					data: JSON.stringify(json),
 					success: (resp)=>{							
 						let option = loopChartJson(resp.rows);
-						let myChart = echarts.getInstanceByDom(document.getElementById('chart'+this.chartId));
-						if(!myChart){
-							myChart = echarts.init(document.getElementById('chart'+this.chartId),"default", {width:640, height:320});
+						//图形回调函数
+						var execf = ()=>{
+							let myChart = echarts.getInstanceByDom(document.getElementById('chart'+this.chartId));
+							if(!myChart){
+								myChart = echarts.init(document.getElementById('chart'+this.chartId),"default", {width:640, height:320});
+							}
+							myChart.setOption(option, true);
+							//图形下钻事件
+							myChart.off("click").on('click', function(params){
+								var xvalue = params.name;
+								var yvalue = params.value;
+								var svalue = params.seriesName;
+								var pos = {left:params.event.event.clientX, top:params.event.event.clientY};
+								var oldDimId = json.chartJson.xcol.alias;
+								ts.drillChart(xvalue, yvalue, svalue, pos, tools.findCompById(ts.chartId, ts.pageInfo), oldDimId); 
+							});
 						}
-						myChart.setOption(option, true);
-						//图形下钻事件
-						myChart.off("click").on('click', function(params){
-							var xvalue = params.name;
-							var yvalue = params.value;
-							var svalue = params.seriesName;
-							var pos = {left:params.event.event.clientX, top:params.event.event.clientY};
-							var oldDimId = json.chartJson.xcol.alias;
-							ts.drillChart(xvalue, yvalue, svalue, pos, tools.findCompById(ts.chartId, ts.pageInfo), oldDimId); 
-						});
+						if(json.chartJson.type === 'map'){
+							var u2 = baseUrl + "chartjson/"+json.chartJson.maparea+".json";
+							$.getJSON(u2, {}, (resp)=>{
+								echarts.registerMap(json.chartJson.maparea, resp);
+								execf();
+							});
+						}else{
+							execf();
+						}
 					}
 				}, this, load);
 			},
