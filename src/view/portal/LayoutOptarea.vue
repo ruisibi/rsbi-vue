@@ -386,6 +386,7 @@ export default {
               }
             }, 200);
              */
+            console.log("moving...");
           }else{
             //获取TREE
 				    var ref = $("#comptree").jstree(true);
@@ -407,7 +408,6 @@ export default {
               var comp = {"id":newGuid(), "name":"数据块", "type":"box"};
                execf(layoutId, comp);
             }
-            
           }
           ts.setUpdate();
           ts.$forceUpdate();

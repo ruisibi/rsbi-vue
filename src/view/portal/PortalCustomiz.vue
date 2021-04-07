@@ -24,6 +24,7 @@
       <selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
       <select-dset ref="selectDsetForm"></select-dset>
        <layout-param-add ref="prarmAddForm" :pageInfo="pageInfo"></layout-param-add>
+       <auto-layout ref="autoLayoutForm" :pageInfo="pageInfo"></auto-layout>
 
       <!-- 保存框 -->
        <el-dialog title="报表保存" :visible.sync="saveShow" :close-on-click-modal="false" custom-class="nopadding">
@@ -43,6 +44,7 @@
 import {baseUrl, ajax} from '@/common/biConfig'
 import layoutLeft from "./LayoutLeft.vue"
 import PortalLayout from "./PortalLayoutDailog.vue"
+import AutoLayout from "./PortalLayoutAuto.vue"
 import selectCube from "@/view/bireport/SelectCube"
 import SelectDset from "./SelectDset"
 import layoutParam from "./LayoutParam.vue"
@@ -60,7 +62,7 @@ import LayoutRight from './LayoutRight.vue'
 
 export default {
   name: "customizer",
-  components: {layoutLeft, PortalLayout, selectCube, SelectDset, layoutParam, LayoutOptarea, LayoutParamAdd, LayoutBottom, LayoutRight},
+  components: {layoutLeft, PortalLayout, selectCube, SelectDset, layoutParam, LayoutOptarea, LayoutParamAdd, LayoutBottom, LayoutRight,AutoLayout},
   props: {
 
   },

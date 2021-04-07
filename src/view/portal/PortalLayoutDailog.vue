@@ -58,7 +58,11 @@ export default {
      save(){
        let l = this.layoutId;
        if(l === 6){  //自定义
-
+            this.show = false;
+            var o = this.$parent;
+            this.$nextTick(()=>{
+              o.$refs['autoLayoutForm'].showDailog();
+            });
        }else{
          let comps = layout.findAllComps(this.pageInfo);
          let json = layout.layout["l"+l];
