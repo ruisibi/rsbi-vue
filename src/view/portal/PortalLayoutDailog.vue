@@ -60,6 +60,7 @@ export default {
        if(l === 6){  //自定义
             this.show = false;
             var o = this.$parent;
+            o.showAutoLayout = true;
             this.$nextTick(()=>{
               o.$refs['autoLayoutForm'].showDailog();
             });

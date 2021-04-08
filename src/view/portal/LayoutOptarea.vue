@@ -386,7 +386,6 @@ export default {
               }
             }, 200);
              */
-            console.log("moving...");
           }else{
             //获取TREE
 				    var ref = $("#comptree").jstree(true);

@@ -24,7 +24,7 @@
       <selectCube ref="selectCubeForm" :callback="selectCubeCallback"></selectCube>
       <select-dset ref="selectDsetForm"></select-dset>
        <layout-param-add ref="prarmAddForm" :pageInfo="pageInfo"></layout-param-add>
-       <auto-layout ref="autoLayoutForm" :pageInfo="pageInfo"></auto-layout>
+       <auto-layout ref="autoLayoutForm" v-if="showAutoLayout" :pageInfo="pageInfo"></auto-layout>
 
       <!-- 保存框 -->
        <el-dialog title="报表保存" :visible.sync="saveShow" :close-on-click-modal="false" custom-class="nopadding">
@@ -72,6 +72,7 @@ export default {
         isupdate:false,
         saveShow:false,
         dataPanelShow:false,
+        showAutoLayout:false,
         saveInfo:{
           name:null
         },

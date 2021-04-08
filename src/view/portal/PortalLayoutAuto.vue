@@ -35,6 +35,7 @@ import $ from 'jquery'
 
 export default {
   components:{
+    
   },
   props:{
       pageInfo:{
@@ -152,6 +153,7 @@ export default {
         this.show = false;
         this.$parent.isbindTdEvent = true;
         this.$parent.isupdate = true;
+        this.$parent.showAutoLayout = false;
         this.$parent.$forceUpdate();
      },
      updateHeightWidth(noSetPos){
