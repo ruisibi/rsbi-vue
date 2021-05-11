@@ -12,6 +12,7 @@ import BoxView from "./view/Box.vue"
 import ChartView from "./view/Chart.vue"
 import GridView from "./view/Grid.vue"
 import TableView from "./view/Table.vue"
+import * as echartsUtils from '@/common/echartsUtils'
 
 export default {
   components: {
@@ -97,6 +98,11 @@ export default {
     };
   },
   mounted() {
+      //放入window对象
+    window.echartsUtils = echartsUtils;
+    var echarts = require('echarts');
+    window.echarts = echarts;
+
     this.bindTdEvent();
     $(window).resize(()=>this.resizeChart());
   },
@@ -386,7 +392,7 @@ export default {
               }
             }, 200);
              */
-          }else{
+          }else{ 
             //获取TREE
 				    var ref = $("#comptree").jstree(true);
 				    var node = ref.get_node(ui.draggable[0]);
@@ -517,6 +523,10 @@ export default {
         }
       });
     }
+  },
+  beforeDestroy(){
+    delete window.echartsUtils;
+    delete window.echarts;
   },
   watch:{
    

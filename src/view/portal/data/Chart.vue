@@ -23,7 +23,7 @@ export default {
   },
   render(h){
       let leftCols = []; 
-      let comp = this.comp;
+	  let comp = this.comp;
 			let tp = comp.chartJson.type;
 			let isscatter = tp === 'scatter' || tp === 'bubble';
 			let isbubble = tp === 'bubble';
