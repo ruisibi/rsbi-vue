@@ -100,10 +100,27 @@ export default {
 				let scolobj = h('div', {class:"ts_h"}, [h('div', '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
 				leftCols.push(scolobj);
 			}
+			let typeIndex = comp.chartJson.typeIndex;
+			//第二纵轴
+			if((tp==='column' || tp === 'line') && (typeIndex == 2 || typeIndex == 4) ){
+				let y2col = null;
+				if(comp.kpiJson && comp.kpiJson.length > 1 && comp.kpiJson[1] != null){
+					let o = comp.kpiJson[1];
+					y2col = [h('span', {class:"charttxt", attrs:{ title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'y2col')}})]
+				}else{
+					y2col = [h('span', {class:"charttip"}, '将度量拖到这里')]
+				}
+				let y2obj = h('div', {class:"ts_h"}, [h('div', '第二纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}},y2col)]);
+				leftCols.push(y2obj);
+			}
+			//更新拖拽事件
+			this.$nextTick(()=>{
+				this.initChartKpiDrop();
+			});
 			return h('div', {class:"tsbd", attrs:{id:"chartData"}}, leftCols);
 		},
   mounted(){
-    this.initChartKpiDrop();
+
   },
   computed: {
      
@@ -148,7 +165,7 @@ export default {
 	},
     initChartKpiDrop(){
         const ts = this;
-        let comp = this.comp;
+		let comp = this.comp;
 				$("#chartData #xcol, #chartData #ycol, #chartData #y2col, #chartData #y3col, #chartData #ycols, #chartData #scol").droppable({
 					accept:"#datasettree .jstree-node",
 					tolerance:"pointer",
@@ -290,21 +307,23 @@ export default {
   span.charttip {
     color:#999999;
     padding:3px;
-    display:block;
+	display:block;
   }
   span.charttxt {
     display:inline-block;
     width:99px;
     white-space:nowrap;
     overflow:hidden;
-    margin-left:3px;
+	margin-left:3px;
+	margin-top:3px;
   }
   a.charticon {
     display:inline-block;
     width:16px;
     height:16px;
     cursor:pointer;
-    font-size: 14px;
+	font-size: 14px;
+	position: absolute;
   }
 
 </style>

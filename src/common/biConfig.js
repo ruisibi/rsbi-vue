@@ -35,14 +35,15 @@ export const ajax = (cfg, ts, loadingObj) => {
 			if(resp.result === 1){
 				cfg.success(resp);
 			}else if(resp.result === 2){
+				if(ts.$route.path === '/'){
+					return;
+				}
 				ts.$notify.error({
 					title: '登录信息失效',
 					message:resp.msg,
 					offset: 50
 				});
-				//if(ts.$route.path === '/'){
-					ts.$router.push("/");
-				//}
+				ts.$router.push("/");
 			}else{
 				const h = ts.$createElement;
 				Message.error({message:h('div',[h('h5','系统错误'), h('div', resp.msg)]), type:"error",showClose: true});

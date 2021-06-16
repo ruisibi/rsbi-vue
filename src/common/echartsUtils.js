@@ -33,7 +33,8 @@ export const toolTips = (params, fmt, unit, ydesc, fmt2, unit2, y2desc, thb, cha
                 }
             }else{
                 if (fmt2) { //双指标
-                    var chart = echarts.getInstanceByDom(document.getElementById(chartId));
+                    var cid = "ct_" + chartId; //图形以ct_开头
+                    var chart = echarts.getInstanceByDom(document.getElementById(cid));
                     var opts = chart.getOption();
                     $(opts.series).each(function(c, d){
                         if(d.name === b.seriesName){

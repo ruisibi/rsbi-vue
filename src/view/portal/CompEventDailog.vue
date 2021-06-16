@@ -100,7 +100,6 @@
 					}
 				}
 				this.comps = ccomps || [];
-				console.log(this.comps);
 				var clink;
 				var linkaccept;
 				if(comp.type == "chart" && comp.chartJson){
