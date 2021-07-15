@@ -558,7 +558,7 @@ export default {
 								}
 							}
 							if(ccnt == 0){
-								groups = "";
+								//groups = "";
 							}
 							cnt = cnt + ccnt;
 						}
