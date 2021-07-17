@@ -120,9 +120,8 @@
 					}
 				}, this, load);
 			},
-			create(paramId){	//用在参数筛选
+			create(p){	//用在参数筛选
 				this.show = true;
-				let p = findParamById(paramId, this.pageInfo.params);
 				this.title = p.name + " - 参数筛选";
 				this.param = p;
 				this.cubeId = p.cubeId;

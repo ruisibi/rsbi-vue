@@ -1,10 +1,11 @@
 <template>
 	<div class="ibox" style="margin-bottom:20px;">
 		<div class="ibox-content" id="p_param" style="padding:5px;">
-			<div class="ptabhelpr">拖拽维度到此处作为筛选条件</div>
+			<div class="ptabhelpr" v-if="!pageInfo.params || pageInfo.params.length == 0 ">拖拽维度到此处作为筛选条件</div>
+			<b v-if="pageInfo.params && pageInfo.params.length > 0">参数：</b>
 			<template v-for="(p) in pageInfo.params">
 				<span :key="p.id" class="pppp">
-					<span title="筛选" @click="paramFilter(p.id, p.type, p.name)" class="text">{{p.name}}({{ paramsDisp(p) }})</span>
+					<span title="筛选" @click="paramFilter(p, p.type, p.name)" class="text">{{p.name}}({{ paramsDisp(p) }})</span>
 					<button class="btn btn-default btn-xs" title="删除" @click.stop="deleteParam(p.id)"><i class="fa fa-remove"></i></button>
 				</span>
 			</template>
@@ -62,7 +63,6 @@
 			 */
 			paramDrop(){
 				const ts = this;
-				const pageInfo = ts.pageInfo;
 				$("#p_param").droppable({
 					accept:"#datasettree .jstree-node",
 					tolerance:"pointer",
@@ -81,6 +81,7 @@
 						$(this).css("border", "1px solid #d3d3d3");
 					},
 					drop:function(e,ui){
+						const pageInfo = ts.pageInfo;
 						$(this).css("border", "1px solid #d3d3d3");
 						var ref = $("#datasettree").jstree(true);
 						var node = ref.get_node(ui.draggable[0]);
@@ -98,12 +99,9 @@
 							var p = {"id":id, "name":node.text, "type":node.li_attr.dim_type, "colname":node.li_attr.col_name,"alias":node.li_attr.alias, "tname":node.li_attr.tname,"cubeId":node.li_attr.cubeId,"valType":node.li_attr.valType,"tableName":node.li_attr.tableName, "tableColKey":node.li_attr.tableColKey,"tableColName":node.li_attr.tableColName,"calc":node.li_attr.calc, "dimord":node.li_attr.dimord, "grouptype":node.li_attr.grouptype,"dateformat":(node.li_attr.dateformat==null?"":node.li_attr.dateformat),dsid:node.li_attr.dsid};
 							pageInfo.params.push(p);
 							var obj = $(this);
-							obj.find("div.ptabhelpr").remove();
-							if(obj.find("b").length == 0){
-								obj.append("<b>参数： </b>");
-							}
+							
 							//弹出筛选窗口
-							ts.paramFilter(id, p.type, p.name);
+							ts.paramFilter(p, p.type, p.name);
 						}
 					}
 				});
@@ -111,8 +109,8 @@
 			/**
 			 * 弹出筛选窗口
 			 */
-			paramFilter(id, type, name){
-				this.$parent.$refs['paramFilterForm'].create(id);
+			paramFilter(p, type, name){
+				this.$parent.$refs['paramFilterForm'].create(p);
 			},
 			deleteParam(id){
 				$(this.pageInfo.params).each((a,b)=>{
