@@ -333,8 +333,8 @@ export function drill(oldDimId, dimId, comp, pos, val, vdesc, cb){
 		if(dims[i].id == oldDimId){
 			oldDimIndex = i;
 			if(dims[i].type == 'month'){
-				dims[i].startmt = val;
-				dims[i].endmt = val;
+				dims[i].st = val;
+				dims[i].end = val;
 				delete dims[i].vals;
 				oldDim = dims[i];
 			}else
@@ -345,14 +345,14 @@ export function drill(oldDimId, dimId, comp, pos, val, vdesc, cb){
 				//	tmpval = val.substring(0, 4) + "-" + val.substring(4, 6) + "-" + val.substring(6, 8);
 				//}else{
 				//}
-				dims[i].startdt = tmpval;
-				dims[i].enddt = dims[i].startdt;
+				dims[i].st = tmpval;
+				dims[i].end = dims[i].st;
 				delete dims[i].vals;
 				oldDim = dims[i];
 			}else{
 				var o = dims[i];
-				delete o.startdt;
-				delete o.enddt;
+				delete o.st;
+				delete o.end;
 				dims[i].vals = [val];   //只展开当前，设置值筛选
 			}
 			
@@ -386,12 +386,12 @@ export function goupDim(comp, pos, dimId, pageInfo, cb){
 		if(dims[i].id == dimId){
 			delete dims[i].vals;
 			if(dims[i].type == 'day'){
-				delete dims[i].startdt;
-				delete dims[i].enddt;
+				delete dims[i].st;
+				delete dims[i].end;
 			}
 			if(dims[i].type == 'month'){
-				delete dims[i].startmt;
-				delete dims[i].endmt;
+				delete dims[i].st;
+				delete dims[i].end;
 			}
 			idx = i;
 			break;

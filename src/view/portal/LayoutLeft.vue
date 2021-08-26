@@ -248,6 +248,7 @@ export default {
         if(ref){
             ref.destroy();
         }
+        const ts = this;
         if (!cubeId) {
             $('#datasettree').jstree({
                 core: {
@@ -285,8 +286,14 @@ export default {
             }
             $('#datasettree').jstree({
                 core: {
-                    data: {
-                        url: 'model/treeCube.action?cubeId=' + cubeId + '&t=' + Math.random()
+                    data: function (obj, callback) {
+                        ajax({
+                            url:"model/treeCube.action",
+                            data:{cubeId:cubeId},
+                            success:(resp)=>{
+                                callback.call(this, resp.rows);
+                            }
+                        }, ts);
                     },
                     check_callback: false
                 },

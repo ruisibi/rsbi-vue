@@ -59,7 +59,7 @@
 </template>
 
 <script>
-	import {baseUrl} from '@/common/biConfig'
+	import {baseUrl, ajax} from '@/common/biConfig'
 	import $ from 'jquery'
 	import selectCube from "@/view/bireport/SelectCube";
 	import reportParam from "@/view/bireport/ReportParam";
@@ -110,6 +110,7 @@
 				this.initdataset();
 			},
 			initdataset(){
+				const ts = this;
 				let ref = $("#datasettree").jstree(true);
 				if(ref){
 					ref.destroy();
@@ -151,8 +152,14 @@
 					}
 					$('#datasettree').jstree({
 						core: {
-							data: {
-								url: 'model/treeCube.action?cubeId=' + this.pageInfo.selectDs + '&t=' + Math.random()
+							data: function (obj, callback) {
+								ajax({
+									url:"model/treeCube.action",
+									data:{cubeId:ts.pageInfo.selectDs},
+									success:(resp)=>{
+										callback.call(this, resp.rows);
+									}
+								}, ts);
 							},
 							check_callback: false
 						},

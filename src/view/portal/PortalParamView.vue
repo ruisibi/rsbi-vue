@@ -2,7 +2,7 @@
     <div>
       <!-- 参数区域 -->
       <template v-if="pms.filter(m=>m.type != 'hidden').length > 0 ">
-        <el-form :model="reportParam" ref="paramForm" size="small" label-position="left" >
+        <el-form :model="reportParam" ref="paramForm" size="mini" label-position="left" >
           <div class="ibox reportParams" style="margin:5px;">
               <div class="row">
                 <div class="ibox-content" style="padding:5px;border:none;">

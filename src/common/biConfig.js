@@ -35,6 +35,9 @@ export const ajax = (cfg, ts, loadingObj) => {
 			if(resp.result === 1){
 				cfg.success(resp);
 			}else if(resp.result === 2){
+				if(!ts){
+					return;
+				}
 				if(ts.$route.path === '/'){
 					return;
 				}
@@ -44,9 +47,14 @@ export const ajax = (cfg, ts, loadingObj) => {
 					offset: 50
 				});
 				ts.$router.push("/");
-			}else{
+			}else if(resp.result === 0){
 				const h = ts.$createElement;
 				Message.error({message:h('div',[h('h5','系统错误'), h('div', resp.msg)]), type:"error",showClose: true});
+			}else{
+				Message.error(baseUrl+cfg.url + " 接口返回格式错误，未包含 result 值。");
+				if(errorCallback){
+					errorCallback();
+				}
 			}
 		},
 		error: function(){
@@ -61,6 +69,9 @@ export const ajax = (cfg, ts, loadingObj) => {
 	};
 	if(!cfg.postJSON || cfg.postJSON === false){
 		delete o.contentType;
+	}
+	if(cfg.async === false){ //同步请求
+		o.async = cfg.async;
 	}
 	$.ajax(o);
 }
