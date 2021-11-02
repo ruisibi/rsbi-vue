@@ -327,6 +327,8 @@ export default {
 		 if(this.pageInfo.params){  //处理参数
 			 json.params = this.pageInfo.params;
 		 }
+		 //删除dims
+		 delete json.dims;
 		let load = Loading.service({ fullscreen: true });
 		 ajax({
 			 url:"bireport/TableView.action",
