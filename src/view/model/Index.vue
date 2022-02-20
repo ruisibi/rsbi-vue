@@ -51,7 +51,7 @@ import dynaCol from "@/view/model/DsetDynaCol";
 import cubeAdd from "@/view/model/CubeAdd";
 import groupAdd from "@/view/model/CubeAddGroup";
 import expressionAdd from "@/view/model/ExpressAdd";
-import dimKpiModify from "@/view/model/DimKpiModify";
+import dimKpiModify from "@/view/model/DimkpiModify";
 
 export default {
   name:"modelIndex",
