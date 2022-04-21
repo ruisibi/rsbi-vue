@@ -1,3 +1,8 @@
+<!--
+ * Copyright 2021 本系统版权归成都睿思商智科技有限公司所有
+ * 用户不能删除系统源码上的版权信息, 使用许可证地址:
+ * https://www.ruisitech.com/licenses/index.html
+ -->
 <template>
       <div class="tabpanel_tab_content">
             <div class="tabpanel_header">
@@ -20,8 +25,9 @@
                         <i class="fa fa-exchange"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <!--
+                           
                         <el-dropdown-item command="flash">刷新当前页面</el-dropdown-item>
+                         <!--
                         <el-dropdown-item command="fullScreem">全屏当前页面</el-dropdown-item>
                         -->
                         <el-dropdown-item command="closeother">关闭其他页面</el-dropdown-item>
@@ -54,10 +60,14 @@ export default {
     };
   },
   mounted:function(){
-    
+    var ms = localStorage.getItem("menus");
+    if(ms){
+        this.menus = JSON.parse(ms);
+    }
   },
   methods: {
       gotab(pos){
+          /**
         var o = $(".tabpanel_mover");
         var left = Number(o.css("marginLeft").replace("px", ""));
         if(pos =='left'){
@@ -70,8 +80,20 @@ export default {
         }
         var size = $(".tabpanel_mover li").length;
         if(Math.abs(left/110) < size){
-            o.css("marginLeft", left+"px");
+            //o.css("marginLeft", left+"px");
+            //o.scrollLeft(size);
         }
+
+        //o.scrollLeft(300+"px");
+        console.log(o.scrollLeft());
+        **/
+        var left = $(".tabpanel_header").scrollLeft();
+        if(pos =='left'){
+            left = left + 110;
+        }else{
+            left = left - 110;
+        }
+        $(".tabpanel_header").scrollLeft(left);
       },
       menuAdd(menu){
           for(let m of this.menus){
@@ -92,7 +114,10 @@ export default {
                 active:"active",
                 closeBtn:true
             });
+            //滚动条移如最右边
+            this.$nextTick(()=>$(".tabpanel_header").scrollLeft(9999));
           }
+          this.cacheMenus();
       },
       closemenu(url){
           let ts = this;
@@ -101,12 +126,21 @@ export default {
                   if(b.active === 'active'){  //删除的刚好是active
                     let provNode = ts.menus[a - 1]; //前一个节点
                     provNode.active = 'active';
+                    
+                    //点击X按钮后，需要移除缓存的 路由对象
+                    if(b.url === '/etl/imp/DbImp' || b.url === '/etl/imp/CsvImp' || b.url === '/etl/imp/XlsImp'){
+                        var p = ts.$parent.clearPage;
+                        if(p.indexOf(b.url) < 0){
+                            p.push(b.url);
+                        }
+                    }                   
                     ts.$router.push(provNode.url);
                   }
                   ts.menus.splice(a, 1);
                   return false;
               }
           });
+          this.cacheMenus();
       },
       selectmenu(url){
           let ts = this;
@@ -116,10 +150,23 @@ export default {
           $(this.menus).each((a, b)=>{
               if(b.url === url){
                   b.active = "active";
+                  if(ts.$route.path === url){
+                      return false;
+                  }
                   ts.$router.push(url);
                   return false;
               }
           });
+          this.cacheMenus();
+      },
+      /**
+       * 更新菜单的url
+       */
+      chgMenuUrl(oldUrl, newUrl){
+          let u = this.menus.filter(m=>m.url.indexOf(oldUrl)>=0)[0];
+          if(u){
+            u.url = newUrl;
+          }
       },
        handleCommand(cmd){
            if(cmd === "closeother"){
@@ -135,6 +182,8 @@ export default {
                this.menus[0].active = "active";
                this.$router.push(this.menus[0].url);
            }else if(cmd === 'flash'){
+               location.reload();
+               /** 
                $(this.menus).each((a, b)=>{
                    if(b.active === 'active'){
                        //this.$router.go(0);
@@ -143,7 +192,12 @@ export default {
                        return false;
                    }
                });
+               */
            }
+           this.cacheMenus();
+       },
+       cacheMenus(){
+           localStorage.setItem("menus", JSON.stringify(this.menus));
        }
   },
 };
@@ -152,7 +206,7 @@ export default {
 <style lang="css">
 .tabpanel_header {
     width: calc(100% - 80px);
-    overflow: hidden;
+    overflow: auto;
     display: inline-block;
 }
 .btn-link {

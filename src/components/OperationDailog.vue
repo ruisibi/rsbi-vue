@@ -4,8 +4,9 @@
 <template>
   <div v-show="dailogShow">
     <div class="ibox" style="margin-bottom:0px;">
-        <div class="ibox-title">
-            {{title}}
+        <div class="ibox-title" style="height:33px;">
+            {{title}} &nbsp;
+            <button class="btn btn-outline btn-info btn-xs" @click="goback()"><i class="fa fa-chevron-left"></i>返回</button>
         </div>
         <div class="ibox-content" :style="autoHeight()" style="padding-bottom: 0px;overflow:auto;">
             <slot></slot>
@@ -68,6 +69,9 @@ export default {
         if(this.callback()){
             this.closeDailog();
         }
+    },
+     goback(){
+      this.closeDailog();
     }
   }
 }

@@ -287,7 +287,7 @@ export default {
           var dt = [];
           for(let i=0; i<tbs.length; i++){
             var ccld = [];
-            var nd = {id:tbs[i],text:tbs[i],icon:'fa fa-table', state:{opened:true}, children:ccld};
+            var nd = {id:tbs[i], li_attr:{istable:true},text:tbs[i],icon:'fa fa-table', state:{opened:true}, children:ccld};
             dt.push(nd);
             var cols = findcols(tbs[i]);
             for(let l=0; l<cols.length; l++){
@@ -322,7 +322,10 @@ export default {
             check_callback: true,
             data: dts,
           },
-          plugins: ["wholerow"],
+          checkbox:{
+            three_state:false,
+          },
+          plugins: ["wholerow", "checkbox"],
         }).bind("ready.jstree", function () {
           
         });
@@ -494,83 +497,97 @@ export default {
     ds2cube(){
         let ts = this;
         var leftRef = $("#cubelefttree").jstree(true);
-        var left = leftRef.get_selected(true);
-        if(left.length == 0){
+        var lefts = leftRef.get_selected(true);
+        if(lefts.length == 0){
           ts.$notify.error("您还未从左边选择字段。");
           return;
         }
-        left = left[0];
-        if(!left.li_attr){
-          ts.$notify.error("请选择字段。");
-          return;
-        }
-        if(leftRef.is_hidden(left)){
-          return;
-        }
-        var rightRef = $("#cuberighttree").jstree(true);
-        var right = rightRef.get_selected(true);
-        if(right.length == 0){
-          ts.$notify.error("您还未选择右边度量或维度。");
-          return;
-        }
-        right = right[0];
-        var parent = right.parent;
-        if(!parent){
-          ts.$notify.error("您还未选择右边度量或维度。");
-          return;
-        }
-        parent = rightRef.get_node(parent);
-        var isCalc = true; //是否是公式？
-        if(!left.li_attr.expression||left.li_attr.expression==null||left.li_attr.expression==""){
-          isCalc = false;
-        }	
-        if(right.id == 'cubedl' || parent.id == 'cubedl' || (parent.li_attr && parent.li_attr.tp == "kpigroup")){
-          //生成ID
-          var cid = ts.findCubeMaxId();
-          //calc 表示是否是动态字段，
-          //calcKpi 表示是否是计算指标
-          var o = {id:cid.id, text:'sum('+left.text+")",li_attr:{tp:"kpi",drag:true,aggre:"sum",col:(!isCalc?left.li_attr.col:left.li_attr.expression), tname:left.li_attr.tname,dispName:left.text,alias:left.id,calc:isCalc,calcKpi:0},icon:"glyphicon glyphicon-stop icon_kpi"};
-          if(right.id == 'cubedl' || (parent.id=="cubedl" && right.li_attr.tp == "kpigroup")){
-            rightRef.create_node(right.id, o);
-            rightRef.open_node(right.id);
-          }else{
-            //获取位置
-            var cnodes = rightRef.get_node(right.parent);
-            var idx = -1;
-            for(j=0; j<cnodes.children.length; j++){
-              if(cnodes.children[j] == right.id){
-                idx = j;
-                break;
-              }
-            }
-            rightRef.create_node(right.parent, o, idx + 1);
+        const exef = (left)=>{
+          if(!left.li_attr){
+            ts.$notify.error("请选择字段。");
+            return false;
           }
-          leftRef.hide_node(left.id);
-        }else if(right.id == 'cubewd' || parent.id == 'cubewd' || (parent.li_attr && parent.li_attr.tp == 'group')){
-          var cid = ts.findCubeMaxId();
-          var o = {id:cid.id, text:left.text, li_attr:{tp:"dim",drag:true,col:!isCalc?left.li_attr.col:left.li_attr.expression,tname:left.li_attr.tname,dispName:left.text,tname:left.li_attr.tname,vtype:left.li_attr.vtype,alias:left.li_attr.col,calc:isCalc},icon:"glyphicon glyphicon-stop icon_dim", targetId:""};  //通过targetId 来指引对应数据库的的字段 ID, 用在修改上
-          if(right.id == 'cubewd' || (parent.id == 'cubewd' && right.li_attr.tp == 'group')){
-            rightRef.create_node(right.id, o);
-            rightRef.open_node(right.id);
-          }else{
-            //获取位置
-            var cnodes = rightRef.get_node(right.parent);
-            var idx = -1;
-            for(var j=0; j<cnodes.children.length; j++){
-              if(cnodes.children[j] == right.id){
-                idx = j;
-                break;
-              }
-            }
-            rightRef.create_node(right.parent, o, idx + 1);
+          if(leftRef.is_hidden(left)){
+            return false;
           }
-          leftRef.hide_node(left.id);
+          var rightRef = $("#cuberighttree").jstree(true);
+          var right = rightRef.get_selected(true);
+          if(right.length == 0){
+            ts.$notify.error("您还未选择右边度量或维度。");
+            return false;
+          }
+          right = right[0];
+          var parent = right.parent;
+          if(!parent){
+            ts.$notify.error("您还未选择右边度量或维度。");
+            return false;
+          }
+          parent = rightRef.get_node(parent);
+          var isCalc = true; //是否是公式？
+          if(!left.li_attr.expression||left.li_attr.expression==null||left.li_attr.expression==""){
+            isCalc = false;
+          }	
+          if(right.id == 'cubedl' || parent.id == 'cubedl' || (parent.li_attr && parent.li_attr.tp == "kpigroup")){
+            //生成ID
+            var cid = ts.findCubeMaxId();
+            //calc 表示是否是动态字段，
+            //calcKpi 表示是否是计算指标
+            var o = {id:cid.id, text:'sum('+left.text+")",li_attr:{tp:"kpi",drag:true,aggre:"sum",col:(!isCalc?left.li_attr.col:left.li_attr.expression), tname:left.li_attr.tname,dispName:left.text,alias:left.id,calc:isCalc,calcKpi:0},icon:"glyphicon glyphicon-stop icon_kpi"};
+            if(right.id == 'cubedl' || (parent.id=="cubedl" && right.li_attr.tp == "kpigroup")){
+              rightRef.create_node(right.id, o);
+              rightRef.open_node(right.id);
+            }else{
+              //获取位置
+              var cnodes = rightRef.get_node(right.parent);
+              var idx = -1;
+              for(j=0; j<cnodes.children.length; j++){
+                if(cnodes.children[j] == right.id){
+                  idx = j;
+                  break;
+                }
+              }
+              rightRef.create_node(right.parent, o, idx + 1);
+            }
+            leftRef.hide_node(left.id);
+          }else if(right.id == 'cubewd' || parent.id == 'cubewd' || (parent.li_attr && parent.li_attr.tp == 'group')){
+            var cid = ts.findCubeMaxId();
+            var o = {id:cid.id, text:left.text, li_attr:{tp:"dim",drag:true,col:!isCalc?left.li_attr.col:left.li_attr.expression,tname:left.li_attr.tname,dispName:left.text,tname:left.li_attr.tname,vtype:left.li_attr.vtype,alias:left.li_attr.col,calc:isCalc},icon:"glyphicon glyphicon-stop icon_dim", targetId:""};  //通过targetId 来指引对应数据库的的字段 ID, 用在修改上
+            if(right.id == 'cubewd' || (parent.id == 'cubewd' && right.li_attr.tp == 'group')){
+              rightRef.create_node(right.id, o);
+              rightRef.open_node(right.id);
+            }else{
+              //获取位置
+              var cnodes = rightRef.get_node(right.parent);
+              var idx = -1;
+              for(var j=0; j<cnodes.children.length; j++){
+                if(cnodes.children[j] == right.id){
+                  idx = j;
+                  break;
+                }
+              }
+              rightRef.create_node(right.parent, o, idx + 1);
+            }
+            leftRef.hide_node(left.id);
+          }
+          return true;
+        }
+        let isexe = false;
+        $(lefts).each((a, b)=>{
+          if(b.li_attr && b.li_attr.istable == true){
+            return;
+          }
+          isexe = true;
+          return exef(b);
+        });
+        if(isexe == false){
+          this.$notify.error("您还未选择右边度量或维度。");
         }
     },
     cube2ds(){
       var rightRef = $("#cuberighttree").jstree(true);
       var leftRef = $("#cubelefttree").jstree(true);
       var right = rightRef.get_selected(true);
+      let ts = this;
       if(right.length == 0 || !(right[0].li_attr) || !right[0].li_attr.tp){
         ts.$notify.error("您还未选择需要删除的度量或维度。");
         return;

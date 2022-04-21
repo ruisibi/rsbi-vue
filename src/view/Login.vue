@@ -37,7 +37,7 @@
 		<div align="center" class="bottomtxt">
 
 			<div class="txt" align="center">
-				 <a href='https://www.ruisitech.com' target="_blank">睿思BI</a> - <a href='https://www.ruisitech.com/productent.html' target="_blank">企业版</a> - <a href='https://www.ruisitech.com/product.html' target="_blank">标准版</a>  - <a href='https://www.ruisitech.com/opensource.html' target="_blank">开源版</a> - <a href='https://www.ruisitech.com/yun.html' target="_blank">睿思云</a> - <a href='http://www.ruisibi.cn/book.htm' target="_blank">使用手册</a> - <a href='https://www.ruisitech.com/suggest.html' target="_blank">问题反馈</a> </div>
+				 <a href='https://www.ruisitech.com' target="_blank">睿思BI</a> - <a href='https://www.ruisitech.com/productent.html' target="_blank">企业版</a> - <a href='https://www.ruisitech.com/opensource.html' target="_blank">开源版</a> - <a href='https://www.ruisitech.com/yun.html' target="_blank">睿思云</a> - <a href='http://book.ruisitech.com/' target="_blank">使用手册</a> - <a href='https://www.ruisitech.com/suggest.html' target="_blank">问题反馈</a> </div>
 
                ©成都睿思商智科技有限公司 2020 版权所有
 		</div>
