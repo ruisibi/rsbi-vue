@@ -298,7 +298,7 @@ export default {
           }
           //动态字段
           if(c.dynamic && c.dynamic != null && c.dynamic.length > 0){
-            var dynas = {id:'dynaroot', text:"动态字段", icon:'fa fa-table', state:{opened:true}, children:[]};
+            var dynas = {id:'dynaroot', li_attr:{istable:true} , text:"动态字段", icon:'fa fa-table', state:{opened:true}, children:[]};
             dt.push(dynas);
             for(let i=0; i<c.dynamic.length; i++){
               var r = c.dynamic[i];
@@ -508,7 +508,7 @@ export default {
             return false;
           }
           if(leftRef.is_hidden(left)){
-            return false;
+            return true;
           }
           var rightRef = $("#cuberighttree").jstree(true);
           var right = rightRef.get_selected(true);

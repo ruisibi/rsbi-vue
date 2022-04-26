@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="报表分享" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
-      <el-form :model="form" label-width="100px">
+      <el-form :model="form" label-width="100px" size="mini">
 
       <div class="el-dialog-div">
         <el-tabs v-model="activeName" type="card">
@@ -16,7 +16,7 @@
               <el-input v-model="form.menuName" placeholder="请输入名称"></el-input>
             </el-form-item>
             <el-form-item label="排序">
-              <el-input-number size="mini" v-model="form.menuOrder" :min="1" :max="10000" label="描述文字"></el-input-number>
+              <el-input-number size="small" v-model="form.menuOrder" :min="1" :max="10000" label="描述文字"></el-input-number>
             </el-form-item>
              <el-form-item label="上级菜单">
               <div id="menuTree" class="treestyle"></div>

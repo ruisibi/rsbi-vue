@@ -3,7 +3,7 @@
     <template v-if="dsetId != null">
       <el-table :data="tableData" style="width: 100%" height="420" border header-row-class-name="tableHeadbg">
         <template v-for="item in headData">
-          <el-table-column :key="item" :prop="item" :label="item">
+          <el-table-column :key="item" :prop="item" :label="item" min-width="130">
           </el-table-column>
         </template>
       </el-table>
