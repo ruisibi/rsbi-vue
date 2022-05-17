@@ -90,7 +90,7 @@ export default {
         linkType: [{ required: true, message: "必填", trigger: "blur" }],
         linkUrl: [{ required: true, message: "必填", trigger: "blur" }],
         linkName: [{ required: true, message: "必填", trigger: "blur" }],
-        linkPwd: [{ required: true, message: "必填", trigger: "blur" }],
+       // linkPwd: [{ required: true, message: "必填", trigger: "blur" }],
       },
       jndiRules: {
         jndiName: [{ required: true, message: "必填", trigger: "blur" }],
@@ -106,6 +106,7 @@ export default {
           { label: "PostgreSQL", value: "postgresql" },
           { label: "Hive", value: "hive" },
           { label: "Kylin", value: "kylin" },
+          { label: "ClickHouse", value: "clickhouse" },
         ],
       },
     };
@@ -174,6 +175,8 @@ export default {
         s = "jdbc:hive2://ip:10000/default";
       } else if (val == "kylin") {
         s = "jdbc:kylin://ip:7070/kylin_project_name";
+      }else if(val === 'clickhouse'){
+        s = "jdbc:clickhouse://ip:port/default";
       }
       this.dsource.linkUrl = s;
     },

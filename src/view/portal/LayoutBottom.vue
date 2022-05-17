@@ -7,7 +7,7 @@
             <button class="btn btn-outline btn-danger btn-xs" @click="closeDatapanel()"><i class="fa fa-times"></i></button>
             </div>
           </div>
-          <div class="ibox-content" style="padding:0px; overflow:auto; height:150px;">
+          <div class="ibox-content" style="padding:0px; overflow:auto; height:150px; width:100%;">
             <dbox v-if="showBox" :comp="comp" ref="boxForm"></dbox>
             <dchart v-if="showChart" :comp="comp" ref="chartForm"></dchart>
             <dgrid v-if="showGrid" :comp="comp" ref="gridForm"></dgrid>

@@ -160,6 +160,7 @@
 					});
 				});
 				this.charts[0].show = true;
+				this.charts[0].children[0].select = true;
 			},
 			//更改图形类型
 			changeType(comp){
