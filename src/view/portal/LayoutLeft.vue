@@ -37,6 +37,7 @@ import {baseUrl, ajax} from '@/common/biConfig'
 import $ from 'jquery'
 import "jstree";
 import "jstree/dist/themes/default/style.min.css";
+import * as utils from './Utils'
 
 export default {
   components:{
@@ -103,14 +104,14 @@ export default {
                         return false;
                     }
                     if(node.li_attr.tp == 'comp'){
-                        //resetWindows('min');
+                        utils.resetWindows('min');
                     }
                     return true;
                 },
                 stop:function(e){
                     var ref = $('#'+treeDiv).jstree(true),node = ref.get_node(this);
                     if(node.li_attr.tp == 'comp'){
-                        //resetWindows('max');
+                        utils.resetWindows('max');
                     }
                     $(".indicator").hide();
                 }

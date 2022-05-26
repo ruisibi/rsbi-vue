@@ -308,3 +308,11 @@ export const exportReport = (tp, reportId, paramViewForm, pageInfo)=>{
 	$("#expff #picinfo").val(strs);
 	$("#expff").submit().remove();
   }
+
+  export const resetWindows = (tp)=>{
+	if(tp == 'min'){
+	  $("div.cctx").hide();
+	}else{
+	  $("div.cctx").show();
+	}
+}

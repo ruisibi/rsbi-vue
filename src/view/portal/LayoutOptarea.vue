@@ -370,7 +370,7 @@ export default {
                   }
                 });
               }
-            ts.$nextTick(()=>ts.bindCompEvent(comp));
+             ts.$nextTick(()=>ts.bindAllCompsEvent());
          }
 
           $(".indicator").hide();
@@ -438,6 +438,11 @@ export default {
         }
       });
     },
+    bindAllCompsEvent(){
+      utils.findAllComps(this.pageInfo).forEach(e=>{
+        this.bindCompEvent(e)
+      });
+    },
     //绑定组件拖拽事件
     bindCompEvent(obj){
       let ts = this;
@@ -457,12 +462,12 @@ export default {
           return "<div class=\"vakata-dnd\"><span class=\"miconcancel glyphicon glyphicon-remove\"></span>"+id+"</div>";
         },
         start:function(e){
-          //resetWindows('min');
+         utils.resetWindows('min');
           //$(this).hide();
         },
         stop:function(e){
           $(".indicator").hide();
-          //resetWindows('max');
+          utils.resetWindows('max');
           //$(this).show();
         }
       });
@@ -479,8 +484,9 @@ export default {
           });
         },
         out:function(e, ui){
-          var source = ui.draggable[0];
           curTmpInfo.mouseOnDiv = false;
+          /**
+          var source = ui.draggable[0];
           var obj = $(this).parent();
           var last = obj.children().last();
           if(last.attr("id") ==  $(source).attr("id")){
@@ -501,6 +507,7 @@ export default {
               top:last.offset().top + last.height()
             });
           }	
+           */
         },
         drop:function(e, ui){
           //alert(ui); 
