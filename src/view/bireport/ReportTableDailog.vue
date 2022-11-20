@@ -279,12 +279,14 @@
 				this.type = "kpiwarning";
 				this.show = true;
 				this.kpi = kpi;
-				this.val.wctype = kpi.warning.pictype;
-				this.val.fztp === kpi.warning.reverse === "y";
-				this.val.logic1 = kpi.warning.logic1;
-				this.val.value1 = kpi.warning.val1;
-				this.val.logic2 = kpi.warning.logic2;
-				this.val.value2 = kpi.warning.val2;
+				if(kpi.warning){
+					this.val.wctype = kpi.warning.pictype;
+					this.val.fztp === kpi.warning.reverse === "y";
+					this.val.logic1 = kpi.warning.logic1;
+					this.val.value1 = kpi.warning.val1;
+					this.val.logic2 = kpi.warning.logic2;
+					this.val.value2 = kpi.warning.val2;
+				}
 			},
 			save(){
 				let dim = this.dim;
