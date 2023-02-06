@@ -87,6 +87,8 @@
 							success:function(resp){
 								ts.fullscreenLoading = false;
 								if (resp.result == 1) {
+									//清除菜单缓存
+									localStorage.removeItem("menus");
 									ts.$router.push('Welcome')
 								}else{
 									ts.$notify.error({

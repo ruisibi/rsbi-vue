@@ -83,6 +83,9 @@ export default {
           //渲染组件
           this.$refs['optarea'].setCompData(resp.rows);
           this.pms = resp.rows.pms;
+          let urlParam = JSON.parse(JSON.stringify(this.$route.query));
+					delete urlParam.id;
+          this.$refs['paramViewForm'].initReportParam(urlParam, this.pms);
         }
       }, this, loadingInstance);
     },

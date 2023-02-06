@@ -118,14 +118,25 @@ export default {
     },
     //初始化参数字段
     initReportParam(urlParam, pms){
+      //把URL上的参数赋给报表参数
       $(pms).each((a, b)=>{
-        if(b.type === 'checkbox' && urlParam[b.id]){
-          let v = urlParam[b.id];
-          this.reportParam[b.id] = v.split(",");
-        }else{
-          this.reportParam[b.id] = urlParam[b.id];
+        if(urlParam[b.id]){
+          b.value = urlParam[b.id];
         }
       });
+      $(pms).each((a, b)=>{
+        if(b.type === 'checkbox' && b.value){
+          let v = b.value;
+          //this.reportParam[b.id] = v.split(",");
+          this.$set(this.reportParam,b.id, v.split(","));
+        }else{
+          //this.reportParam[b.id] = b.value;
+          this.$set(this.reportParam,b.id, b.value);
+        }
+      });
+
+      
+
     }
   },
   mounted(){

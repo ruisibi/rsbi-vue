@@ -28,7 +28,7 @@
               </el-form-item>
             </template>
             <el-form-item label="默认值" label-width="100px">
-              <el-input v-model="param.defvalue"></el-input>
+              <el-input v-model="param.defvalue" :placeholder="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'? 'now 表示当前时间, now - 1 表示前一天':'参数默认值'"></el-input>
             </el-form-item>
             <el-form-item label="隐藏参数" label-width="100px">
               <el-switch v-model="param.hiddenprm" active-value="y" inactive-value="n">
@@ -162,7 +162,7 @@ export default {
           dtformats:{
             yearselect: ['yyyy', 'yyyy年'],
             monthselect:['yyyyMM', 'yyyy-MM', 'yyyy年MM月'],
-            dateselect:['yyyyMMdd', 'yyyy-MM-dd', 'yyyy年MM月dd日']
+            dateselect:['yyyyMMdd', 'yyyy-MM-dd', 'yyyy年MM月dd日', "yyyy-MM-dd HH:mm:ss", "yyyyMMddHHmmss"]
           }
         },
         rules:{
