@@ -14,7 +14,7 @@
             <div class="tab-content tab-content2">
                 <div id="data-tab-1" class="tab-pane" :class="isActive('data-tab-1')">
                     <div class="panel-body" style="padding:0px;overflow:auto;">
-                        <div id="paramtree">a</div>
+                        <div id="paramtree"></div>
                         <div id="comptree"></div>
                     </div>
                 </div>

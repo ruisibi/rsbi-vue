@@ -370,6 +370,7 @@ export default {
                   }
                 });
               }
+             ts.$forceUpdate();
              ts.$nextTick(()=>ts.bindAllCompsEvent());
          }
 

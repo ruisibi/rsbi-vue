@@ -4,31 +4,36 @@
       <template v-if="pms.filter(m=>m.type != 'hidden').length > 0 ">
         <el-form :model="reportParam" ref="paramForm" size="mini" label-position="left" >
           <div class="ibox reportParams" style="margin:5px;">
-              <div class="row">
                 <div class="ibox-content" style="padding:5px;border:none;">
+                   <div class="row">
                     <template v-for="item in pms.filter(m=>m.type != 'hidden')">
                       <div class="col-sm-3" :key="item.id">
-                            <el-form-item :label="item.desc" label-width="80px">
+                            <el-row>
+                               <el-col :span="8">
+                                <div class="paramtitle" >{{item.desc}}：</div>
+                              </el-col>
+                               <el-col :span="16">
                               <template v-if="item.inputType==='text'">
-                                <el-input v-model="reportParam[item.id]" :disabled="!showSearchBtn" placeholder="请录入"></el-input>
+                                <el-input v-model="reportParam[item.id]" size="mini" :disabled="!showSearchBtn" placeholder="请录入"></el-input>
                               </template>
                               <template v-if="item.inputType==='select'">
-                                <el-select v-model="reportParam[item.id]" :disabled="!showSearchBtn" clearable placeholder="请选择" style="width:100%">
+                                <el-select v-model="reportParam[item.id]" size="mini" :disabled="!showSearchBtn" clearable placeholder="请选择" style="width:100%">
                                   <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
                                   </el-option>
                                 </el-select>
                               </template>
                               <template v-if="item.inputType==='mselect'">
-                                <el-select v-model="reportParam[item.id]" :disabled="!showSearchBtn" multiple clearable placeholder="请选择" style="width:100%">
+                                <el-select v-model="reportParam[item.id]" size="mini" :disabled="!showSearchBtn" multiple clearable placeholder="请选择" style="width:100%">
                                   <el-option v-for="item in item.options" :key="item.value" :label="item.text" :value="item.value">
                                   </el-option>
                                 </el-select>
                               </template>
                               <template v-if="item.inputType === 'dateSelect'">
-                                <el-date-picker v-model="reportParam[item.id]" :disabled="!showSearchBtn" :format="item.dateFormat" 
+                                <el-date-picker v-model="reportParam[item.id]" size="mini" :disabled="!showSearchBtn" :format="item.dateFormat" 
                                 style="width:100%" :type="item.dateType" placeholder="选择日期" :value-format="item.dateFormat"></el-date-picker>
                               </template>
-                            </el-form-item>
+                               </el-col>
+                            </el-row>
                       </div>
                     </template>
                     <template v-if="showSearchBtn==true">
@@ -148,5 +153,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
+.paramtitle{
+  padding: 6px;
+  font-weight: bold;
+}
 </style>
