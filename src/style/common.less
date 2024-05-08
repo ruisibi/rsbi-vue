@@ -191,8 +191,8 @@ html,body{
 	overflow:hidden;
 }
 .lock-dg .lock-dg-header {
-	border-bottom:1px solid #e7eaec;
-	overflow:hidden;
+    background-color: #F5F5F6;
+    overflow: hidden;
 }
 TABLE.lockgrid {
 	border-collapse:collapse;
@@ -200,11 +200,11 @@ TABLE.lockgrid {
 }
 TABLE.lockgrid TH {
 	text-align: center;
-    PADDING: 2px;
+    PADDING: 8px 3px 8px 3px;
     font-size: 13px;
     height:26px;
-	white-space:nowrap;
-	font-weight:normal;
+	word-break:break-all;
+    word-wrap:break-word;
 }
 TABLE.lockgrid TD.pms {
     color: rgb(255, 0, 0);
@@ -213,12 +213,17 @@ TABLE.lockgrid TD.pms {
 TABLE.lockgrid th.crossHead0,TABLE.lockgrid th.crossHead1,TABLE.lockgrid th.crossHead2 {
 	text-align: center;
 }
+TABLE.lockgrid th.grid3-td {
+    border-right:1px solid #e7eaec;
+    border-left:1px solid #e7eaec;
+}
 TABLE.lockgrid TD.lockgrid-td, TD.grid3-foot {
-    padding: 8px 2px 8px 2px;
+    padding: 8px 3px 8px 3px;
     font-size: 12px;
     height:20px;
-	border-bottom:1px solid #e7eaec;
-	line-height:1.42857;
+    border-bottom:1px solid #e7eaec;
+    border-left:1px solid #e7eaec;
+    border-right:1px solid #e7eaec;
 }
 TABLE.lockgrid div.dg-cell {
 	width:90px;

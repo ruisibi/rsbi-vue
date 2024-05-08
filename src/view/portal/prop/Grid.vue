@@ -13,7 +13,7 @@
             </el-form-item>
             <template v-if="!(prop.isnotfy === true)">
             <el-form-item label="每页显示条数" label-width="80px">
-               <el-input-number v-model="prop.pageSize" @change="changevalue('pageSize')"></el-input-number>
+               <el-input-number size="small" v-model="prop.pageSize" @change="changevalue('pageSize')"></el-input-number>
             </el-form-item>
             </template>
       </el-collapse-item>
@@ -58,7 +58,9 @@ export default {
       let p = this.prop;
       let c = this.comp;
       p.title = c.name;
-      p.showtitle = c.showtitle;
+      if(c.showtitle != null){
+        p.showtitle = c.showtitle;
+      }
       if(c.pageSize){
         p.pageSize = c.pageSize;
       }

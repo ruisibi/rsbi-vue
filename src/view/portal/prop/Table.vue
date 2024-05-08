@@ -78,7 +78,9 @@ export default {
       let p = this.prop;
       let c = this.comp;
       p.title = c.name;
-      p.showtitle = c.showtitle;
+      if(c.showtitle != null){
+        p.showtitle = c.showtitle;
+      }
       p.usedrill = c.usedrill;
       this.loadCols();
     },

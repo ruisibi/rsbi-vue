@@ -139,7 +139,7 @@ export default {
       }else if(comp.type === 'table'){
         compctx.push(h('table-view',{ref:'mv_'+comp.id, key:"k_"+comp.id, attrs:{comp:comp, portalParams:this.pageInfo.params,  editor:true}}));
       }
-      let style = {padding:"1px", width:"100%"};
+      let style = {padding:"0", width:"100%"};
       let bgcolor = comp.bgcolor;
       if(bgcolor){
         style['background-color'] = bgcolor;

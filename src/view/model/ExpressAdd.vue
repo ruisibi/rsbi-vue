@@ -87,11 +87,11 @@ export default {
       opt:{
         js:["sum","avg","count","count(distinct)", "max", "min"],
         fmt:[{
-          value:"#,###", text:"整数"
+          value:"#,##0", text:"整数"
         },{
-          value:"#,###.00", text:"小数(保留两位)"
+          value:"#,##0.00", text:"小数(保留两位)"
         },{
-          value:"#,###.0000", text:"小数(保留四位)"
+          value:"#,##0.0000", text:"小数(保留四位)"
         },{
           value:"0.00%", text: "百分比"
         }]
