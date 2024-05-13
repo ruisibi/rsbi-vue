@@ -16,9 +16,11 @@
 <p>4.权限管理</p>
 
 <br/>
-<p class="text-warning">如果您需要更多功能，可以 <button class="btn btn-primary btn-sm" onclick="window.open('https://www.ruisitech.com/product.html')">购买旗舰版</button></p>
+<p>快速开始： <a href='https://blog.csdn.net/zhuifengsn/article/details/138605460'>https://blog.csdn.net/zhuifengsn/article/details/138605460</a></p>
+<p class="text-warning">技术交流QQ群：648548832</p> 
 
-<p class="text-info">技术交流QQ群：648548832</p> 
+<p class="text-warning">如果您需要更多功能，可以 <button class="btn btn-success btn-sm" onclick="window.open('https://www.ruisitech.com/product.html')">购买旗舰版</button></p>
+
 			  </div>
 		  </div>
   	</div>
