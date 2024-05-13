@@ -1,13 +1,14 @@
 <template>
   <el-dialog :title="tit" :visible.sync="show">
     <el-form :model="express" ref="expressForm" :rules="rule">
-         <el-form-item label="度量标识" label-width="100px" prop="alias">
+         <el-form-item label="度量标识：" label-width="100px" prop="alias">
           <el-input v-model="express.alias"></el-input>
          </el-form-item>
-         <el-form-item label="显示名称" label-width="100px" prop="kpiname">
+         <el-form-item label="显示名称：" label-width="100px" prop="kpiname">
           <el-input v-model="express.kpiname"></el-input>
          </el-form-item>
-         <el-form-item label="表 达 式" label-width="100px" prop="expression">
+         <el-form-item label="表 达 式：" label-width="100px" prop="expression">
+          <label slot="label">表达式 <a @click="helpbdsinfo" href="javascript:;"><i class="fa fa-question-circle"></i></a>：</label>
           <el-input id="mybds" type="textarea" v-model="express.expression"></el-input>
          </el-form-item>
          <div style="line-height:25px;">
@@ -15,7 +16,7 @@
               <button @click="selectCol(c.col)" style="margin-right:5px;" type="button" :key="c.col" :name="c.col" class="btn btn-primary btn-xs">{{ c.col }}</button>
           </template>
           </div>
-          <el-form-item label="计算方式" label-width="100px" prop="kpiaggre">
+          <el-form-item label="计算方式：" label-width="100px" prop="kpiaggre">
             <el-select
               v-model="express.kpiaggre"
               placeholder="请选择"
@@ -29,10 +30,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="度量单位" label-width="100px" prop="kpiunit">
+          <el-form-item label="度量单位：" label-width="100px" prop="kpiunit">
             <el-input v-model="express.kpiunit"></el-input>
           </el-form-item>
-          <el-form-item label="格式化" label-width="100px" prop="kpifmt">
+          <el-form-item label="格式化：" label-width="100px" prop="kpifmt">
             <el-select
               v-model="express.kpifmt"
               placeholder="请选择"
@@ -46,7 +47,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="指标解释" label-width="100px" prop="kpinote">
+          <el-form-item label="指标解释：" label-width="100px" prop="kpinote">
             <el-input type="textarea" v-model="express.kpinote"></el-input>
           </el-form-item>
     </el-form>
@@ -54,6 +55,12 @@
       <el-button type="primary" @click="save()">确 定</el-button>
       <el-button @click="show = false">取 消</el-button>
     </div>
+    <el-dialog custom-class="nopadding" width="50%" title="表达式度量说明" :visible.sync="innerVisible" append-to-body>
+			<div style="line-height:30px; padding:15px;">表达式度量是一句SQL片段，用来提高系统灵活性。<li>通过表达式来对度量进行运算；</li>字段相加：<div class="mycode"> sum(a)+sum(b) </div>或：<div class="mycode"> sum(a + b) </div><li>数据量计数；</li><div class="mycode">count(*)</div><p class="text-warning">请注意：此处创建的表达式度量必须使用sum/avg/max/min/count等聚合函数。</p><p></p></div>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="innerVisible = false">关 闭</el-button>
+			</div>
+		</el-dialog>
   </el-dialog>
 </template>
 
@@ -67,6 +74,7 @@ export default {
     return {
       show:false,
       tit:"",
+      innerVisible:false,
      express: {
        alias:"",
        kpiname:"",
@@ -107,6 +115,9 @@ export default {
   },
   computed: {},
   methods: {
+    helpbdsinfo(){
+      this.innerVisible = true;
+    },
     save(){
       let ts = this;
       this.$refs['expressForm'].validate(v=>{

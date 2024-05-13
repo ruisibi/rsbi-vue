@@ -25,6 +25,9 @@
           </el-form-item>
         </el-tab-pane>
         <el-tab-pane label="立方体信息" name="cubeInfo">
+           <div style="margin-bottom:5px;" v-if="showBtn">
+          <button type="button" class="btn btn-info btn-xs" @click="autoCube()">自动生成立方体</button>
+        </div>
             <div class="row">
               <div class="col-sm-4" >
                 <div class="ibox">
@@ -42,7 +45,7 @@
               <div class="col-sm-2" style="text-align: center">
                 <button
                   type="button"
-                  @click="ds2cube"
+                  @click="ds2cube()"
                   style="margin-top: 120px"
                   class="btn btn-success btn-circle"
                 >
@@ -101,6 +104,7 @@ export default {
    name: 'cubeAdd',
   data() {
     return {
+      showBtn:true,
       cube:{
         cubeId:null,
         name:null,
@@ -138,9 +142,39 @@ export default {
         }
       });
     },
+    autoCube(){
+      let ref = $("#cubelefttree").jstree(true);
+      let rightRef = $("#cuberighttree").jstree(true);
+      $(this.dset.cols).each((a, b)=>{
+        var left = ref.get_node(b.name);
+        var isCalc = true; //是否是公式？
+        if(!left.li_attr.expression||left.li_attr.expression==null||left.li_attr.expression==""){
+          isCalc = false;
+        }	
+        if(b.type == 'String'){
+            var cid = this.findCubeMaxId();
+            var o = {id:cid.id, text:left.text, li_attr:{tp:"dim",drag:true,col:!isCalc?left.li_attr.col:left.li_attr.expression,tname:left.li_attr.tname,dispName:left.text,tname:left.li_attr.tname,vtype:left.li_attr.vtype,alias:left.li_attr.col,calc:isCalc},icon:"glyphicon glyphicon-stop icon_dim", targetId:""};  //通过targetId 来指引对应数据库的的字段 ID, 用在修改上
+            rightRef.create_node("cubewd", o);
+            ref.hide_node(left);
+        }
+        if(b.type == 'Int' || b.type == 'Double'){
+           var cid = this.findCubeMaxId();
+           var o = {id:cid.id, text:'sum('+left.text+")",li_attr:{tp:"kpi",drag:true,aggre:"sum",col:(!isCalc?left.li_attr.col:left.li_attr.expression), tname:left.li_attr.tname,dispName:left.text,alias:left.id,calc:isCalc,calcKpi:0},icon:"glyphicon glyphicon-stop icon_kpi"};
+           rightRef.create_node("cubedl", o);
+           ref.hide_node(left);
+        }
+      });
+      this.showBtn = false;
+    },
     addCube(isupdate, cubeId){
+      this.active = "base";
       if(this.$refs['cubeForm']){
         this.$refs['cubeForm'].resetFields();
+     }
+     if(isupdate){
+       this.showBtn = false;
+     }else{
+       this.showBtn = true;
      }
      this.loadDset();
       if(isupdate){
