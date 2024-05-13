@@ -5,6 +5,7 @@
           <el-input v-model="dyna.name" placeholder="英文字符" id="dynaName"></el-input>
           </el-form-item>
          <el-form-item label="表达式" label-width="100px" prop="expression">
+           <label slot="label">表达式 <a @click="helpbdsinfo" href="javascript:;"><i class="fa fa-question-circle"></i></a>：</label>
             <el-input id="mybds" type="textarea" v-model="dyna.expression"></el-input>
           </el-form-item>
           <div style="line-height:25px;">
@@ -28,6 +29,13 @@
       <el-button type="primary" @click="save()">确 定</el-button>
       <el-button @click="show = false">取 消</el-button>
     </div>
+
+    <el-dialog custom-class="nopadding" width="50%" title="表达式说明" :visible.sync="innerVisible" append-to-body>
+				<div style="line-height:30px;">表达式是一句SQL片段，用来提高系统灵活性。<li>通过表达式来对字段进行运算；</li>字段相加：<div class="mycode"> a+ b</div><li>对字段进行case when 转换；</li><div class="mycode">case when a=1 then '是' when a=2 then '否' else '未知' end</div><p class="text-warning">请注意：此处表达式请勿使用sum/avg/max/min/count等聚合函数。</p><p></p></div>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="innerVisible = false">关 闭</el-button>
+			</div>
+		</el-dialog>
   </el-dialog>
 </template>
 
@@ -40,6 +48,7 @@ export default {
   data() {
     return {
       show:false,
+      innerVisible:false,
       dyna:{
         name:"",
         tname:"",
@@ -78,6 +87,9 @@ export default {
   },
   computed: {},
   methods: {
+    helpbdsinfo(){
+				this.innerVisible = true;
+			},
 	 createDyna(isupdate, col, cols, dynaCols, master){
      let ts = this;
      this.show = true;

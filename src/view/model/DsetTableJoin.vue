@@ -1,15 +1,15 @@
 <template>
   <el-dialog title="表关联" :visible.sync="showDailog">
     <el-form :model="join" :rules="rules" ref="joinForm">
-      <el-form-item label="主表" label-width="100px" >
+      <el-form-item label="主表：" label-width="100px" >
         {{ master }}
       </el-form-item>
 
-      <el-form-item label="字段" label-width="100px" >
+      <el-form-item label="字段：" label-width="100px" >
         {{ masterCol }}
       </el-form-item>
 
-      <el-form-item label="从表" label-width="100px" prop="ref">
+      <el-form-item label="从表：" label-width="100px" prop="ref">
         <el-select v-model="join.ref" placeholder="请选择" @change="changejoin">
           <el-option
             v-for="item in selectTables"
@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="字段" label-width="100px" prop="refKey">
+      <el-form-item label="字段：" label-width="100px" prop="refKey">
         <el-select v-model="join.refKey" placeholder="请选择">
           <el-option
             v-for="item in refKeyList"
@@ -32,7 +32,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="关联方式" label-width="100px" prop="jtype">
+      <el-form-item label="关联方式：" label-width="100px" prop="jtype">
         <el-select v-model="join.jtype" placeholder="请选择">
           <el-option
             v-for="item in joinTypes"

@@ -1,13 +1,13 @@
 <template>
   <el-dialog title="编辑字段" :visible.sync="show">
     <el-form :model="col" ref="colForm">
-        <el-form-item label="字段名" label-width="100px" >
+        <el-form-item label="字段名：" label-width="100px" >
           {{ col.name }}
           </el-form-item>
-         <el-form-item label="显示名" label-width="100px">
+         <el-form-item label="显示名：" label-width="100px">
             <el-input v-model="col.dispName"></el-input>
           </el-form-item>
-          <el-form-item label="字段类型" label-width="100px">
+          <el-form-item label="字段类型：" label-width="100px">
             <el-select v-model="col.type" placeholder="请选择">
               <el-option
                 v-for="item in opts.types"
@@ -18,10 +18,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="来源表" label-width="100px" >
+          <el-form-item label="来源表：" label-width="100px" >
           {{ col.tname }}
           </el-form-item>
-          <el-form-item label="关联字段" label-width="100px" >
+          <el-form-item label="关联字段：" label-width="100px" >
           {{ col.join }}
           </el-form-item>
     </el-form>
