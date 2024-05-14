@@ -46,7 +46,7 @@
 					xcol = [h('span', {class:"charttip"}, '将度量拖到这里')]
 				}
 				//横轴　
-				let xcolobj = h('div', {class:"ts_h"}, [h('div', '横轴：'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
+				let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '横轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
 				leftCols.push(xcolobj);
 
 				let ycol = null;
@@ -56,7 +56,7 @@
 				}else{
 					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')]
 				}
-				let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
 				leftCols.push(ycolobj);
 
 				//气泡大小
@@ -68,7 +68,7 @@
 					}else{
 						qp = [h('span', {class:"charttip"}, '将度量拖到这里')]
 					}
-					let qpobj = h('div', {class:"ts_h"}, [h('div', '气泡大小'), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
+					let qpobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '气泡大小'), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
 					leftCols.push(qpobj);
 				}
 			}
@@ -81,7 +81,7 @@
 				xcol = [h('span', {class:"charttip"}, '将维度拖到这里')]
 			}
 			//横轴　
-			let xcolobj = h('div', {class:"ts_h"}, [h('div', isscatter?'观察维度：':'横轴：'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
+			let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, isscatter?'观察维度':'横轴'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
 			leftCols.push(xcolobj);
 
 			if(!isscatter){
@@ -93,7 +93,7 @@
 					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')];
 				}
 				//纵轴
-				let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴：'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '纵轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
 				leftCols.push(ycolobj);
 			}
 
@@ -106,7 +106,7 @@
 					scol = [h('span', {class:"charttip"}, '将维度拖到这里')]
 				}
 				//图例 Ser
-				let scolobj = h('div', {class:"ts_h"}, [h('div', '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
+				let scolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
 				leftCols.push(scolobj);
 			}
 			//启用多指标查询
@@ -114,7 +114,7 @@
 
 			//维度交换
 			let exchange = [
-				h('div',{style:{height:"40px"}},''),
+				h('div',{style:{height:"30px"}},''),
 				h("img", {attrs:{src:require("../../assets/image/exchangexs1.gif")}}),
 				h('a',{attrs:{href:"javascript:;"}, on:{click:()=>{this.exchangexs();}}}, [h("img", {attrs:{src:require("../../assets/image/reload.png")}})]),
 				h("img", {attrs:{src:require("../../assets/image/exchangexs2.gif")}})
@@ -191,13 +191,13 @@
 					},
 					out:function(e, ui){
 						$(ui.helper[0]).find("span").removeClass("glyphicon-ok").addClass("glyphicon-remove");
-						$(this).css("border-color", "#7F9DB9");
+						$(this).css("border-color", "#dcdfe6");
 					},
 					drop:function(e, ui){
 						var id = ts.chartId;
 						var json = tools.findCompById(id, ts.pageInfo);
 						//清除边框样式
-						$("#T"+id+" #"+$(this).attr("id")).css("border-color", "#7F9DB9");
+						$("#T"+id+" #"+$(this).attr("id")).css("border-color", "#dcdfe6");
 						//获取TREE
 						var ref = $("#datasettree").jstree(true);
 						var node = ref.get_node(ui.draggable[0]);
@@ -587,18 +587,35 @@
 
 <style lang="less" scoped>
 .tsbd {
-	width:135px;
+	width:145px;
 	float:left;
 	.ts_h{
 		font-size:14px;
-		margin:10px;
-		width:120px;
+		margin:20px 0 20px 0;
+	}
+	.h_tit {
+		float: left;
+		border:1px solid #dcdfe6;
+		height:32px;
+		color: #909399;
+		font-size: 14px;
+		padding:5px 0px 3px 5px;
+		border-radius:5px;
+		background-color: #f5f7fa;
+		width:45px;
+		border-right: 0;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 	.h_ctx {
-		border: 1px solid #7F9DB9;
-		overflow: hidden;
-		height: 26px;
-		border-radius: 5px;
+	  border:1px solid #dcdfe6;
+      height:32px;
+      overflow:hidden;
+      border-radius:5px;
+	  padding:4px 0px 3px 4px;
+	  font-size: 14px;
+	  border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 	}
 }
 span.charttip {

@@ -37,7 +37,7 @@ export default {
 					xcol = [h('span', {class:"charttip"}, '将度量拖到这里')]
 				}
 				//横轴　
-				let xcolobj = h('div', {class:"ts_h"}, [h('div', '横轴：'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
+				let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '横轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
 				leftCols.push(xcolobj);
 
 				let ycol = null;
@@ -47,7 +47,7 @@ export default {
 				}else{
 					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')]
 				}
-				let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},'纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
 				leftCols.push(ycolobj);
 
 				//气泡大小
@@ -59,7 +59,7 @@ export default {
 					}else{
 						qp = [h('span', {class:"charttip"}, '将度量拖到这里')]
 					}
-					let qpobj = h('div', {class:"ts_h"}, [h('div', '气泡大小'), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
+					let qpobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},'气泡大小'), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
 					leftCols.push(qpobj);
 				}
 			}
@@ -72,7 +72,7 @@ export default {
 				xcol = [h('span', {class:"charttip"}, '将维度拖到这里')]
 			}
 			//横轴　
-			let xcolobj = h('div', {class:"ts_h"}, [h('div', isscatter?'观察维度：':'横轴：'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
+			let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},isscatter?'观察维度':'横轴'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
 			leftCols.push(xcolobj);
 
 			if(!isscatter){
@@ -84,7 +84,7 @@ export default {
 					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')];
 				}
 				//纵轴
-				let ycolobj = h('div', {class:"ts_h"}, [h('div', '纵轴：'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div',{class:"h_tit"}, '纵轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
 				leftCols.push(ycolobj);
 			}
 
@@ -97,7 +97,7 @@ export default {
 					scol = [h('span', {class:"charttip"}, '将维度拖到这里')]
 				}
 				//图例 Ser
-				let scolobj = h('div', {class:"ts_h"}, [h('div', '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
+				let scolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},'图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
 				leftCols.push(scolobj);
 			}
 			let typeIndex = comp.chartJson.typeIndex;
@@ -110,7 +110,7 @@ export default {
 				}else{
 					y2col = [h('span', {class:"charttip"}, '将度量拖到这里')]
 				}
-				let y2obj = h('div', {class:"ts_h"}, [h('div', '第二纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}},y2col)]);
+				let y2obj = h('div', {class:"ts_h"}, [h('div',{class:"h_tit"}, '第二纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}},y2col)]);
 				leftCols.push(y2obj);
 			}
 			//更新拖拽事件
@@ -186,13 +186,13 @@ export default {
 					},
 					out:function(e, ui){
 						$(ui.helper[0]).find("span").removeClass("glyphicon-ok").addClass("glyphicon-remove");
-						$(this).css("border-color", "#7F9DB9");
+						$(this).css("border-color", "#dcdfe6");
 					},
 					drop:function(e, ui){
 						var id = ts.chartId;
 						var json = comp;
 						//清除边框样式
-						$("#chartData #"+$(this).attr("id")).css("border-color", "#7F9DB9");
+						$("#chartData #"+$(this).attr("id")).css("border-color", "#dcdfe6");
 						//获取TREE
 						var ref = $("#datasettree").jstree(true);
 						var node = ref.get_node(ui.draggable[0]);
@@ -291,17 +291,35 @@ export default {
 <style lang="less" scoped>
   .tsbd {
      .ts_h{
-      font-size:13px;
-      margin:5px 20px 5px 5px;
-      width:125px;
-      float:left;
-    }
+       font-size:13px;
+      margin:5px 10px 5px 5px;
+      width:205px;
+	  float:left;
+	  padding-top: 20px;
+	}
+	.h_tit {
+		float: left;
+		border:1px solid #dcdfe6;
+		height:32px;
+		color: #909399;
+		font-size: 14px;
+		padding:5px 0px 3px 5px;
+		border-radius:5px;
+		background-color: #f5f7fa;
+		 width:80px;
+		 border-right: 0;
+		 border-top-right-radius: 0;
+		 border-bottom-right-radius: 0;
+	}
     .h_ctx{
-      border:1px solid #7F9DB9;
-      height:28px;
+      border:1px solid #dcdfe6;
+      height:32px;
       overflow:hidden;
       border-radius:5px;
-      padding:2px;
+	  padding:2px;
+	  font-size: 14px;
+	  border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
     }
   }
   span.charttip {
@@ -317,13 +335,18 @@ export default {
 	margin-left:3px;
 	margin-top:3px;
   }
-  a.charticon {
+ a.charticon {
     display:inline-block;
     width:16px;
     height:16px;
     cursor:pointer;
 	font-size: 14px;
 	position: absolute;
+	margin-top:3px;
+	color: #909399;
+  }
+  a.charticon :hover {
+	  color: black;
   }
 
 </style>

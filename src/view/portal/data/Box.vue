@@ -2,7 +2,7 @@
     <div id="boxDataPanel" style="margin:3px;">
         <div class="tsbd">
           <div class="ts_h">
-            数据块度量：
+            <div class="h_tit">数据块度量</div>
             <div class="h_ctx">
               <span v-if="!comp.kpiJson" class="charttip">拖拽度量到此处</span>
               <span v-if="comp.kpiJson"><span>{{comp.kpiJson.kpi_name}}</span></span>
@@ -64,12 +64,12 @@ export default {
         },
         out:function(e, ui){
           $(ui.helper[0]).find("span").removeClass("glyphicon-ok").addClass("glyphicon-remove");
-			    $(this).css("border", "1px solid #7F9DB9");
+			    $(this).css("border", "1px solid #dcdfe6");
         },
        drop:function(e, ui){
           let json = ts.comp;        
           //清除边框颜色
-          $(this).css("border", "1px solid #7F9DB9");
+          $(this).css("border", "1px solid #dcdfe6");
           
           //获取TREE
           var ref = $("#datasettree").jstree(true);
@@ -104,19 +104,41 @@ export default {
   .tsbd .ts_h{
     font-size:13px;
     margin:5px 20px 5px 5px;
-    width:125px;
+    width:205px;
     float:left;
   }
+  .h_tit {
+		float: left;
+		border:1px solid #dcdfe6;
+		height:32px;
+		color: #909399;
+		font-size: 14px;
+		padding:5px 0px 3px 5px;
+		border-radius:5px;
+		background-color: #f5f7fa;
+		 width:90px;
+		 border-right: 0;
+		 border-top-right-radius: 0;
+		 border-bottom-right-radius: 0;
+	}
   .tsbd .h_ctx{
-    border:1px solid #7F9DB9;
-    height:28px;
-    overflow:hidden;
-    border-radius:5px;
-    padding:2px;
+    border:1px solid #dcdfe6;
+      height:32px;
+      overflow:hidden;
+      border-radius:5px;
+	  padding:5px;
+	  font-size: 14px;
+	  border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
   }
   span.charttip {
     color:#999999;
     padding:3px;
     display:block;
+  }
+   span.charttip {
+    color:#999999;
+    display:block;
+    padding: 1px;
   }
 </style>
