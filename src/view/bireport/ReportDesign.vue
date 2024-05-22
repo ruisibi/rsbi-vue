@@ -24,7 +24,7 @@
 					<div class="ibox">
 						<div class="ibox-content" style="padding:0px;">
 							<div style="padding:15px 20px 0px 20px">
-								<button class="btn btn-block btn-primary" @click="selectCube()"><i class="fa fa-refresh"></i> 切换数据</button>
+								<button class="btn btn-block btn-primary" @click="selectCube()"><i class="fa fa-refresh"></i> 选择立方体</button>
 								<p class="text-warning">拖拽数据到表格或图形中展现</p>
 							</div>
 							<div id="datasettree"></div>
@@ -115,12 +115,15 @@
 				if(ref){
 					ref.destroy();
 				}
+				var h = Math.round($(window).height()) - 235;
+				$("#datasettree").css({"overflow":"auto","height":h + "px"});
+
 				if (this.pageInfo.selectDs.length === 0) {
 					$('#datasettree').jstree({
 						core: {
 							data: {
 								id: 'nodata',
-								text: '您还未创建立方体',
+								text: '您还未选择立方体',
 								icon: 'fa fa-warning icon_kpi'
 							}
 						},
