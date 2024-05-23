@@ -9,8 +9,20 @@
 	  </div>
 		<transition name="el-fade-in">
 	  		<section class="form_contianer" v-show="showLogin">
+				 
 		    	<el-form :model="loginForm" :rules="rules" ref="loginForm" @keyup.enter.native="submitForm('loginForm')">
-					<h2>用户登录</h2>
+				 <div class="language">
+					  {{$t('message.login.lang')}}： 
+					  <el-select v-model="loginForm.lang" size="mini" style="width:100px;" @change="chagelanguage()">
+						  <el-option
+								v-for="item in langs"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+								</el-option>
+					  </el-select>
+				  </div>
+					<h2>{{ $t('message.login.userLogin') }}</h2>
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="logimg">
@@ -19,15 +31,17 @@
 						</div>
 						<div class="col-sm-6">
 							<el-form-item prop="username">
-								<el-input v-model="loginForm.username" placeholder="用户名" suffix-icon="el-icon-user"></el-input>
+								<el-input v-model="loginForm.username" :placeholder="$t('message.login.userName')" suffix-icon="el-icon-user"></el-input>
 							</el-form-item>
 							<el-form-item prop="password">
-								<el-input type="password" placeholder="密码" v-model="loginForm.password" suffix-icon="el-icon-lock"></el-input>
+								<el-input type="password" :placeholder="$t('message.login.psd')" v-model="loginForm.password" suffix-icon="el-icon-lock"></el-input>
 							</el-form-item>
 							<el-form-item>
-								<el-button type="primary" v-loading.fullscreen.lock="fullscreenLoading" @click="submitForm('loginForm')" class="submit_btn">登录</el-button>
+								<el-button type="primary" v-loading.fullscreen.lock="fullscreenLoading" @click="submitForm('loginForm')" class="submit_btn">{{ $t('message.login.login') }}</el-button>
 							</el-form-item>
-							<div>账号/密码： admin/123456</div>
+							<div>
+								{{ $t('message.login.prompt') }}
+							</div>
 						</div>
 					</div>
 				</el-form>
@@ -39,7 +53,7 @@
 			<div class="txt" align="center">
 				 <a href='https://www.ruisitech.com' target="_blank">睿思BI</a> - <a href='https://www.ruisitech.com/productent.html' target="_blank">企业版</a> - <a href='https://www.ruisitech.com/opensource.html' target="_blank">开源版</a> - <a href='https://www.ruisitech.com/yun.html' target="_blank">睿思云</a> - <a href='http://book.ruisitech.com/' target="_blank">使用手册</a> - <a href='https://www.ruisitech.com/suggest.html' target="_blank">问题反馈</a> </div>
 
-               ©成都睿思商智科技有限公司 2020 版权所有
+               {{$t('message.login.copyright')}}
 		</div>
   	</div>
 </template>
@@ -54,17 +68,19 @@
 				loginForm: {
 					username: '',
 					password: '',
+					lang: 'en'
 				},
 				fullscreenLoading: false,
 				rules: {
 					username: [
-			            { required: true, message: '请输入用户名', trigger: 'blur' },
+			            { required: true, message: this.$t('message.login.nameError'), trigger: 'blur' },
 			        ],
 					password: [
-						{ required: true, message: '请输入密码', trigger: 'blur' }
+						{ required: true, message: this.$t('message.login.psdError'), trigger: 'blur' }
 					],
 				},
-				showLogin: true
+				showLogin: true,
+				langs: [{label:"中文简体", value:"zh"}, {label:"中文繁體",value:"zhHant"}, {label:"English",value:"en"}]
 			}
 		},
 		mounted(){
@@ -92,8 +108,8 @@
 									ts.$router.push('Welcome')
 								}else{
 									ts.$notify.error({
-										title: '登录错误',
-										message: resp.msg,
+										title: ts.$t('message.login.loginError'),
+										message: ts.$t(resp.msg),
 										offset: 50
 									});
 								}
@@ -101,7 +117,7 @@
 							error:function(){
 								ts.fullscreenLoading = false;
 								ts.$notify.error({
-										title: '网络错误',
+										title: ts.$t('message.login.sysError'),
 										offset: 50
 									});
 							}
@@ -113,6 +129,9 @@
 			},
 			fadeIn:function(){
 				 this.showLogin = !this.showLogin;
+			},
+			chagelanguage(){
+				this.$i18n.locale = this.loginForm.lang;
 			}
 		},
 		watch: {
@@ -184,5 +203,10 @@
 		a {
 			color:#fff;
 		}
+	}
+	.language {
+		position: absolute;
+		right: 10px;
+		top: 5px;
 	}
 </style>
