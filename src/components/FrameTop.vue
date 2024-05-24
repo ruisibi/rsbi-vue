@@ -15,11 +15,11 @@
               <i class="fa fa-user"></i> demo <span :class="userbtnstyle" class="glyphicon"></span>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="grxx">个人信息</el-dropdown-item>
-              <el-dropdown-item command="xgmm">修改密码</el-dropdown-item>
-              <el-dropdown-item command="wtfk">问题反馈</el-dropdown-item>
-              <el-dropdown-item command="sysc">使用手册</el-dropdown-item>
-              <el-dropdown-item command="signout">退出登录</el-dropdown-item>
+              <el-dropdown-item command="grxx">{{$t('message.main.user.info')}}</el-dropdown-item>
+              <el-dropdown-item command="xgmm">{{$t('message.main.user.psd')}}</el-dropdown-item>
+              <el-dropdown-item command="wtfk">{{$t('message.main.user.question')}}</el-dropdown-item>
+              <el-dropdown-item command="sysc">{{$t('message.main.user.book')}}</el-dropdown-item>
+              <el-dropdown-item command="signout">{{$t('message.main.user.out')}}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </a>
@@ -80,7 +80,7 @@ export default {
             crossDomain: true,
             success:function(){
                 ts.$notify.success({
-                  title: '退出成功',
+                  title: ts.$t('message.main.user.outSuccess'),
                   offset: 50
                 });
                ts.$router.push('/'); 

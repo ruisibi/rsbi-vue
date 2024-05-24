@@ -51,7 +51,7 @@ export default {
     return {
         menus:[{
             id:"b_home",
-            text:"首页",
+            text:this.$t('message.main.indexName'),
             icon:"fa fa-home",
             url:"/Welcome",
             active:"active",

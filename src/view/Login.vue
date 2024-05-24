@@ -68,7 +68,7 @@
 				loginForm: {
 					username: '',
 					password: '',
-					lang: 'en'
+					lang: this.$i18n.locale
 				},
 				fullscreenLoading: false,
 				rules: {
