@@ -3,6 +3,15 @@
  */
 export default {
     message: {
+      base:{
+        cancel:"Cancel",
+        ok:"OK",
+        required:"required",
+        sysError: 'System error',
+        noLogin:"Login information has expired",
+        noLoginInfo:"The login information has timed out, please log in again!",
+        apiError:"The interface returns a error format and does not contain the result key.",
+      },
       login: {
         lang:"Language",
         userLogin: "User login",
@@ -12,7 +21,6 @@ export default {
         nameError: 'Please input your login name',
         psdError: 'Please input your password',
         prompt: 'name/password：admin/123456',
-        sysError: 'System error',
         loginError: 'Login error', 
         userError: 'The account does not exist or the password is wrong!',
         copyright:"©Chengdu Ruisi Shangzhi Technology Co., Ltd. 2024 All rights reserved"
@@ -33,6 +41,29 @@ export default {
           book:"User manual",
           out:"Log out",
           outSuccess:"Exit successfully"
+        },
+        info:{
+          loginName: "Login name",
+          userName: "Username",
+          company: "User’s company",
+          state: "Account status",
+          cnt: "Number of logins",
+          lastLogDate: "Last login time",
+          uinfo: "Personal information",
+          times:"times",
+          compName:"Chengdu Ruisi Shangzhi Technology Co., Ltd",
+          enable:"Enable",
+          disable:"Disable",
+        },
+        psd:{
+          title:"Change password",
+          old:"Original password",
+          new:"New password",
+          confirm:"Repeat password",
+          length:"The length of the password is 6 to 18 digits",
+          error:"Original password is incorrect",
+          error2: "Two passwords are inconsistent",
+          success: "Password modified successfully"
         }
       }
     }

@@ -3,6 +3,15 @@
  */
 export default {
   message: {
+    base:{
+      cancel:"取 消",
+      ok:"确 定",
+      required:"必填",
+      sysError: '系統錯誤',
+      noLogin:"登錄信息已經失效",
+      noLoginInfo:"登錄信息已經超時，請重新登錄！",
+      apiError:"接口返回格式錯誤，未包含result值。",
+    },
     login: {
       lang:"語言",
       userLogin: "用戶登錄",
@@ -12,7 +21,6 @@ export default {
       nameError: '請輸入用戶名',
       psdError: '請輸入密碼',
       prompt: '帳號/密碼： admin/123456',
-      sysError: '系統錯誤',
       loginError: '登錄錯誤',
       userError: '帳號不存在或密碼錯誤!',
       copyright:"©成都睿思商智科技有限公司 2024 版權所有"
@@ -33,6 +41,29 @@ export default {
         book:"使用手冊",
         out:"退出登錄",
         outSuccess:"退出成功"
+      },
+      info:{
+        loginName:"登錄名",
+        userName:"用戶名",
+        company:"所屬企業",
+        state:"賬號狀態",
+        cnt:"登錄次數",
+        lastLogDate:"上次登錄時間",
+        uinfo:"個人信息",
+        times:"次",
+        compName:"成都睿思商智科技有限公司",
+        enable:"啟用",
+        disable:"停用",
+        psd:{
+          title:"修改密碼",
+          old:"原始密碼",
+          new:"新密碼",
+          confirm:"重復密碼",
+          length:"密碼長度6到18位",
+          error:"原始密碼錯誤",
+          error2:"兩次密碼不一致",
+          success:"密碼修改成功"
+        }
       }
     }
   }

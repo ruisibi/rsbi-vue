@@ -3,6 +3,15 @@
  */
 export default {
   message: {
+    base:{
+      cancel:"取 消",
+      ok:"确 定",
+      required:"必填",
+      sysError: '系统错误',
+      noLogin:"登录信息已经失效",
+      noLoginInfo:"登录信息已经超时，请重新登录！",
+      apiError:"接口返回格式错误，未包含result值。",
+    },
     login: {
       lang:"语言",
       userLogin: "用户登录",
@@ -12,7 +21,6 @@ export default {
       nameError: '请输入用户名',
       psdError: '请输入密码',
       prompt: '账号/密码： admin/123456',
-      sysError: '系統错误',
       loginError: '登录错误',
       userError: '账号不存在或密码错误!',
       copyright:"©成都睿思商智科技有限公司 2024 版权所有"
@@ -33,6 +41,29 @@ export default {
         book:"使用手册",
         out:"退出登录",
         outSuccess:"退出成功"
+      },
+      info:{
+        loginName:"登录名",
+        userName:"用户名",
+        company:"所属企业",
+        state:"账号状态",
+        cnt:"登录次数",
+        lastLogDate:"上次登录时间",
+        uinfo:"个人信息",
+        times:"次",
+        compName:"成都睿思商智科技有限公司",
+        enable:"启用",
+        disable:"停用",
+      },
+      psd:{
+        title:"修改密码",
+        old:"原始密码",
+        new:"新密码",
+        confirm:"重复密码",
+        length:"密码长度6到18位",
+        error:"原始密码错误",
+        error2:"两次密码不一致",
+        success:"密码修改成功"
       }
     }
   }

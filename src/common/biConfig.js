@@ -6,6 +6,7 @@
  */
 import $ from 'jquery'
 import { Message } from 'element-ui'
+import { i18n } from '@/main.js'
 
 const baseUrl = 'http://localhost:8080/';
 //const baseUrl = "http://112.124.13.251:8081/";
@@ -42,16 +43,20 @@ export const ajax = (cfg, ts, loadingObj) => {
 					return;
 				}
 				ts.$notify.error({
-					title: '登录信息失效',
-					message:resp.msg,
+					title: i18n.tc('message.base.noLogin'),
+					message:i18n.tc(resp.msg),
 					offset: 50
 				});
 				ts.$router.push("/");
 			}else if(resp.result === 0){
 				const h = ts.$createElement;
-				Message.error({message:h('div',[h('h5','系统错误'), h('div', resp.msg)]), type:"error",showClose: true});
+				let m = resp.msg;
+				if(m && m.indexOf('message') >= 0){
+					m = i18n.tc(m);
+				}
+				Message.error({message:h('div',[h('h5',i18n.tc('message.base.sysError')), h('div', m)]), type:"error",showClose: true});
 			}else{
-				Message.error(baseUrl+cfg.url + " 接口返回格式错误，未包含 result 值。");
+				Message.error(baseUrl+cfg.url + i18n.tc('message.base.apiError'));
 				if(errorCallback){
 					errorCallback();
 				}
@@ -62,7 +67,7 @@ export const ajax = (cfg, ts, loadingObj) => {
 				loadingObj.close();
 			}
 			ts.$notify.error({
-				title: '系统出错',
+				title: i18n.tc('message.base.sysError'),
 				offset: 50
 			});
 		}

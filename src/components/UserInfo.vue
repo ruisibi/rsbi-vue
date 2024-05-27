@@ -1,21 +1,21 @@
 <template>
-  <el-dialog title="个人信息" :visible.sync="show">
+  <el-dialog :title="$t('message.main.info.uinfo')" :visible.sync="show">
     <dl class="dl-horizontal">
-      <dt>登录名：</dt>
+      <dt>{{$t('message.main.info.loginName')}}：</dt>
       <dd>{{user.staffId}}</dd>
-      <dt>用户名：</dt>
+      <dt>{{$t('message.main.info.userName')}}：</dt>
       <dd>{{user.loginName}}</dd>
-      <dt>所属企业：</dt>
-      <dd>成都睿思商智科技有限公司</dd>
-      <dt>账号状态：</dt>
-      <dd>{{ user.state==1?"启用":"停用" }}</dd>
-      <dt>登录次数：</dt>
-      <dd>{{user.logCnt}}次</dd>
-      <dt>上次登录时间：</dt>
+      <dt>{{$t('message.main.info.company')}}：</dt>
+      <dd>{{$t('message.main.info.compName')}}</dd>
+      <dt>{{$t('message.main.info.state')}}：</dt>
+      <dd>{{ user.state==1? $t('message.main.info.enable') : $t('message.main.info.disable') }}</dd>
+      <dt>{{$t('message.main.info.cnt')}}：</dt>
+      <dd>{{user.logCnt}} {{$t('message.main.info.times')}}</dd>
+      <dt>{{$t('message.main.info.lastLogDate')}}：</dt>
       <dd>{{user.loginTime}}</dd>
     </dl>
       <div slot="footer" class="dialog-footer">
-				<el-button @click="show = false">取 消</el-button>
+				<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 			  </div>
   </el-dialog>
 </template>

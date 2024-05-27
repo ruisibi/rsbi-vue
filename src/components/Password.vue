@@ -1,19 +1,19 @@
 <template>
-  <el-dialog title="修改密码" :visible.sync="show">
+  <el-dialog :title="$t('message.main.psd.title')" :visible.sync="show">
     <el-form :model="userpsd" :rules="rules" ref="userPsdForm">
-      <el-form-item label="原密码" label-width="100px" prop="password1">
+      <el-form-item :label="$t('message.main.psd.old')" label-width="140px" prop="password1">
         <el-input type="password" v-model="userpsd.password1"  :show-password="true" ></el-input>
       </el-form-item>
-      <el-form-item label="新密码" label-width="100px" prop="password2">
+      <el-form-item :label="$t('message.main.psd.new')" label-width="140px" prop="password2">
         <el-input type="password" v-model="userpsd.password2"  :show-password="true" ></el-input>
       </el-form-item>
-      <el-form-item label="重复密码" label-width="100px" prop="password3">
+      <el-form-item :label="$t('message.main.psd.confirm')" label-width="140px" prop="password3">
         <el-input type="password" v-model="userpsd.password3"  :show-password="true" ></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="savepsd()">确 定</el-button>
-      <el-button @click="show = false">取 消</el-button>
+      <el-button type="primary" @click="savepsd()">{{$t('message.base.ok')}}</el-button>
+      <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -34,16 +34,16 @@ export default {
       },
       rules:{
         password1:[
-						{ required: true, message: '必填', trigger: 'blur' },
-						{ min: 6, max: 18, message: '密码长度6到18位', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' },
+						{ min: 6, max: 18, message: this.$t('message.main.psd.length'), trigger: 'blur' }
 					],
 					password2:[
-						{ required: true, message: '必填', trigger: 'blur' },
-						{ min: 6, max: 18, message: '密码长度6到18位', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' },
+						{ min: 6, max: 18, message: this.$t('message.main.psd.length'), trigger: 'blur' }
           ],
           password3:[
-						{ required: true, message: '必填', trigger: 'blur' },
-						{ min: 6, max: 18, message: '密码长度6到18位', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' },
+						{ min: 6, max: 18, message: this.$t('message.main.psd.length'), trigger: 'blur' }
 					]
       }
     };
@@ -58,7 +58,7 @@ export default {
 					if (valid) {
 						if(ts.userpsd.password2 != ts.userpsd.password3){
 							ts.$notify.error({
-										title: '两次密码不一致',
+										title: ts.$t('message.main.psd.error2'),
 										offset: 50
 									});
 							return false;
@@ -70,7 +70,7 @@ export default {
 							url:"frame/chgPsd.action",
 							success:function(resp){
 								ts.$notify.success({
-										title: '密码修改成功',
+										title: ts.$t('message.main.psd.success'),
 										offset: 50
 									});
 								ts.show = false;

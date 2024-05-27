@@ -117,7 +117,7 @@
 							error:function(){
 								ts.fullscreenLoading = false;
 								ts.$notify.error({
-										title: ts.$t('message.login.sysError'),
+										title: ts.$t('message.base.sysError'),
 										offset: 50
 									});
 							}
