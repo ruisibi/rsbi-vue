@@ -11,6 +11,12 @@ export default {
         noLogin:"Login information has expired",
         noLoginInfo:"The login information has timed out, please log in again!",
         apiError:"The interface returns a error format and does not contain the result key.",
+        add:"Add",
+        modify:"Modify",
+        delete:"Remove",
+        err1:"Unchecked data",
+        confirm:"Are you confirm?",
+        select:"Select Please"
       },
       login: {
         lang:"Language",
@@ -36,16 +42,16 @@ export default {
         indexName:"Home",
         user:{
           info:"User information",
-          psd:"Change the password",
-          question:"Feedback on the problem",
+          psd:"Change password",
+          question:"Feedback problem",
           book:"User manual",
-          out:"Log out",
+          out:"Sign out",
           outSuccess:"Exit successfully"
         },
         info:{
           loginName: "Login name",
           userName: "Username",
-          company: "User’s company",
+          company: "User company",
           state: "Account status",
           cnt: "Number of logins",
           lastLogDate: "Last login time",
@@ -64,7 +70,49 @@ export default {
           error:"Original password is incorrect",
           error2: "Two passwords are inconsistent",
           success: "Password modified successfully"
+        },
+        navMenu:{
+          flash: "Refresh current page",
+          closeother: "Close other pages",
+          closeall: "Close all pages",
+          left:"Move to left",
+          right:"Move to right",
         }
-      }
+      },
+      manage:{
+        user:{
+          name: "User Management",
+          id:"ID",
+          staff: "Staff number",
+          userName: "Username",
+          state: "State",
+          logTimes: "Login times",
+          logDate: "Login Date",
+          oper: "Operation",
+          userRole:"User Role",
+          userMenu: "User Menu",
+          man:"Man",
+          woman:"Woman",
+          newUser:"New user",
+          modifyUser:"Modify user",
+          staffNote:"Use to login",
+          password:"Password",
+          password2:"Repeat password",
+          sex:"Gender",
+          mobilePhone:"Mobile phone",
+          officeTel:"Office Phone",
+          email:"E-mail",
+          suc1:"Modified Successfully",
+          suc2:"Created Successfully",
+          suc3:"Authorisation Successfully",
+          suc4:"Removed Successfully",
+        },
+        userMenu:{
+          name:"User Management >> Menu of User",
+          open:"Expand all",
+          close:"Close all",
+          suc:"Authorisation Successfully"
+        }
     }
+  }
 }

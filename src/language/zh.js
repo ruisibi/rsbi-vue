@@ -11,6 +11,14 @@ export default {
       noLogin:"登录信息已经失效",
       noLoginInfo:"登录信息已经超时，请重新登录！",
       apiError:"接口返回格式错误，未包含result值。",
+      add:"新增",
+      modify:"修改",
+      delete:"删除",
+      err1:"未勾选数据",
+      newUser:"新增用户",
+      modifyUser:"修改用户",
+      confirm:"是否确认?",
+      select:"请选择",
     },
     login: {
       lang:"语言",
@@ -64,6 +72,48 @@ export default {
         error:"原始密码错误",
         error2:"两次密码不一致",
         success:"密码修改成功"
+      },
+      navMenu:{
+        flash:"刷新当前页面",
+        closeother:"关闭其他页面",
+        closeall:"关闭全部页面",
+        left:"左移选项卡",
+        right:"右移选项卡",
+      }
+    },
+    manage:{
+      user:{
+        name:"用户管理",
+        id:"标识",
+        staff:"工号",
+        userName:"用户名",
+        state:"状态",
+        logTimes:"登录次数",
+        logDate:"登录时间",
+        oper:"操作",
+        userRole:"授权角色",
+        userMenu: "授权菜单",
+        man:"男",
+        woman:"女",
+        newUser:"新增用户",
+        modifyUser:"修改用户",
+        staffNote:"登录系统使用",
+        password:"登录密码",
+        password2:"重复密码",
+        sex:"性别",
+        mobilePhone:"手机号码",
+        officeTel:"办公电话",
+        email:"电子邮件",
+        suc1:"用户修改成功",
+        suc2:"用户创建成功",
+        suc3:"授权成功",
+        suc4:"用户删除成功",
+      },
+      userMenu:{
+        name:"用户管理 >> 所辖菜单",
+        open:"全部展开",
+        close:"全部关闭",
+        suc:"授权成功"
       }
     }
   }

@@ -61,6 +61,11 @@
 <script>
 	import {baseUrl} from '@/common/biConfig'
 	import $ from 'jquery'
+	//配置elementui 的国际化
+	import enlang from 'element-ui/lib/locale/lang/en'
+	import zhlang from 'element-ui/lib/locale/lang/zh-CN'
+	import twlang from 'element-ui/lib/locale/lang/zh-TW'
+	import locale from 'element-ui/lib/locale'
 
 	export default {
 	    data(){
@@ -131,7 +136,15 @@
 				 this.showLogin = !this.showLogin;
 			},
 			chagelanguage(){
-				this.$i18n.locale = this.loginForm.lang;
+				let l = this.$i18n.locale = this.loginForm.lang;
+				//更新elementui的国际化
+				if(l == 'en'){
+					locale.use(enlang)
+				}else if(l == 'zh'){
+					locale.use(zhlang)
+				}else if(l == 'zhHant'){
+					locale.use(twlang)
+				}
 			}
 		},
 		watch: {

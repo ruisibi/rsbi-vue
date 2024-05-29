@@ -17,7 +17,7 @@
             </ul>
             </div>
             <div class="tabpanel_header_ref">
-                 <a class="btn btn-link btn-xs" @click="gotab('right')" title="右移选项卡">
+                 <a class="btn btn-link btn-xs" @click="gotab('right')" :title="$t('message.main.navMenu.right')">
                         <i class="glyphicon glyphicon-chevron-left"></i>
                     </a>
                     <el-dropdown @command="handleCommand" menu-align='start'>
@@ -26,15 +26,12 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                            
-                        <el-dropdown-item command="flash">刷新当前页面</el-dropdown-item>
-                         <!--
-                        <el-dropdown-item command="fullScreem">全屏当前页面</el-dropdown-item>
-                        -->
-                        <el-dropdown-item command="closeother">关闭其他页面</el-dropdown-item>
-                        <el-dropdown-item command="closeall">关闭全部页面</el-dropdown-item>
+                        <el-dropdown-item command="flash">{{$t('message.main.navMenu.flash')}}</el-dropdown-item>
+                        <el-dropdown-item command="closeother">{{$t('message.main.navMenu.closeother')}}</el-dropdown-item>
+                        <el-dropdown-item command="closeall">{{$t('message.main.navMenu.closeall')}}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                    <a class="btn btn-link btn-xs" @click="gotab('left')" title="左移选项卡">
+                    <a class="btn btn-link btn-xs" @click="gotab('left')" :title="$t('message.main.navMenu.left')">
                         <i class="glyphicon glyphicon-chevron-right"></i>
                     </a>
             </div>

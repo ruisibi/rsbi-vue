@@ -1,16 +1,16 @@
 <template>
   <div class="wrapper-content">
     <div class="ibox" id="mainDiv">
-      <div class="ibox-title">用户管理 >> 所辖菜单</div>
+      <div class="ibox-title">{{ $t('message.manage.userMenu.name') }}</div>
       <div class="ibox-content">
         <div class="row">
           <div class="col-sm-6">
-           <a href="javascript:;" @click="openall">全部展开</a> &nbsp;&nbsp; <a href="javascript:;" @click="closeall">全部关闭</a>
+           <a href="javascript:;" @click="openall">{{$t('message.manage.userMenu.open')}}</a> &nbsp;&nbsp; <a href="javascript:;" @click="closeall">{{$t('message.manage.userMenu.close')}}</a>
            <div id="menuTree"></div>
           </div>
           <div class="col-sm-6" align="right">
-            <el-button type="primary" @click="save()">确 定</el-button>
-			    	<el-button @click="backpage()">取 消</el-button>
+            <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			    	<el-button @click="backpage()">{{$t('message.base.cancel')}}</el-button>
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@ export default {
         data:{userId:ts.$route.params.userId, menuIds:ids},
         success:function(resp){
           ts.$notify.success({
-            title: '授权成功',
+            title: ts.$t('message.manage.userMenu.suc'),
             offset: 50
           });
           ts.backpage();
