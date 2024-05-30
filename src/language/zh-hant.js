@@ -19,6 +19,7 @@ export default {
       modifyUser:"修改用戶",
       confirm:"是否確認?",
       select:"請選擇",
+      oper:"操作",
     },
     login: {
       lang:"語言",
@@ -90,7 +91,6 @@ export default {
         state:"狀態",
         logTimes:"登錄次數",
         logDate:"登錄時間",
-        oper:"操作",
         userRole:"授權角色",
         userMenu: "授權菜單",
         man:"男",
@@ -114,6 +114,37 @@ export default {
         open:"全部展開",
         close:"全部關閉",
          suc:"授權成功"
+      },
+      role:{
+        name:"角色管理",
+        roleMenu: "授權菜單",
+        id:"標識",
+        name:"角色名稱",
+        desc:"備註信息",
+        createUser:"創建人",
+        createDate:"創建時間",
+        ord:"排序",
+        add:"新增角色",
+        mod:"修改角色",
+        suc:"用戶刪除成功",
+      },
+      roleMenu: {
+        name:"角色管理 >> 所轄菜單",
+        suc:"角色授權成功",
+      },
+      menu:{
+        name:"菜單管理",
+        note:"在菜單上點擊鼠標右鍵來新建或編輯菜單。",
+        menuName:"名稱",
+        menuUrl:"URL",
+        menuOrder:"排序",
+        menuDesc:"備註",
+        pic:"圖標",
+        root:"系統菜單",
+        urlNote:"如果創建目錄則不用填寫URL",
+        err1:"菜單只能建3級",
+        modify:"修改菜單",
+        add:"創建菜單",
       }
     }
   }

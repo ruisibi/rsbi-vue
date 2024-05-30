@@ -12,8 +12,8 @@
             <slot></slot>
         </div>
         <div class="ibox-footer">
-            <el-button type="primary" @click="saveForm()">确 定</el-button>
-			<el-button @click="closeDailog()">取 消</el-button>
+            <el-button type="primary" @click="saveForm()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="closeDailog()">{{$t('message.base.cancel')}}</el-button>
         </div>
     </div>
   </div>

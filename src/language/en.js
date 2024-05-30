@@ -16,7 +16,8 @@ export default {
         delete:"Remove",
         err1:"Unchecked data",
         confirm:"Are you confirm?",
-        select:"Select Please"
+        select:"Select Please",
+        oper: "Operation",
       },
       login: {
         lang:"Language",
@@ -88,7 +89,6 @@ export default {
           state: "State",
           logTimes: "Login times",
           logDate: "Login Date",
-          oper: "Operation",
           userRole:"User Role",
           userMenu: "User Menu",
           man:"Man",
@@ -112,6 +112,37 @@ export default {
           open:"Expand all",
           close:"Close all",
           suc:"Authorisation Successfully"
+        },
+        role:{
+          name:"Role Management",
+          roleMenu: "Role Menu",
+          id:"ID",
+          name:"Role name",
+          desc:"Note",
+          createUser:"Create user",
+          createDate:"Create date",
+          ord:"Sort",
+          add:"New role",
+          mod:"Modify role",
+          suc:"Removed Successfully",
+        },
+        roleMenu: {
+          name:"Role Management >> Role Menu ",
+          suc:"Role Authorisation Successfully",
+        },
+        menu:{
+          name:"Menu Management",
+          note:"Click the right mouse button on the menu to create or edit the menu.",
+          menuName:"Name",
+          menuUrl:"URL",
+          menuOrder:"Sort",
+          menuDesc:"Note",
+          pic:"Icon",
+          root:"System Menu",
+          urlNote:"If you create a directory, you don't need to fill in the URL.",
+          err1:"The menu can only be built to 3 levels.",
+          modify:"Modify Menu",
+          add:"Add Menu",
         }
     }
   }

@@ -1,14 +1,14 @@
 <template>
   <div class="wrapper-content">
     <div class="ibox" id="mainDiv">
-      <div class="ibox-title">菜单管理</div>
+      <div class="ibox-title">{{ $t('message.manage.menu.name') }}</div>
       <div class="ibox-content">
         <div class="row">
           <div class="col-sm-6">
             <div id="menuTree"></div>
           </div>
           <div class="col-sm-6">
-            <p class="text-warning">在菜单上点击鼠标右键来新建或编辑菜单。</p>
+            <p class="text-warning">{{ $t('message.manage.menu.note') }}</p>
           </div>
         </div>
       </div>
@@ -17,19 +17,19 @@
 		<div class="row">
 			<div class="col-sm-6">
 				<el-form :model="menu" :rules="rules" ref="menuForm" size="small">
-				    <el-form-item label="名称" label-width="100px" prop="menuName">
+				    <el-form-item :label="$t('message.manage.menu.menuName')" label-width="100px" prop="menuName">
 				     	<el-input v-model="menu.menuName" ></el-input>
 				    </el-form-item>
-					<el-form-item label="URL" label-width="100px">
-				     	<el-input v-model="menu.menuUrl" placeholder="如果创建目录则不用填写URL"></el-input>
+					<el-form-item :label="$t('message.manage.menu.menuUrl')" label-width="100px">
+				     	<el-input v-model="menu.menuUrl" :placeholder="$t('message.manage.menu.urlNote')"></el-input>
 				    </el-form-item>
-					<el-form-item label="排序" label-width="100px">
+					<el-form-item :label="$t('message.manage.menu.menuOrder')" label-width="100px">
 						<el-input-number v-model="menu.menuOrder" :min="0" :max="100" size="small"></el-input-number>
 					</el-form-item>
-					<el-form-item label="备注" label-width="100px">
+					<el-form-item :label="$t('message.manage.menu.menuDesc')" label-width="100px">
 				     	<el-input v-model="menu.menuDesc" ></el-input>
 				    </el-form-item>
-					<el-form-item label="图标" label-width="100px">
+					<el-form-item :label="$t('message.manage.menu.pic')" label-width="100px">
 				     	<div id="picview" style="font-size:20px;"></div>
 				    </el-form-item>
 			  	</el-form>
@@ -68,7 +68,7 @@ export default {
 		},
 		rules:{
 			menuName:[
-				{ required: true, message: '必填', trigger: 'blur' }
+				{ required: true, message: this.$t('message.base.required'), trigger: 'blur' }
 			]
 		},
 		operDailog:false,
@@ -96,14 +96,14 @@ export default {
           if(p2 != null){
             var p3 = ref.get_node(p2).parent
             if(p3 == "0"){
-              this.$notify.error({title: '菜单只能建3级',offset: 50});
+              this.$notify.error({title: this.$t('message.manage.menu.err1'),offset: 50});
               return;
             }
           }
         }
       }
 
-		  this.operDailogTitle = isupdate?"修改菜单":"创建菜单";
+		  this.operDailogTitle = isupdate?this.$t('message.manage.menu.modify'):this.$t('message.manage.menu.add');
       this.$refs.operForm.showDailog();
       this.isupdate = isupdate;
       
@@ -132,7 +132,7 @@ export default {
 	  },
 	  delMenu:function(node){
       let ts = this;
-      if(confirm("是否确认?")){
+      if(confirm(ts.$t('message.base.confirm'))){
         ajax({
           type:"GET",
           data:{menuId:node.id},
@@ -188,7 +188,7 @@ export default {
                 callback.call(this, [
                   {
                     id: "0",
-                    text: "系统菜单",
+                    text: ts.$t('message.manage.menu.root'),
                     children: true,
                     state: { opened: true },
                     icon: "fa fa-home",
@@ -210,7 +210,7 @@ export default {
           contextmenu: {
             items: {
               add: {
-                label: "新增",
+                label: this.$t('message.base.add'),
                 icon: "glyphicon glyphicon-plus",
                 action: function (data) {
                   const inst = $.jstree.reference(data.reference),
@@ -219,7 +219,7 @@ export default {
                 },
               },
               modify: {
-                label: "修改",
+                label: this.$t('message.base.modify'),
                 icon: "glyphicon glyphicon-edit",
                 action: function (data) {
                   const inst = $.jstree.reference(data.reference),
@@ -237,7 +237,7 @@ export default {
                 },
               },
               remove: {
-                label: "删除",
+                label: this.$t('message.base.delete'),
                 icon: "glyphicon glyphicon-trash",
                 _disabled: function (data) {
                   const inst = $.jstree.reference(data.reference),

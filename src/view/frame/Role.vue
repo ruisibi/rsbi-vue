@@ -2,17 +2,17 @@
   	<div class="wrapper-content">
 		  <div class="ibox">
 			  <div class="ibox-title">
-				  角色管理
+				  {{ $t('message.manage.role.name') }}
 			  </div>
 			  <div class="ibox-content">
 					<div class="btn-group optbtncls" role="group">
-						<button type="button" class="btn btn-outline btn-default" title="新增" @click="addRole(false)">
+						<button type="button" class="btn btn-outline btn-default" :title="$t('message.base.add')" @click="addRole(false)">
 							<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
 						</button>
-						<button type="button" class="btn btn-outline btn-default" title="修改" @click="addRole(true)">
+						<button type="button" class="btn btn-outline btn-default" :title="$t('message.base.modify')" @click="addRole(true)">
 							<i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
 						</button>
-						<button type="button" class="btn btn-outline btn-default" title="删除" @click="delRole()">
+						<button type="button" class="btn btn-outline btn-default" :title="$t('message.base.delete')" @click="delRole()">
 							<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
 						</button>
 					</div>
@@ -25,15 +25,15 @@
 								<el-radio v-model="checked" name="myselect2" :label="scope.row.roleId">&nbsp;</el-radio>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" prop="roleId" label="标识"></el-table-column>
-						<el-table-column align="center" prop="roleName" label="角色名称"></el-table-column>
-						<el-table-column align="center" prop="roleDesc" label="备注信息"></el-table-column>
-						<el-table-column align="center" prop="createUser" label="创建人"></el-table-column>
-						<el-table-column align="center" prop="createDate" label="创建时间"></el-table-column>
-						<el-table-column align="center" prop="ord" label="排序"></el-table-column>
-						<el-table-column align="center" prop="roleId" label="操作">
+						<el-table-column align="center" prop="roleId" :label="$t('message.manage.role.id')"></el-table-column>
+						<el-table-column align="center" prop="roleName" :label="$t('message.manage.role.name')"></el-table-column>
+						<el-table-column align="center" prop="roleDesc" :label="$t('message.manage.role.desc')"></el-table-column>
+						<el-table-column align="center" prop="createUser" :label="$t('message.manage.role.createUser')"></el-table-column>
+						<el-table-column align="center" prop="createDate" :label="$t('message.manage.role.createDate')"></el-table-column>
+						<el-table-column align="center" prop="ord" :label="$t('message.manage.role.ord')"></el-table-column>
+						<el-table-column align="center" prop="roleId" :label="$t('message.base.oper')">
 							<template slot-scope="scope">
-								<a class="btn btn-primary btn-xs" @click="userRole(scope.row.roleId)"> 授权菜单 </a>
+								<a class="btn btn-primary btn-xs" @click="userRole(scope.row.roleId)"> {{$t('message.manage.role.roleMenu')}} </a>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -44,21 +44,21 @@
 		  <el-dialog :title="dialogTitle" :visible.sync="addRoleDailog">
 			  	<el-form :model="role" :rules="rules" ref="roleForm" size="small">
 					 
-				    <el-form-item label="角色名称" label-width="100px" prop="roleName">
+				    <el-form-item :label="$t('message.manage.role.name')" label-width="100px" prop="roleName">
 				     	<el-input v-model="role.roleName" ></el-input>
 				    </el-form-item>
 					
-					<el-form-item label="角色备注" label-width="100px" prop="roleDesc">
+					<el-form-item :label="$t('message.manage.role.desc')" label-width="100px" prop="roleDesc">
 				     	<el-input v-model="role.roleDesc"  ></el-input>
 				    </el-form-item>
-					<el-form-item label="排序" label-width="100px">
+					<el-form-item :label="$t('message.manage.role.ord')" label-width="100px">
 						<el-input-number v-model="role.ord" :min="0" :max="100"></el-input-number>
 					</el-form-item>
 					
 			  	</el-form>
 			  <div slot="footer" class="dialog-footer">
-			    <el-button type="primary" @click="saveRole(isupdate)">确 定</el-button>
-				<el-button @click="addRoleDailog = false">取 消</el-button>
+			    <el-button type="primary" @click="saveRole(isupdate)">{{$t('message.base.ok')}}</el-button>
+				<el-button @click="addRoleDailog = false">{{$t('message.base.cancel')}}</el-button>
 			  </div>
 		</el-dialog>
   	</div>
@@ -83,7 +83,7 @@
 				},
 				rules:{
 					roleName:[
-						{ required: true, message: '必填', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' }
 					]
 				},
 				isupdate: false   //是否修改数据
@@ -112,7 +112,7 @@
 			addRole:function(isupdate){
 				let ts = this;
 				if(isupdate){
-					this.dialogTitle = "修改角色";
+					this.dialogTitle = this.$t('message.manage.role.mod');
 					//回写值
 					ajax({
 						url:"frame/role/get.action",
@@ -126,7 +126,7 @@
 						}
 					}, ts);
 				}else{
-					this.dialogTitle = "新增角色";
+					this.dialogTitle = this.$t('message.manage.role.add');
 					//清空值
 					for(let v in this.role){
 						this.role[v] = null;
@@ -155,17 +155,17 @@
 			delRole:function(){
 				let ts = this;
 				if(!this.checked){
-					ts.$notify.error({title: '请勾选数据',offset: 50});
+					ts.$notify.error({title: this.$t("message.base.err1"),offset: 50});
 					return;
 				}
-				if(confirm("是否确认删除？")){
+				if(confirm(this.$t('message.base.confirm'))){
 					ajax({
 						type:"GET",
 						data: {roleId: ts.checked},
 						postJSON:false,
 						url:"frame/role/delete.action",
 						success:function(resp){
-							ts.$notify.success({title: '用户删除成功',offset: 50});
+							ts.$notify.success({title: ts.$t('message.manage.role.suc'),offset: 50});
 							ts.loadDatas();
 						}
 					}, this);

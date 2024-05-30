@@ -31,7 +31,7 @@
 					<el-table-column align="center" prop="state" :formatter="fmtstate" :label="$t('message.manage.user.state')"></el-table-column>
 					<el-table-column align="center" prop="logCnt" :label="$t('message.manage.user.logTimes')"></el-table-column>
 					<el-table-column align="center" prop="loginTime" :label="$t('message.manage.user.logDate')"></el-table-column>
-					<el-table-column align="center" prop="userId" :label="$t('message.manage.user.oper')" width="180">
+					<el-table-column align="center" prop="userId" :label="$t('message.base.oper')" width="180">
 						<template slot-scope="scope">
 								<a class="btn btn-primary btn-xs" @click="addUserRole(scope.row.userId)"> {{$t('message.manage.user.userRole')}} </a>
 								<a class="btn btn-primary btn-xs" @click="userMenu(scope.row.userId)"> {{$t('message.manage.user.userMenu')}} </a>

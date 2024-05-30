@@ -19,6 +19,7 @@ export default {
       modifyUser:"修改用户",
       confirm:"是否确认?",
       select:"请选择",
+      oper:"操作",
     },
     login: {
       lang:"语言",
@@ -90,7 +91,6 @@ export default {
         state:"状态",
         logTimes:"登录次数",
         logDate:"登录时间",
-        oper:"操作",
         userRole:"授权角色",
         userMenu: "授权菜单",
         man:"男",
@@ -114,6 +114,37 @@ export default {
         open:"全部展开",
         close:"全部关闭",
         suc:"授权成功"
+      },
+      role:{
+         name:"角色管理",
+         roleMenu: "授权菜单",
+         id:"标识",
+         name:"角色名称",
+         desc:"备注信息",
+         createUser:"创建人",
+         createDate:"创建时间",
+         ord:"排序",
+         add:"新增角色",
+         mod:"修改角色",
+         suc:"用户删除成功",
+      },
+      roleMenu: {
+          name:"角色管理 >> 所辖菜单",
+          suc:"角色授权成功",
+      },
+      menu:{
+        name:"菜单管理",
+        note:"在菜单上点击鼠标右键来新建或编辑菜单。",
+        menuName:"名称",
+        menuUrl:"URL",
+        menuOrder:"排序",
+        menuDesc:"备注",
+        pic:"图标",
+        root:"系统菜单",
+        urlNote:"如果创建目录则不用填写URL",
+        err1:"菜单只能建3级",
+        modify:"修改菜单",
+        add:"创建菜单",
       }
     }
   }
