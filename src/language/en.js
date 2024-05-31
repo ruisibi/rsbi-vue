@@ -6,6 +6,7 @@ export default {
       base:{
         cancel:"Cancel",
         ok:"OK",
+        back:"Back",
         required:"required",
         sysError: 'System error',
         noLogin:"Login information has expired",
@@ -33,9 +34,9 @@ export default {
         copyright:"©Chengdu Ruisi Shangzhi Technology Co., Ltd. 2024 All rights reserved"
       },
       main:{
-        sysIntro:'The <b>"Ruisi BI"</b> business intelligence system is an enterprise data analysis system independently developed by <a href="http://www.ruisitech.com">Chengdu Ruisi Shangzhi Technology Co., Ltd</a>. and has independent intellectual property rights. The open source version contains data modelling, multi-dimensional analysis, data report, permission management and other functional modules, which is convenient for enterprises to quickly establish a set of easy-to-use, flexible and zero-cost commercial energy platforms, grasp the operation of enterprises through data, and support decision-making with data.',
+        sysIntro:'The <b>"Ruisi BI"</b> business intelligence system is an enterprise data analysis system independently developed by <a href="http://www.ruisitech.com">Chengdu Ruisi Shangzhi Technology Co., Ltd</a>. and has independent intellectual property rights. The open source version contains data model, multi-dimensional analysis, data report, permission management and other functional modules, which is convenient for enterprises to quickly establish a set of easy-to-use, flexible and zero-cost commercial energy platforms, grasp the operation of enterprises through data, and support decision-making with data.',
         module:'Open source version of the function module',
-        moduleIntro:'<p>1. Data modelling</p><p>2. Multidimensional analysis</p><p>3. Data report</p><p>4. Permission management</p>',
+        moduleIntro:'<p>1. Data model</p><p>2. Multidimensional analysis</p><p>3. Data report</p><p>4. Permission management</p>',
         buyUltimate:'Buy the ultimate version',
         start:"Start quickly",
         qq:"Technical exchange QQ group",
@@ -106,6 +107,7 @@ export default {
           suc2:"Created Successfully",
           suc3:"Authorisation Successfully",
           suc4:"Removed Successfully",
+          exist:"The account already exists.",
         },
         userMenu:{
           name:"User Management >> Menu of User",
@@ -144,6 +146,49 @@ export default {
           modify:"Modify Menu",
           add:"Add Menu",
         }
+    },
+    model:{
+      title: "Data Model",
+      dsource:{
+        title: "Data Source",
+        name:"Name",
+        use:"Use",
+        linkType:"Type",
+        linkUrl:"Connection url",
+        linkName:"Username",
+        psd:"Password",
+        suc1:"Removed Successfully!",
+        jndiName:"JNDI Name",
+        test:"Test Connection",
+        crt:"Create Data Source",
+        update:"Modify Data Source",
+        suc2:"Test Connection Successfully",
+        err2:"Please click the Test Connection first, and then click the OK button after the connection is successful.",
+        suc3:"Modify Data Source Successfully",
+        suc4:"Add Data Source Successfully",
+      },
+      dset:{
+        title: "Data Set",
+        flush:"Refresh",
+        crt:"Create Data Set",
+        update:"Modify Data Set",
+        name:"Name",
+        priTable:"Primary Table",
+        dsname:"Data Source",
+        useType:"Link",
+        base:"Basic Information",
+        join:"Table Join",
+        search:"Search Tables",
+        err1:"Please select the table",
+        suc1:"Refresh Successfully",
+        stable:"Select Tables",
+        stable2:"List to be selected",
+        stable3:"Selected tables",
+        cols:"Table Column",
+      },
+      cube:{
+        title: "Cube",
+      }
     }
   }
 }

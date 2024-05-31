@@ -51,6 +51,7 @@ export default {
                   postJSON: false,
                   url: 'frame/user/userMenu.action',
                   success: function (resp) {
+                    resp.rows.text = ts.$t(resp.rows.text);
                     callback.call(this, resp.rows);
                   },
                 }, ts);

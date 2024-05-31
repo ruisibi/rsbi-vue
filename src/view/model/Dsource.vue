@@ -4,7 +4,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="新增"
+        :title="$t('message.base.add')"
         @click="addDsource(false)"
       >
         <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
@@ -12,7 +12,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="修改"
+        :title="$t('message.base.modify')"
         @click="addDsource(true)"
       >
         <i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
@@ -20,7 +20,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="删除"
+        :title="$t('message.base.delete')"
         @click="delDsource()"
       >
         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
@@ -44,30 +44,30 @@
         align="center"
         width="150"
         prop="dsname"
-        label="名称"
+        :label="$t('message.model.dsource.name')"
       ></el-table-column>
       <el-table-column
         align="center"
         width="150"
         prop="use"
-        label="类型"
+        :label="$t('message.model.dsource.use')"
       ></el-table-column>
       <el-table-column
         align="center"
         width="150"
         prop="linkType"
-        label="数据库"
+        :label="$t('message.model.dsource.linkType')"
       ></el-table-column>
       <el-table-column
         align="center"
         prop="linkUrl"
-        label="链接字符串"
+        :label="$t('message.model.dsource.linkUrl')"
       ></el-table-column>
       <el-table-column
         align="center"
         width="150"
         prop="linkName"
-        label="用户名"
+        :label="$t('message.model.dsource.linkName')"
       ></el-table-column>
     </el-table>
     <dsourceAdd ref="dsourceadd" :isupdate="isupdate"></dsourceAdd>
@@ -121,11 +121,11 @@ export default {
     delDsource() {
       if (!this.checked) {
         this.$notify.error({
-          title: "未勾选数据",
+          title: this.$t("message.base.err1"),
           offset: 50,
         });
       }
-      if (confirm("是否确认?")) {
+      if (confirm(this.$t('message.base.confirm'))) {
         ajax(
           {
             type: "GET",
@@ -133,7 +133,7 @@ export default {
             data: { dsid: this.checked },
             success: () => {
               this.$notify.success({
-                title: "删除成功！",
+                title: this.$t('message.model.dsource.suc1'),
                 offset: 50,
               });
               this.loadData();

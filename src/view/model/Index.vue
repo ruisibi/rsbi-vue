@@ -1,16 +1,16 @@
 <template>
   <div class="wrapper-content">
     <div class="ibox" id="mainDiv">
-      <div class="ibox-title">数据建模</div>
+      <div class="ibox-title">{{$t('message.model.title')}}</div>
       <div class="ibox-content">
         <el-tabs tab-position="left" :style="autoHeight()">
-          <el-tab-pane label="数据源">
+          <el-tab-pane :label="$t('message.model.dsource.title')">
             <dsource></dsource>
           </el-tab-pane>
-          <el-tab-pane label="数据集">
+          <el-tab-pane :label="$t('message.model.dset.title')">
             <dset ref="dsetGrid"></dset>
           </el-tab-pane>
-          <el-tab-pane label="立方体">
+          <el-tab-pane :label="$t('message.model.cube.title')">
             <cube ref="cubeInfo"></cube>
           </el-tab-pane>
         </el-tabs>

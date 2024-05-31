@@ -4,7 +4,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="新增"
+        :title="$t('message.base.add')"
         @click="addDset(false)"
       >
         <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
@@ -12,7 +12,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="修改"
+        :title="$t('message.base.modify')"
         @click="addDset(true)"
       >
         <i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
@@ -20,7 +20,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="刷新"
+        :title="$t('message.model.dset.flush')"
         @click="flashDset()"
       >
         <i class="fa fa-refresh" aria-hidden="true"></i>
@@ -28,7 +28,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="删除"
+        :title="$t('message.base.delete')"
         @click="delDset()"
       >
         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
@@ -51,22 +51,22 @@
         <el-table-column
           align="center"
           prop="name"
-          label="名称"
+          :label="$t('message.model.dset.name')"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="priTable"
-          label="主表"
+          :label="$t('message.model.dset.priTable')"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="dsname"
-          label="数据源"
+          :label="$t('message.model.dset.dsname')"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="useType"
-          label="连接"
+          :label="$t('message.model.dset.useType')"
         ></el-table-column>
       </el-table>
   </div>
@@ -109,21 +109,25 @@ export default {
     },
     addDset(isupdate){
       this.isupdate = isupdate;
+      if(isupdate && !this.checked ){
+        this.$notify.error(this.$t("message.base.err1"));
+        return;
+      }
       let o = this.$parent.$parent.$parent;
       let oper =  o.$refs['dsetOper'];
-      o.dsetOperTitle = isupdate===false?"创建数据集":"编辑数据集";
+      o.dsetOperTitle = isupdate===false? this.$t('message.model.dset.crt') :this.$t('message.model.dset.update') ;
       oper.showDailog();
       o.$refs["dsetAddForm"].addDset(isupdate, this.checked);
     },
     delDset(){
       if(!this.checked){
         this.$notify.error({
-          title: "未勾选数据",
+          title: this.$t("message.base.err1"),
           offset: 50,
         });
         return;
       }
-      if(confirm("是否确认？")){
+      if(confirm(this.$t('message.base.confirm'))){
         ajax({
           url:"model/deleteDset.action",
           type:"GET",
@@ -137,7 +141,7 @@ export default {
     flashDset(){
       if(!this.checked){
         this.$notify.error({
-          title: "未勾选数据",
+          title: this.$t("message.base.err1"),
           offset: 50,
         });
         return;
@@ -155,7 +159,7 @@ export default {
         type:"GET",
         data:{dsetId:dset.dsetId, dsid:dset.dsid},
         success:(r)=>{
-          this.$notify.success("刷新成功");
+          this.$notify.success(ts.$t('message.model.dset.suc1'));
         }
       }, this);
     }

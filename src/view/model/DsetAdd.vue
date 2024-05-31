@@ -1,14 +1,14 @@
 <template>
     <el-form :model="dset" :rules="rules" ref="dsetForm">
       <el-tabs v-model="active" type="card">
-        <el-tab-pane label="基本信息" name="base">
-          <el-form-item label="数据集名称" label-width="100px" prop="name">
+        <el-tab-pane :label="$t('message.model.dset.base')" name="base">
+          <el-form-item :label="$t('message.model.dset.name')" label-width="100px" prop="name">
             <el-input v-model="dset.name"></el-input>
           </el-form-item>
-          <el-form-item label="数据源" label-width="100px" prop="dsid">
+          <el-form-item :label="$t('message.model.dset.dsname')" label-width="100px" prop="dsid">
             <el-select
               v-model="dset.dsid"
-              placeholder="请选择"
+              :placeholder="$t('message.base.select')"
               @change="selectds"
             >
               <el-option
@@ -20,18 +20,18 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择表" label-width="100px">
+          <el-form-item :label="$t('message.model.dset.stable')" label-width="100px">
             <div class="row">
               <div class="col-sm-4" style="padding-left: 0">
                 <div class="ibox">
                   <div class="ibox-title" style="line-height: normal">
-                    待选表
+                    {{ $t('message.model.dset.stable2')}}
                   </div>
                   <div class="ibox-content" style="padding: 0px">
                     <el-input
                       v-model="dset.searchkey"
                       @keyup.enter.native="searhTable()"
-                      placeholder="搜索表"
+                      :placeholder="$t('message.model.dset.search')"
                     ></el-input>
                     <div
                       id="allTablesTree"
@@ -59,7 +59,7 @@
               <div class="col-sm-4" style="padding-left: 0">
                 <div class="ibox">
                   <div class="ibox-title" style="line-height: normal">
-                    已选表
+                    {{ $t('message.model.dset.stable3')}}
                   </div>
                   <div class="ibox-content" style="padding: 0px">
                     <div
@@ -72,11 +72,11 @@
             </div>
           </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="表关联" name="join">
-          <el-form-item label="主表" label-width="100px" prop="master">
+        <el-tab-pane :label="$t('message.model.dset.join')" name="join">
+          <el-form-item :label="$t('message.model.dset.priTable')" label-width="110px" prop="master">
             <el-select
               v-model="dset.master"
-              placeholder="请选择"
+              :placeholder="$t('message.base.select')"
               @change="changemaster"
             >
               <el-option
@@ -88,7 +88,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="表字段" label-width="100px">
+          <el-form-item :label="$t('message.model.dset.cols')" label-width="110px">
             <div class="row">
               <div class="col-sm-9" style="padding-left: 0">
                 <div
@@ -119,7 +119,7 @@
             </div>
           </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="表字段" name="cols">
+        <el-tab-pane :label="$t('message.model.dset.cols')" name="cols">
           <el-table
             :data="cols"
             border
@@ -226,9 +226,9 @@ export default {
       },
       dsourceList: [],
       rules: {
-        name: [{ required: true, message: "必填", trigger: "blur" }],
-        dsid: [{ required: true, message: "必填", trigger: "blur" }],
-        master: [{ required: true, message: "必填", trigger: "blur" }],
+        name: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        dsid: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        master: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
       },
       selectTables: [],
       active: "base",
@@ -285,7 +285,7 @@ export default {
         }
         if (valid) {
           if (ts.selectTables.length === 0) {
-            ts.$notify.error("请选择表");
+            ts.$notify.error(ts.$t('message.model.dset.err1'));
             ret = false;
             return;
           }
@@ -526,7 +526,7 @@ export default {
       var node = ref.get_selected();
 
       if (node.length == 0 || ref.is_hidden(node[0])) {
-        this.$notify.error("请选择表");
+        this.$notify.error(this.$t('message.model.dset.err1'));
         return;
       }
 

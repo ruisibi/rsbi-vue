@@ -239,9 +239,14 @@
 						dataType:"json",
 						success:function(dt){
 							dt = dt.rows;
-							for(let v in ts.user){
-								ts.user[v] = dt[v] + "";
-							}
+							ts.user.userId = dt.userId;
+							ts.user.staffId = dt.staffId;
+							ts.user.loginName = dt.loginName;
+							ts.user.gender = dt.gender;
+							ts.user.state = dt.state;
+							ts.user.mobilePhone = dt.mobilePhone;
+							ts.user.officeTel = dt.officeTel;
+							ts.user.email = dt.email;
 						}
 					}, ts);
 				}else{

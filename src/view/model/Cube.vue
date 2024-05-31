@@ -4,7 +4,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="新增"
+        :title="$t('message.base.add')"
         @click="addCube(false)"
       >
         <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
@@ -12,7 +12,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="修改"
+        :title="$t('message.base.modify')"
         @click="addCube(true)"
       >
         <i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
@@ -20,7 +20,7 @@
       <button
         type="button"
         class="btn btn-outline btn-default"
-        title="删除"
+        :title="$t('message.base.delete')"
         @click="delCube()"
       >
         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>

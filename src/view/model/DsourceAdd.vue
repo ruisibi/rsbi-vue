@@ -3,13 +3,13 @@
     <el-tabs v-model="active" type="card">
       <el-tab-pane label="JDBC" name="jdbc">
         <el-form :model="dsource" :rules="rules" ref="dsourceForm">
-          <el-form-item label="数据源名称" label-width="100px" prop="dsname">
+          <el-form-item :label="$t('message.model.dsource.name')" label-width="100px" prop="dsname">
             <el-input v-model="dsource.dsname"></el-input>
           </el-form-item>
-          <el-form-item label="数据源类型" label-width="100px" prop="linkType">
+          <el-form-item :label="$t('message.model.dsource.linkType')" label-width="100px" prop="linkType">
             <el-select
               v-model="dsource.linkType"
-              placeholder="请选择"
+              :placeholder="$t('message.base.select')"
               @change="chglinkType"
             >
               <el-option
@@ -21,28 +21,28 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="连接字符串" label-width="100px" prop="linkUrl">
+          <el-form-item :label="$t('message.model.dsource.linkUrl')" label-width="100px" prop="linkUrl">
             <el-input
               type="textarea"
               :rows="3"
               v-model="dsource.linkUrl"
             ></el-input>
           </el-form-item>
-          <el-form-item label="连接用户名" label-width="100px" prop="linkName">
+          <el-form-item :label="$t('message.model.dsource.linkName')" label-width="100px" prop="linkName">
             <el-input v-model="dsource.linkName"></el-input>
           </el-form-item>
-          <el-form-item label="连接密码" label-width="100px" prop="linkPwd">
+          <el-form-item :label="$t('message.model.dsource.psd')" label-width="100px" prop="linkPwd">
             <el-input type="password" v-model="dsource.linkPwd"></el-input>
           </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="JNDI" name="jndi">
         <el-form :model="jndisource" :rules="jndiRules" ref="jndiForm">
-          <el-form-item label="JNDI名称" label-width="100px" prop="jndiName">
+          <el-form-item :label="$t('message.model.dsource.jndiName')" label-width="100px" prop="jndiName">
             <el-input v-model="jndisource.jndiName"></el-input>
           </el-form-item>
-          <el-form-item label="数据源类型" label-width="100px" prop="linkType">
-            <el-select v-model="jndisource.linkType" placeholder="请选择">
+          <el-form-item :label="$t('message.model.dsource.linkType')" label-width="100px" prop="linkType">
+            <el-select v-model="jndisource.linkType" :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.linkTypes"
                 :key="item.value"
@@ -56,9 +56,9 @@
       </el-tab-pane>
     </el-tabs>
     <div slot="footer" class="dialog-footer">
-      <el-button type="warning" @click="testDsource()">测试连接</el-button>
-      <el-button type="primary" @click="saveDsource()">确 定</el-button>
-      <el-button @click="show = false">取 消</el-button>
+      <el-button type="warning" @click="testDsource()">{{$t('message.model.dsource.test')}}</el-button>
+      <el-button type="primary" @click="saveDsource()">{{$t('message.base.ok')}}</el-button>
+      <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -86,15 +86,15 @@ export default {
         linkType:null
       },
       rules: {
-        dsname: [{ required: true, message: "必填", trigger: "blur" }],
-        linkType: [{ required: true, message: "必填", trigger: "blur" }],
-        linkUrl: [{ required: true, message: "必填", trigger: "blur" }],
-        linkName: [{ required: true, message: "必填", trigger: "blur" }],
-       // linkPwd: [{ required: true, message: "必填", trigger: "blur" }],
+        dsname: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        linkType: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        linkUrl: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        linkName: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+       // linkPwd: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
       },
       jndiRules: {
-        jndiName: [{ required: true, message: "必填", trigger: "blur" }],
-        linkType: [{ required: true, message: "必填", trigger: "blur" }],
+        jndiName: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        linkType: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
       },
       active: "jdbc",
       opts: {
@@ -115,9 +115,9 @@ export default {
   components: {},
   mounted() {
     if (this.isupdate) {
-      this.dialogTitle = "修改数据源";
+      this.dialogTitle = this.$t('message.model.dsource.update');
     } else {
-      this.dialogTitle = "创建数据源";
+      this.dialogTitle = this.$t('message.model.dsource.crt');
     }
   },
   computed: {},
@@ -141,7 +141,7 @@ export default {
                 data: this.active === "jdbc" ? ts.dsource : ts.jndisource,
                 success: (resp) => {
                   ts.$notify.success({
-                    title: ts.isupdate ? "数据源修改成功" : "数据源创建成功",
+                    title: ts.isupdate ? this.$t('message.model.dsource.suc3') : this.$t('message.model.dsource.suc4'),
                     offset: 50,
                   });
                   //关闭窗口
@@ -153,7 +153,7 @@ export default {
               ts
             );
           }else if(this.ischeckds === false){
-            this.$notify.warning("请先点击测试连接，连接成功后再点击确定按钮");
+            this.$notify.warning(this.$t('message.model.dsource.err2'));
           }
         }
       );
@@ -184,7 +184,7 @@ export default {
       this.ischeckds = false;
       if (update) {
         if (!dsId || dsId === "") {
-          this.$notify.error("未勾选数据");
+          this.$notify.error(this.$t("message.base.err1"));
           return;
         }
         this.show = true;
@@ -231,7 +231,7 @@ export default {
                 data: this.active === "jdbc" ? this.dsource : this.jndisource,
                 success: (resp) => {
                   this.$notify.success({
-                    title: "测试成功",
+                    title: this.$t('message.model.dsource.suc2'),
                     offset: 50,
                   });
                   this.ischeckds = true;
