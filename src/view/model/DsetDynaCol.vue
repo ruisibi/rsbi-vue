@@ -1,11 +1,11 @@
 <template>
-  <el-dialog title="创建表达式(主表)" :visible.sync="show">
+  <el-dialog :title="$t('message.model.dset.dyna.title2')" :visible.sync="show">
     <el-form :model="dyna" ref="dynaForm" :rules="rule">
-         <el-form-item label="字段名" label-width="100px" prop="name">
-          <el-input v-model="dyna.name" placeholder="英文字符" id="dynaName"></el-input>
+         <el-form-item :label="$t('message.model.dset.dyna.name')" label-width="140px" prop="name">
+          <el-input v-model="dyna.name" :placeholder="$t('message.model.dset.dyna.eng')" id="dynaName"></el-input>
           </el-form-item>
-         <el-form-item label="表达式" label-width="100px" prop="expression">
-           <label slot="label">表达式 <a @click="helpbdsinfo" href="javascript:;"><i class="fa fa-question-circle"></i></a>：</label>
+         <el-form-item :label="$t('message.model.dset.dyna.expression')" label-width="140px" prop="expression">
+           <label slot="label">{{$t('message.model.dset.dyna.expression') }} <a @click="helpbdsinfo" href="javascript:;"><i class="fa fa-question-circle"></i></a>：</label>
             <el-input id="mybds" type="textarea" v-model="dyna.expression"></el-input>
           </el-form-item>
           <div style="line-height:25px;">
@@ -13,8 +13,8 @@
               <button @click="selectCol(c.name)" style="margin-right:5px;" type="button" :key="c.name" :name="c.name" class="btn btn-primary btn-xs">{{ c.name }}</button>
           </template>
           </div>
-          <el-form-item label="字段类型" label-width="100px" prop="type">
-            <el-select v-model="dyna.type" placeholder="请选择">
+          <el-form-item :label="$t('message.model.dset.dyna.type')" label-width="140px" prop="type">
+            <el-select v-model="dyna.type" :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.types"
                 :key="item.value"
@@ -26,14 +26,14 @@
           </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="save()">确 定</el-button>
-      <el-button @click="show = false">取 消</el-button>
+      <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+      <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
     </div>
 
-    <el-dialog custom-class="nopadding" width="50%" title="表达式说明" :visible.sync="innerVisible" append-to-body>
-				<div style="line-height:30px;">表达式是一句SQL片段，用来提高系统灵活性。<li>通过表达式来对字段进行运算；</li>字段相加：<div class="mycode"> a+ b</div><li>对字段进行case when 转换；</li><div class="mycode">case when a=1 then '是' when a=2 then '否' else '未知' end</div><p class="text-warning">请注意：此处表达式请勿使用sum/avg/max/min/count等聚合函数。</p><p></p></div>
+    <el-dialog custom-class="nopadding" width="50%" :title="$t('message.model.dset.dyna.note')" :visible.sync="innerVisible" append-to-body>
+				<div style="line-height:30px;"><p v-html="$t('message.model.dset.dyna.expnote')"/><p></p></div>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="innerVisible = false">关 闭</el-button>
+				<el-button @click="innerVisible = false">{{$t('message.base.cancel')}}</el-button>
 			</div>
 		</el-dialog>
   </el-dialog>
@@ -56,9 +56,9 @@ export default {
         expression:""
       },
       rule:{
-        name: [{ required: true, message: "必填", trigger: "blur" }],
-        expression: [{ required: true, message: "必填", trigger: "blur" }],
-        type: [{ required: true, message: "必填", trigger: "blur" }]
+        name: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        expression: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        type: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }]
       },
       opts:{
         types:[{
@@ -129,7 +129,7 @@ export default {
      this.$refs['dynaForm'].validate(v=>{
        if(v){
          if(this.ischinese(ts.dyna.name)){
-           ts.$notify.error("字段名必须是英文字符。");
+           ts.$notify.error(ts.$t('message.model.dset.dyna.err2'));
            return;
          }
          if(ts.isupdate){

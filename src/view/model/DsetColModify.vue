@@ -1,14 +1,14 @@
 <template>
-  <el-dialog title="编辑字段" :visible.sync="show">
+  <el-dialog :title="$t('message.model.dset.col.title')" :visible.sync="show">
     <el-form :model="col" ref="colForm">
-        <el-form-item label="字段名：" label-width="100px" >
+        <el-form-item :label="$t('message.model.dset.col.name')" label-width="120px" >
           {{ col.name }}
           </el-form-item>
-         <el-form-item label="显示名：" label-width="100px">
+         <el-form-item :label="$t('message.model.dset.col.dispName')" label-width="120px">
             <el-input v-model="col.dispName"></el-input>
           </el-form-item>
-          <el-form-item label="字段类型：" label-width="100px">
-            <el-select v-model="col.type" placeholder="请选择">
+          <el-form-item :label="$t('message.model.dset.col.type')" label-width="120px">
+            <el-select v-model="col.type" :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.types"
                 :key="item.value"
@@ -18,16 +18,16 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="来源表：" label-width="100px" >
+          <el-form-item :label="$t('message.model.dset.col.tname')" label-width="120px" >
           {{ col.tname }}
           </el-form-item>
-          <el-form-item label="关联字段：" label-width="100px" >
+          <el-form-item :label="$t('message.model.dset.col.join')" label-width="120px" >
           {{ col.join }}
           </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="save()">确 定</el-button>
-      <el-button @click="show = false">取 消</el-button>
+      <el-button type="primary" @click="save()">{{ $t('message.base.ok') }}</el-button>
+      <el-button @click="show = false">{{ $t('message.base.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -95,7 +95,7 @@ export default {
           break;
         }
       }
-      ts.col.join = joinInfo==null?"字段无关联":master+"."+joinInfo.col+" -> " + joinInfo.ref+"."+joinInfo.refKey;
+      ts.col.join = joinInfo==null?ts.$t('message.model.dset.col.err1'):master+"."+joinInfo.col+" -> " + joinInfo.ref+"."+joinInfo.refKey;
  
    },
    save(){

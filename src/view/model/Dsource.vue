@@ -124,6 +124,7 @@ export default {
           title: this.$t("message.base.err1"),
           offset: 50,
         });
+        return;
       }
       if (confirm(this.$t('message.base.confirm'))) {
         ajax(

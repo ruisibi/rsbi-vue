@@ -1,17 +1,17 @@
 <template>
   <el-form :model="cube" :rules="rules" ref="cubeForm">
       <el-tabs v-model="active" type="card">
-        <el-tab-pane label="基本信息" name="base">
-          <el-form-item label="立方体名称" label-width="100px" prop="name">
+        <el-tab-pane :label="$t('message.model.cube.base')" name="base">
+          <el-form-item :label="$t('message.model.cube.name')" label-width="100px" prop="name">
             <el-input v-model="cube.name"></el-input>
           </el-form-item>
-          <el-form-item label="立方体说明" label-width="100px" prop="desc">
+          <el-form-item :label="$t('message.model.cube.desc')" label-width="100px" prop="desc">
             <el-input type="textarea" v-model="cube.desc"></el-input>
           </el-form-item>
-          <el-form-item label="对应数据集" label-width="100px" prop="dsetId">
+          <el-form-item :label="$t('message.model.cube.dsetName')" label-width="100px" prop="dsetId">
             <el-select
               v-model="cube.dsetId"
-              placeholder="请选择"
+              :placeholder="$t('message.base.select')"
               @change="selectdSet"
             >
               <el-option
@@ -24,15 +24,15 @@
             </el-select>
           </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="立方体信息" name="cubeInfo">
+        <el-tab-pane :label="$t('message.model.cube.cubeInfo')" name="cubeInfo">
            <div style="margin-bottom:5px;" v-if="showBtn">
-          <button type="button" class="btn btn-info btn-xs" @click="autoCube()">自动生成立方体</button>
+          <button type="button" class="btn btn-info btn-xs" @click="autoCube()">{{$t('message.model.cube.auto')}}</button>
         </div>
             <div class="row">
               <div class="col-sm-4" >
                 <div class="ibox">
                   <div class="ibox-title" style="line-height: normal">
-                    待选字段
+                    {{ $t('message.model.cube.cols') }}
                   </div>
                   <div class="ibox-content" style="padding: 0px">
                     <div
@@ -61,7 +61,7 @@
               <div class="col-sm-4" style="padding-left: 0">
                 <div class="ibox">
                   <div class="ibox-title" style="line-height: normal">
-                    维度和度量
+                   {{ $t('message.model.cube.dimKpis') }}
                   </div>
                   <div class="ibox-content" style="padding: 0px">
                     <div
@@ -77,16 +77,16 @@
                   @click="addgroup()"
                   class="btn btn-default btn-xs"
                 >
-                  <i class="fa fa-plus"></i> 维度分组</button
+                  <i class="fa fa-plus"></i> {{ $t('message.model.cube.group') }}</button
                 ><br />
                 <button type="button" class="btn btn-default btn-xs" @click="editCalcKpi();">
-                  <i class="fa fa-plus-square"></i> 计算度量</button>
+                  <i class="fa fa-plus-square"></i>  {{ $t('message.model.cube.calc') }}</button>
                 <br />
                   <button type="button" @click="editcubecol();" class="btn btn-default btn-xs">
-                    <i class="fa fa-edit"></i> 编辑</button>
+                    <i class="fa fa-edit"></i> {{$t('message.base.modify')}}</button>
 <br />
                     <button type="button" @click="cube2ds();" class="btn btn-default btn-xs">
-                      <i class="fa fa-remove"></i> 删除</button>
+                      <i class="fa fa-remove"></i> {{$t('message.base.delete')}}</button>
               </div>
             </div>
         </el-tab-pane>
@@ -113,8 +113,8 @@ export default {
         dsetName:null
       },
       rules:{
-        name: [{ required: true, message: "必填", trigger: "blur" }],
-        dsetId: [{ required: true, message: "必填", trigger: "blur" }],
+        name: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        dsetId: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
       },
       active:"base",
       delObj:[],
@@ -332,7 +332,7 @@ export default {
           }
           //动态字段
           if(c.dynamic && c.dynamic != null && c.dynamic.length > 0){
-            var dynas = {id:'dynaroot', li_attr:{istable:true} , text:"动态字段", icon:'fa fa-table', state:{opened:true}, children:[]};
+            var dynas = {id:'dynaroot', li_attr:{istable:true} , text:this.$t('message.model.dset.dyna.title'), icon:'fa fa-table', state:{opened:true}, children:[]};
             dt.push(dynas);
             for(let i=0; i<c.dynamic.length; i++){
               var r = c.dynamic[i];
@@ -366,9 +366,9 @@ export default {
     },
     initRightTree(cube){
       //加载立方体字段
-      var targdt = [{id:'cbroot', text:'数据立方体', icon:'fa fa-cubes', state:{opened:true}, children:[]}];
-      targdt[0].children.push({id:"cubewd", text:"维度",icon:'fa fa-gears', state:{opened:true}, children:[]});
-      targdt[0].children.push({id:"cubedl", text:"度量",icon:'glyphicon glyphicon-signal', state:{opened:true}, children:[]});
+      var targdt = [{id:'cbroot', text:this.$t('message.model.cube.cname'), icon:'fa fa-cubes', state:{opened:true}, children:[]}];
+      targdt[0].children.push({id:"cubewd", text:this.$t('message.model.cube.dim'),icon:'fa fa-gears', state:{opened:true}, children:[]});
+      targdt[0].children.push({id:"cubedl", text:this.$t('message.model.cube.kpi'),icon:'glyphicon glyphicon-signal', state:{opened:true}, children:[]});
       if(cube && cube.dims && cube.kpis){ //给立方体添加维度及指标
         var dims = targdt[0].children[0].children;
         var groupexist = function(grouptype){

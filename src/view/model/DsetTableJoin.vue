@@ -1,16 +1,16 @@
 <template>
-  <el-dialog title="表关联" :visible.sync="showDailog">
+  <el-dialog :title="$t('message.model.dset.joinInfo.title')" :visible.sync="showDailog">
     <el-form :model="join" :rules="rules" ref="joinForm">
-      <el-form-item label="主表：" label-width="100px" >
+      <el-form-item :label="$t('message.model.dset.joinInfo.master')" label-width="100px" >
         {{ master }}
       </el-form-item>
 
-      <el-form-item label="字段：" label-width="100px" >
+      <el-form-item :label="$t('message.model.dset.joinInfo.col')" label-width="100px" >
         {{ masterCol }}
       </el-form-item>
 
-      <el-form-item label="从表：" label-width="100px" prop="ref">
-        <el-select v-model="join.ref" placeholder="请选择" @change="changejoin">
+      <el-form-item :label="$t('message.model.dset.joinInfo.slave')" label-width="100px" prop="ref">
+        <el-select v-model="join.ref" :placeholder="$t('message.base.select')" @change="changejoin">
           <el-option
             v-for="item in selectTables"
             :key="item.id"
@@ -21,8 +21,8 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="字段：" label-width="100px" prop="refKey">
-        <el-select v-model="join.refKey" placeholder="请选择">
+      <el-form-item :label="$t('message.model.dset.joinInfo.col')" label-width="100px" prop="refKey">
+        <el-select v-model="join.refKey" :placeholder="$t('message.base.select')">
           <el-option
             v-for="item in refKeyList"
             :key="item.id"
@@ -32,8 +32,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="关联方式：" label-width="100px" prop="jtype">
-        <el-select v-model="join.jtype" placeholder="请选择">
+      <el-form-item :label="$t('message.model.dset.joinInfo.joinType')" label-width="100px" prop="jtype">
+        <el-select v-model="join.jtype" :placeholder="$t('message.base.select')">
           <el-option
             v-for="item in joinTypes"
             :key="item.id"
@@ -45,8 +45,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="savejoin()">确 定</el-button>
-      <el-button @click="showDailog = false">取 消</el-button>
+      <el-button type="primary" @click="savejoin()">{{$t('message.base.ok')}}</el-button>
+      <el-button @click="showDailog = false">{{$t('message.base.cancel')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -66,14 +66,14 @@ export default {
         jtype: null,
       },
       rules: {
-        ref: [{ required: true, message: "必填", trigger: "blur" }],
-        refKey: [{ required: true, message: "必填", trigger: "blur" }],
-        jtype: [{ required: true, message: "必填", trigger: "blur" }],
+        ref: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        refKey: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
+        jtype: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
       },
       joinTypes: [
-        { id: "left", name: "左连接" },
-        { id: "right", name: "右连接" },
-        { id: "inner", name: "全连接" },
+        { id: "left", name: this.$t('message.model.dset.joinInfo.left') },
+        { id: "right", name: this.$t('message.model.dset.joinInfo.right') },
+        { id: "inner", name: this.$t('message.model.dset.joinInfo.inner') },
       ],
       refKeyList:[],
       dsetIds:[],
@@ -110,7 +110,7 @@ export default {
       var ref = $("#masterTableTree").jstree(true);
       var node = ref.get_selected(true);
       if (node.length == 0) {
-        this.$notify.error("请选择字段再点关联");
+        this.$notify.error(this.$t('message.model.dset.err6'));
         return;
       }
       node = node[0];

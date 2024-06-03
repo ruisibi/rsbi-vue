@@ -43,22 +43,22 @@
         <el-table-column
           align="center"
           prop="cubeId"
-          label="标识"
+          :label="$t('message.model.cube.id')"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="cubeName"
-          label="立方体名称"
+          :label="$t('message.model.cube.name')"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="desc"
-          label="立方体说明"
+          :label="$t('message.model.cube.desc')"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="dsetName"
-          label="数据集"
+          :label="$t('message.model.cube.dsetName')"
         ></el-table-column>
       </el-table>
   </div>
@@ -100,21 +100,28 @@ export default {
     },
     addCube(isupdate){
       this.isupdate = isupdate;
+      if(isupdate == true && !this.checked){
+        this.$notify.error({
+          title: this.$t("message.base.err1"),
+          offset: 50,
+        });
+        return;
+      }
       let o = this.$parent.$parent.$parent;
       let oper =  o.$refs['cubeOper'];
-      o.cubeOperTitle = isupdate===false?"创建立方体":"编辑立方体";
+      o.cubeOperTitle = isupdate===false?this.$t('message.model.cube.add'):this.$t('message.model.cube.modify');
       oper.showDailog();
       o.$refs["cubeForm"].addCube(isupdate, this.checked);
     },
     delCube(){
       if(!this.checked){
         this.$notify.error({
-          title: "未勾选数据",
+          title: this.$t('message.base.err1'),
           offset: 50,
         });
         return;
       }
-      if(confirm("是否确认？")){
+      if(confirm(this.$t('message.base.confirm'))){
         ajax({
           url:"model/delCube.action",
           type:"GET",

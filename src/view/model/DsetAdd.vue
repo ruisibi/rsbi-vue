@@ -104,15 +104,15 @@
               <div class="col-sm-2">
                 <input
                   type="button"
-                  value="关联"
-                  class="btn btn-primary btn-xs"
+                  :value="$t('message.model.dset.join2')"
+                  class="btn btn-primary btn-sm"
                   @click="joinTable()"
                 />
                 <br />
                 <input
                   type="button"
-                  value="取消"
-                  class="btn btn-primary btn-xs"
+                  :value="$t('message.base.cancel')"
+                  class="btn btn-primary btn-sm"
                   @click="unjoinTable()"
                 />
               </div>
@@ -130,38 +130,38 @@
             <el-table-column
               align="center"
               prop="name"
-              label="字段名"
+              :label="$t('message.model.dset.col.name')"
             ></el-table-column>
             <el-table-column
               align="center"
               prop="dispName"
-              label="显示名"
+              :label="$t('message.model.dset.col.dispName')"
             ></el-table-column>
             <el-table-column
               align="center"
               prop="type"
-              label="类型"
+              :label="$t('message.model.dset.col.type')"
             ></el-table-column>
             <el-table-column
               align="center"
               prop="tname"
-              label="来源表"
+              :label="$t('message.model.dset.col.tname')"
             ></el-table-column>
             <el-table-column
               align="center"
               prop="idx"
-              label="操作"
+              :label="$t('message.base.oper')"
               width="100"
             >
               <template slot-scope="scope">
-                  <a class="btn btn-primary btn-xs" @click="modifyCol(scope.row.name, scope.row.tname)"> 编辑 </a>
+                  <a class="btn btn-primary btn-xs" @click="modifyCol(scope.row.name, scope.row.tname)"> {{ $t('message.base.modify') }} </a>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="动态字段" name="dyna">
+        <el-tab-pane :label="$t('message.model.dset.dyna.title')" name="dyna">
           <div style="padding-bottom:10px;">
-          <button class="btn btn-info btn-xs" type="button" @click="crtdyna(false)">创建</button>
+          <button class="btn btn-info btn-xs" type="button" @click="crtdyna(false)">{{ $t('message.base.add') }}</button>
           </div>
           <el-table
             :data="dynamic"
@@ -173,33 +173,33 @@
             <el-table-column
               align="center"
               prop="name"
-              label="字段名"
+              :label="$t('message.model.dset.dyna.name')"
             ></el-table-column>
             <el-table-column
               align="center"
               prop="expression"
-              label="表达式"
+              :label="$t('message.model.dset.dyna.expression')"
             ></el-table-column>
             <el-table-column
               align="center"
               prop="type"
-              label="类型"
+              :label="$t('message.model.dset.dyna.type')"
             ></el-table-column>
             
             <el-table-column
               align="center"
               prop="idx"
-              label="操作"
+              :label="$t('message.base.oper')"
               width="100"
             >
               <template slot-scope="scope">
-                  <a class="btn btn-primary btn-xs" @click="crtdyna(true, scope.row.name)"> 编辑 </a>
-                  <a class="btn btn-danger btn-xs" @click="deleteDyna(scope.row.name)"> 删除 </a>
+                  <a class="btn btn-primary btn-xs" @click="crtdyna(true, scope.row.name)"> {{ message.base.modify }} </a>
+                  <a class="btn btn-danger btn-xs" @click="deleteDyna(scope.row.name)"> {{ message.base.delete }} </a>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="数据预览" name="dview">
+        <el-tab-pane :label="$t('message.model.dset.view')" name="dview">
           <dsetView ref="dsetViewForm"></dsetView>
         </el-tab-pane>
       </el-tabs>
@@ -216,7 +216,7 @@ import $ from "jquery";
 export default {
   data() {
     return {
-      operDailogTitle: "创建数据集",
+      operDailogTitle: this.$t('message.mode.dset.crt'),
       dset: {
         name: null,
         dsid: null,
@@ -278,7 +278,7 @@ export default {
       let ts = this;
       this.$refs["dsetForm"].validate((valid) => {
         if(!ts.dset.master){
-          ts.$notify.error("未选择主表");
+          ts.$notify.error(ts.$t('message.model.dset.err2'));
           ts.active = "join";
           ret = false;
           return;
@@ -320,7 +320,7 @@ export default {
           //判断是否有选的表未关联
           ts.selectTables.forEach((v, idx) => {
             if (joins.indexOf(v.id) < 0) {
-              ts.$notify.error("表 " + v.id + " 未和主表关联。");
+              ts.$notify.error(ts.$t('message.model.dset.err3', {id:v.id}));
               ret = false;
             }
           });
@@ -547,14 +547,14 @@ export default {
       var node = selRef.get_selected();
 
       if (node.length == 0) {
-        this.$notify.error("您还未选择需要移除的表。");
+        this.$notify.error(this.$t('message.model.dset.err4'));
         return;
       }
 
       node = selRef.get_node(node[0]);
 
       if (this.isupdate && node.id == this.dset.master) {
-        msginfo("不能移除主表。");
+        msginfo(this.$t('message.model.dset.err5'));
         return;
       }
 
@@ -647,7 +647,7 @@ export default {
       const ref = $("#masterTableTree").jstree(true);
       let node = ref.get_selected(true);
       if (node.length === 0) {
-        this.$notify.error("请选择字段再点关联");
+        this.$notify.error(this.$t('message.model.dset.err6'));
         return;
       }
       let ts = this;
@@ -681,7 +681,7 @@ export default {
       this.$parent.$parent.$refs['dynaColForm'].createDyna(isupdate, col, this.cols, this.dynamic, this.dset.master);
     },
     deleteDyna(col){
-      if(confirm("是否确认?")){
+      if(confirm(this.$t('message.base.confirm'))){
         this.dynamic.forEach((e,i)=>{
           if(e.name === col){
             this.dynamic.splice(i, 1);
