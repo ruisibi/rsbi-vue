@@ -272,7 +272,7 @@ export default {
               dataType:"JSON",
               data:json,
               success:function(resp){
-                ts.$notify.success("立方体配置成功。");
+                ts.$notify.success(ts.$t('message.model.cube.suc1'));
                 ts.$parent.$parent.$refs["cubeInfo"].loadData();
               }
             }, ts, load);
@@ -533,12 +533,12 @@ export default {
         var leftRef = $("#cubelefttree").jstree(true);
         var lefts = leftRef.get_selected(true);
         if(lefts.length == 0){
-          ts.$notify.error("您还未从左边选择字段。");
+          ts.$notify.error(ts.$t('message.model.cube.err3'));
           return;
         }
         const exef = (left)=>{
           if(!left.li_attr){
-            ts.$notify.error("请选择字段。");
+            ts.$notify.error(ts.$t('message.model.cube.err4'));
             return false;
           }
           if(leftRef.is_hidden(left)){
@@ -547,13 +547,13 @@ export default {
           var rightRef = $("#cuberighttree").jstree(true);
           var right = rightRef.get_selected(true);
           if(right.length == 0){
-            ts.$notify.error("您还未选择右边度量或维度。");
+            ts.$notify.error(ts.$t('message.model.cube.err5'));
             return false;
           }
           right = right[0];
           var parent = right.parent;
           if(!parent){
-            ts.$notify.error("您还未选择右边度量或维度。");
+            ts.$notify.error(ts.$t('message.model.cube.err5'));
             return false;
           }
           parent = rightRef.get_node(parent);
@@ -614,7 +614,7 @@ export default {
           return exef(b);
         });
         if(isexe == false){
-          this.$notify.error("您还未选择右边度量或维度。");
+          this.$notify.error(ts.$t('message.model.cube.err5'));
         }
     },
     cube2ds(){
@@ -623,19 +623,19 @@ export default {
       var right = rightRef.get_selected(true);
       let ts = this;
       if(right.length == 0 || !(right[0].li_attr) || !right[0].li_attr.tp){
-        ts.$notify.error("您还未选择需要删除的度量或维度。");
+        ts.$notify.error(ts.$t('message.model.cube.err6'));
         return;
       }
       right = right[0];
       if(right.li_attr.tp == 'group'){
         if(right.children && right.children.length > 0){
-          ts.$notify.error("您要删除的分组含有维度，不能删除。");
+          ts.$notify.error(ts.$t('message.model.cube.err7'));
           return;
         }
       }
       if(right.li_attr.tp == 'kpigroup'){
         if(right.children && right.children.length > 0){
-          ts.$notify.error("您要删除的分类下含有度量，不能删除。");
+          ts.$notify.error(ts.$t('message.model.cube.err8'));
           return;
         }
       }
@@ -689,7 +689,7 @@ export default {
       }
       let node = ref.get_selected(true);
       if(node.length === 0){
-        this.$notify.error("未勾选维度或度量。");
+        this.$notify.error(this.$t('message.model.cube.err9'));
       }
       node = node[0];
       //计算指标特殊处理

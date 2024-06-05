@@ -216,7 +216,6 @@ import $ from "jquery";
 export default {
   data() {
     return {
-      operDailogTitle: this.$t('message.mode.dset.crt'),
       dset: {
         name: null,
         dsid: null,

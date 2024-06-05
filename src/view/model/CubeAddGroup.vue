@@ -1,13 +1,13 @@
 <template>
-  <el-dialog title="创建维度分组" :visible.sync="show">
+  <el-dialog :title="$t('message.model.group.title')" :visible.sync="show">
     <el-form :model="group" ref="groupForm" :rules="rule">
-        <el-form-item label="分组名称" label-width="100px" prop="groupName">
+        <el-form-item :label="$t('message.model.group.name')" label-width="100px" prop="groupName">
           <el-input v-model="group.groupName"></el-input>
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="save()">确 定</el-button>
-      <el-button @click="show = false">取 消</el-button>
+      <el-button type="primary" @click="save()">{{ $t('message.base.ok') }}</el-button>
+      <el-button @click="show = false">{{ $t('message.base.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -26,7 +26,7 @@ export default {
        groupName:""
      },
       rule:{
-        groupName: [{ required: true, message: "必填", trigger: "blur" }],
+        groupName: [{ required: true, message: this.$t('message.base.required'), trigger: "blur" }],
       }
     }
   },

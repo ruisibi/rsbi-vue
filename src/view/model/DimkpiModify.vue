@@ -1,25 +1,25 @@
 <template>
-  <el-dialog title="编辑维度及度量" :visible.sync="show">
+  <el-dialog :title="$t('message.model.nodeModify.title')" :visible.sync="show">
     <el-form :model="node" ref="nodeForm" :rules="rule">
         <template v-if="type === 'dim'">
-          <el-form-item label="维度字段" label-width="100px">
+          <el-form-item :label="$t('message.model.nodeModify.colDim')" label-width="150px">
             {{ node.col }}
           </el-form-item>
         </template>
         <template v-if="type === 'kpi'">
-          <el-form-item label="度量字段" label-width="100px">
+          <el-form-item :label="$t('message.model.nodeModify.colKpi')" label-width="150px">
             {{ node.col }}
           </el-form-item>
         </template>
-        <el-form-item label="别名" label-width="100px">
+        <el-form-item :label="$t('message.model.nodeModify.alias')" label-width="150px">
             {{ node.alias }}
           </el-form-item>
-         <el-form-item label="显示名称" label-width="100px" prop="dimname">
+         <el-form-item :label="$t('message.model.nodeModify.dimname')" label-width="150px" prop="dimname">
           <el-input v-model="node.dimname"></el-input>
          </el-form-item>
          <template v-if="type === 'dim'">
-          <el-form-item label="维度类型" label-width="100px" prop="dimtype">
-            <el-select v-model="node.dimtype" clearable="clearable" style="width:100%" placeholder="请选择">
+          <el-form-item :label="$t('message.model.nodeModify.dimtype')" label-width="150px" prop="dimtype">
+            <el-select v-model="node.dimtype" clearable="clearable" style="width:100%" :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.dimtype"
                 :key="item.value"
@@ -29,8 +29,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="维度格式" label-width="100px" prop="dateformat">
-            <el-select v-model="node.dateformat" clearable="clearable" style="width:100%"  placeholder="请选择">
+          <el-form-item :label="$t('message.model.nodeModify.dateformat')" label-width="150px" prop="dateformat">
+            <el-select v-model="node.dateformat" clearable="clearable" style="width:100%"  :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.dateformat"
                 :key="item"
@@ -40,8 +40,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="维度对应表" label-width="100px" prop="dateformat">
-            <el-select v-model="node.colTable" clearable="clearable" style="width:100%" @change="chgtable"  placeholder="请选择">
+          <el-form-item :label="$t('message.model.nodeModify.colTable')" label-width="150px" prop="dateformat">
+            <el-select v-model="node.colTable" clearable="clearable" style="width:100%" @change="chgtable"  :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.colTable"
                 :key="item"
@@ -51,8 +51,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="维度Key字段" label-width="100px" prop="colkey">
-            <el-select v-model="node.colkey"  style="width:100%"  placeholder="请选择">
+          <el-form-item :label="$t('message.model.nodeModify.colkey')" label-width="150px" prop="colkey">
+            <el-select v-model="node.colkey"  style="width:100%"  :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.colkey"
                 :key="item"
@@ -62,8 +62,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="维度Text字段" label-width="100px" prop="coltext">
-            <el-select v-model="node.coltext"  style="width:100%"  placeholder="请选择">
+          <el-form-item :label="$t('message.model.nodeModify.coltext')" label-width="150px" prop="coltext">
+            <el-select v-model="node.coltext"  style="width:100%"  :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.coltext"
                 :key="item"
@@ -73,8 +73,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="排序方式" label-width="100px">
-            <el-select v-model="node.dimord" clearable="clearable" style="width:100%" placeholder="请选择">
+          <el-form-item :label="$t('message.model.nodeModify.dimord')" label-width="150px">
+            <el-select v-model="node.dimord" clearable="clearable" style="width:100%" :placeholder="$t('message.base.select')">
               <el-option
                 v-for="item in opts.dimord"
                 :key="item.value"
@@ -86,8 +86,8 @@
           </el-form-item>
          </template>
          <template v-if="type === 'kpi'">
-           <el-form-item label="计算方式" label-width="100px" prop="kpiaggre">
-            <el-select v-model="node.kpiaggre" placeholder="请选择" >
+           <el-form-item :label="$t('message.model.nodeModify.kpiaggre')" label-width="150px" prop="kpiaggre">
+            <el-select v-model="node.kpiaggre" :placeholder="$t('message.base.select')" >
               <el-option
                 v-for="item in opts.js"
                 :key="item"
@@ -97,13 +97,13 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="度量单位" label-width="100px" prop="kpiunit">
+          <el-form-item :label="$t('message.model.nodeModify.kpiunit')" label-width="150px" prop="kpiunit">
             <el-input v-model="node.kpiunit"></el-input>
           </el-form-item>
-          <el-form-item label="格式化" label-width="100px" prop="kpifmt">
+          <el-form-item :label="$t('message.model.nodeModify.kpifmt')" label-width="150px" prop="kpifmt">
             <el-select
               v-model="node.kpifmt"
-              placeholder="请选择"
+              :placeholder="$t('message.base.select')"
             >
               <el-option
                 v-for="item in opts.fmt"
@@ -114,14 +114,14 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="度量解释" label-width="100px" prop="kpinote">
+          <el-form-item :label="$t('message.model.nodeModify.kpinote')" label-width="150px" prop="kpinote">
             <el-input type="textarea" v-model="node.kpinote"></el-input>
           </el-form-item>
          </template>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="save()">确 定</el-button>
-      <el-button @click="show = false">取 消</el-button>
+      <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+      <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -160,35 +160,35 @@ export default {
       type:'',  //dim/kpi 2种
       opts:{
         dimtype:[
-          {value:"frd",text:"未选择"},
-          {value:"year",text:"年"},
-          {value:"quarter",text:"季度"},
-          {value:"month",text:"月份"},
-          {value:"day",text:"日期"},
-          {value:"prov",text:"省份"},
-          {value:"city",text:"地市"},
-          {value:"town",text:"区县"}
+          {value:"frd",text:this.$t('message.model.dimTypes.frd')},
+          {value:"year",text:this.$t('message.model.dimTypes.year')},
+          {value:"quarter",text:this.$t('message.model.dimTypes.quarter')},
+          {value:"month",text:this.$t('message.model.dimTypes.month')},
+          {value:"day",text:this.$t('message.model.dimTypes.day')},
+          {value:"prov",text:this.$t('message.model.dimTypes.prov')},
+          {value:"city",text:this.$t('message.model.dimTypes.city')},
+          {value:"town",text:this.$t('message.model.dimTypes.town')}
         ],
         dateformat:[
           'yyyymmdd', 'yyyy-mm-dd', 'yyyy年mm月dd日', 'yyyymm', 'yyyy-mm', 'yyyy年mm月', 'yyyy', 'yyyy年'
         ],
         colTable:[],
         dimord:[{
-          value:"asc", text:"升序"
+          value:"asc", text:this.$t('message.model.nodeModify.asc')
         },{
-          value:"desc", text:"降序"
+          value:"desc", text:this.$t('message.model.nodeModify.desc')
         }],
         coltext:[],
         colkey:[],
         js:["sum","avg","count","count(distinct)", "max", "min"],
         fmt:[{
-          value:"#,##0", text:"整数"
+          value:"#,##0", text:this.$t('message.model.fmt.int')
         },{
-          value:"#,##0.00", text:"小数(保留两位)"
+          value:"#,##0.00", text:this.$t('message.model.fmt.double')
         },{
-          value:"#,##0.0000", text:"小数(保留四位)"
+          value:"#,##0.0000", text:this.$t('message.model.fmt.double2')
         },{
-          value:"0.00%", text: "百分比"
+          value:"0.00%", text: this.$t('message.model.fmt.percentage')
         }]
       }
     }
@@ -211,7 +211,7 @@ export default {
             var dtp = ts.node.dimtype;
 						var dtfmt = ts.node.dateformat;
 						if(dtp != "" && (dtp == "year" || dtp == "month" || dtp == "quarter" || dtp == "day") && dtfmt == "" ){
-						  this.$notify.error("请选择时间维度类型。");
+						  this.$notify.error(ts.$t('message.model.nodeModify.err1'));
 							return;
 						}
 						node.li_attr.dispName = ts.node.dimname;
