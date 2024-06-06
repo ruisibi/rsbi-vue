@@ -4,8 +4,8 @@
       <div class="col-sm-3">
         <div class="ibox">
           <div class="ibox-content">
-            <button @click="newReport" class="btn btn-block btn-sm btn-primary">新建报表</button>
-            <p class="text-warning">定制个性化的数据可视化界面</p>
+            <button @click="newReport" class="btn btn-block btn-sm btn-primary">{{$t('message.report.index.new')}}</button>
+            <p class="text-warning">{{$t('message.report.index.note')}}</p>
           </div>
         </div>
       </div>
@@ -13,20 +13,20 @@
         <div class="ibox">
           <div class="ibox-content">
             <div class="mail-box-header">
-              <h2>报表列表</h2>
+              <h2>{{$t('message.report.index.title')}}</h2>
             </div>
             <div class="btn-group optbtncls" role="group">
-            <button type="button" class="btn btn-outline btn-default" title="查看" @click="viewReport(false)">
-              <i class="glyphicon glyphicon-file" aria-hidden="true"></i>查看
+            <button type="button" class="btn btn-outline btn-default" :title="$t('message.report.index.view')" @click="viewReport(false)">
+              <i class="glyphicon glyphicon-file" aria-hidden="true"></i>{{$t('message.report.index.view')}}
             </button>
-            <button type="button" class="btn btn-outline btn-default" title="定制" @click="customization()">
-              <i class="glyphicon glyphicon-cog" aria-hidden="true"></i>定制
+            <button type="button" class="btn btn-outline btn-default" :title="$t('message.report.index.customization')" @click="customization()">
+              <i class="glyphicon glyphicon-cog" aria-hidden="true"></i>{{$t('message.report.index.customization')}}
             </button>
-            <button type="button" class="btn btn-outline btn-default" title="删除" @click="deleteReport()">
-              <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
+            <button type="button" class="btn btn-outline btn-default" :title="$t('message.base.delete')" @click="deleteReport()">
+              <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>{{$t('message.base.delete')}}
             </button>
-            <button type="button" class="btn btn-outline btn-default" title="分享" @click="shareReport()">
-              <i class="glyphicon glyphicon-share" aria-hidden="true"></i>分享
+            <button type="button" class="btn btn-outline btn-default" :title="$t('message.report.index.share')" @click="shareReport()">
+              <i class="glyphicon glyphicon-share" aria-hidden="true"></i>{{$t('message.report.index.share')}}
             </button>
           </div>
           <el-table :data="tableData" @row-click="selectme" border style="width: 100%" header-row-class-name="tableHeadbg">
@@ -38,10 +38,10 @@
 							<el-radio v-model="checked" name="myselect" :label="scope.row.pageId">&nbsp;</el-radio>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" prop="pageId" label="标识"></el-table-column>
-					<el-table-column align="center" prop="pageName" label="报表名称"></el-table-column>
-					<el-table-column align="center" prop="userName" label="创建人"></el-table-column>
-					<el-table-column align="center" prop="crtDate" label="创建时间"></el-table-column>
+					<el-table-column align="center" prop="pageId" :label="$t('message.report.index.pageId')"></el-table-column>
+					<el-table-column align="center" prop="pageName" :label="$t('message.report.index.pageName')"></el-table-column>
+					<el-table-column align="center" prop="userName" :label="$t('message.report.index.userName')"></el-table-column>
+					<el-table-column align="center" prop="crtDate" :label="$t('message.report.index.crtDate')"></el-table-column>
 					
 				</el-table>
 				<el-pagination
@@ -99,7 +99,7 @@ export default {
       let ts = this;
       if(!ts.checked){
         ts.$notify.error({
-                title: '未勾选数据',
+                title: this.$t('message.base.err1'),
                 offset: 50
               });
         return false;
@@ -122,7 +122,7 @@ export default {
       let ts = this;
         if(!ts.checked){
           ts.$notify.error({
-                  title: '未勾选数据',
+                  title: this.$t('message.base.err1'),
                   offset: 50
                 });
           return false;
@@ -133,7 +133,7 @@ export default {
       let ts = this;
         if(!ts.checked){
           ts.$notify.error({
-                  title: '未勾选数据',
+                  title: this.$t('message.base.err1'),
                   offset: 50
                 });
           return false;
@@ -144,19 +144,19 @@ export default {
       let ts = this;
       if(!ts.checked){
           ts.$notify.error({
-                  title: '未勾选数据',
+                  title: this.$t('message.base.err1'),
                   offset: 50
                 });
           return false;
         }
-        if(confirm('是否确认？')){
+        if(confirm(this.$t('message.base.confirm'))){
           ajax({
             url:"portal/delete.action",
             type:"GET",
             data:{pageId: ts.checked},
             success:()=>{
               ts.$notify.success({
-                    title: '删除成功',
+                    title: this.$t('message.model.dsource.suc1'),
                     offset: 50
               });
               ts.loadDatas();

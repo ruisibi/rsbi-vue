@@ -124,9 +124,9 @@ export default {
     },
     renderComp(comp, h, layoutId){
       let tools = [
-        h('button', {class:"btn btn-outline btn-success btn-xs", attrs:{title:"设置组件"}, on:{click:()=>{this.showCompMenu(comp, layoutId)}}}, [h('i', {class:"fa fa-wrench"})]),
+        h('button', {class:"btn btn-outline btn-success btn-xs", attrs:{title:this.$t('message.report.opt.set')}, on:{click:()=>{this.showCompMenu(comp, layoutId)}}}, [h('i', {class:"fa fa-wrench"})]),
         h('span',' '),
-        h('button', {class:"btn btn-outline btn-danger btn-xs", attrs:{title:"删除组件"}, on:{click:()=>{this.deleteComp(comp, layoutId)}}}, [h('i', {class:"fa fa-times"})])
+        h('button', {class:"btn btn-outline btn-danger btn-xs", attrs:{title:this.$t('message.report.opt.rem')}, on:{click:()=>{this.deleteComp(comp, layoutId)}}}, [h('i', {class:"fa fa-times"})])
       ];
       let title = h('div', {class:"ibox-title"}, [h('div', {class:"ctit"}, [h('h5', comp.name)]), h('div', {class:"ibox-tools"}, tools)]);
       let compctx = [];
@@ -187,67 +187,67 @@ export default {
         if(comp.type == "chart"){
           divId = "chart_menu";
           items = {
-                    "tblx": {name: "图表类型",callback:function(){
+                    "tblx": {name: ts.$t('message.report.opt.charttype'),callback:function(){
                       ts.$refs['chartDailogForm'].changeType(comp);
                     }},
-                    "data": {name: "数据", icon:"fa-database", callback:function(){
+                    "data": {name: ts.$t('message.report.opt.data'), icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
                     }},
-                    "filter": {name: "筛选",icon:"fa-filter", callback:function(){
+                    "filter": {name: ts.$t('message.report.opt.filter'),icon:"fa-filter", callback:function(){
                       ts.$refs['compFilterForm'].init(comp);
                     }},
-                    "event": {name: "事件",icon:"fa-bolt", callback:function(){
+                    "event": {name: ts.$t('message.report.opt.event'),icon:"fa-bolt", callback:function(){
                       ts.compevent(comp);
                     }},
-                    "prop": {name: "属性", callback:function(){
+                    "prop": {name: ts.$t('message.report.opt.prop'), callback:function(){
                       ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "table"){
           divId = "table_menu";
           items = {
-                    "data": {name: "数据", icon:"fa-database", callback:function(){
+                    "data": {name: ts.$t('message.report.opt.data'), icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
                     }},
-                    "filter": {name: "筛选",icon:"fa-filter", callback:function(){
+                    "filter": {name: ts.$t('message.report.opt.filter'),icon:"fa-filter", callback:function(){
                       ts.$refs['compFilterForm'].init(comp);
                     }},
-                    "event": {name: "事件",icon:"fa-bolt", callback:function(){
+                    "event": {name: ts.$t('message.report.opt.event'),icon:"fa-bolt", callback:function(){
                       ts.compevent(comp);
                     }},
-                    "prop": {name: "属性", callback:function(){
+                    "prop": {name:ts.$t('message.report.opt.prop'), callback:function(){
                       ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "text"){
           divId = "text_menu";
           items = {
-                    "data": {name: "编辑", icon:"fa-edit", callback:function(){
+                    "data": {name: ts.$t('message.base.modify'), icon:"fa-edit", callback:function(){
                       ts.editComp(comp, layoutId);
                     }},
-                    "prop": {name: "属性", callback:function(){
+                    "prop": {name: ts.$t('message.report.opt.prop'), callback:function(){
                       ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "grid"){
           divId = "grid_menu";
           items = {
-                  "data": {name: "数据", icon:"fa-database", callback:function(){
+                  "data": {name: ts.$t('message.report.opt.data'), icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
-                    }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
+                    }},"filter": {name: ts.$t('message.report.opt.filter'), icon:"fa-filter", callback:function(){
                       ts.$refs['compFilterForm'].init(comp);
-                    }},"prop": {name: "属性", callback:function(){
+                    }},"prop": {name: ts.$t('message.report.opt.prop'), callback:function(){
                       ts.setComp(comp, layoutId);
                     }}
                 };
         }else if(comp.type == "box" || comp.type == "mbox"){
           divId = "box_menu";
           items = {
-                    "data": {name: "数据", icon:"fa-database", callback:function(){
+                    "data": {name: ts.$t('message.report.opt.data'), icon:"fa-database", callback:function(){
                       ts.editComp(comp, layoutId);
-                    }},"filter": {name: "筛选", icon:"fa-filter", callback:function(){
+                    }},"filter": {name: ts.$t('message.report.opt.filter'), icon:"fa-filter", callback:function(){
                       ts.$refs['compFilterForm'].init(comp);
-                    }},"prop": {name: "属性", callback:function(){
+                    }},"prop": {name: ts.$t('message.report.opt.prop'), callback:function(){
                       ts.setComp(comp, layoutId);
                     }}
                 };
@@ -285,7 +285,7 @@ export default {
       this.$refs['CompEventForm'].openDailog(comp);
     },
     deleteComp(comp, layoutId){
-      if(!confirm("是否确认删除组件？")){
+      if(!confirm(this.$t('message.base.confirm'))){
         return;
       }
       //从布局器中删除，
@@ -403,15 +403,15 @@ export default {
             if(tp == "text"){
               ts.$refs['portalTextForm'].insertText("insert", layoutId);
             }else if(tp == "table"){
-              var comp = {"id":newGuid(), "name":"交叉表", "type":"table"};
+              var comp = {"id":newGuid(), "name":this.$t('message.report.left.table'), "type":"table"};
               execf(layoutId, comp);
             }else if(tp == "chart"){
               ts.$refs['chartDailogForm'].insertChart(layoutId, execf);
             }else if(tp == "grid"){
-              var comp = {"id":newGuid(), "name":"表格", "type":"grid"};
+              var comp = {"id":newGuid(), "name":this.$t('message.report.left.grid'), "type":"grid"};
               execf(layoutId, comp);
             }else if(tp == "box"){
-              var comp = {"id":newGuid(), "name":"数据块", "type":"box"};
+              var comp = {"id":newGuid(), "name":this.$t('message.report.left.box'), "type":"box"};
                execf(layoutId, comp);
             }
           }

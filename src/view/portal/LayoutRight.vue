@@ -40,7 +40,7 @@ export default {
   },
   data(){
     return {
-      title:"属性面板",
+      title: this.$t('message.report.right.title'),
       show:false,
       showBox:false,
       showChart:false,
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     showPanel(comp){
-      this.title = utils.getCompTypeDesc(comp.type) + "属性面板";
+      this.title = utils.getCompTypeDesc(comp.type) + " " + this.$t('message.report.right.title');
       this.show = true;
       this.comp = comp;
 

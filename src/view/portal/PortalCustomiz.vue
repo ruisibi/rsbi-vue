@@ -1,15 +1,15 @@
 <template>
   <div class="customizLayout">
       <el-menu @select="handleSelect" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
-        <el-menu-item index="back"><i class="fa fa-arrow-left"></i> 返回</el-menu-item>
-        <el-menu-item index="save"><i class="glyphicon glyphicon-save"></i> 保存</el-menu-item>
-        <el-menu-item index="layout"><i class="glyphicon glyphicon-th-large"></i> 布局</el-menu-item>
+        <el-menu-item index="back"><i class="fa fa-arrow-left"></i> {{$t('message.base.back')}}</el-menu-item>
+        <el-menu-item index="save"><i class="glyphicon glyphicon-save"></i> {{$t('message.report.cust.save')}}</el-menu-item>
+        <el-menu-item index="layout"><i class="glyphicon glyphicon-th-large"></i> {{$t('message.report.cust.layout')}}</el-menu-item>
         <el-submenu index="data">
-          <template slot="title"><i class="fa fa-database"></i> 数据</template>
-          <el-menu-item index="data-1">选择立方体</el-menu-item>
-          <el-menu-item index="data-2">选择数据表</el-menu-item>
+          <template slot="title"><i class="fa fa-database"></i> {{$t('message.report.cust.data')}}</template>
+          <el-menu-item index="data-1">{{$t('message.report.cust.data1')}}</el-menu-item>
+          <el-menu-item index="data-2">{{$t('message.report.cust.data2')}}</el-menu-item>
         </el-submenu>
-        <el-menu-item index="view"><i class="glyphicon glyphicon-file"></i> 预览</el-menu-item>
+        <el-menu-item index="view"><i class="glyphicon glyphicon-file"></i> {{$t('message.report.cust.view')}}</el-menu-item>
       </el-menu>
       <div class="report-layut">
         <layout-left :pageInfo="pageInfo" ref="layoutleftForm"></layout-left>
@@ -27,15 +27,15 @@
        <auto-layout ref="autoLayoutForm" v-if="showAutoLayout" :pageInfo="pageInfo"></auto-layout>
 
       <!-- 保存框 -->
-       <el-dialog title="报表保存" :visible.sync="saveShow" :close-on-click-modal="false" custom-class="nopadding">
+       <el-dialog :title="$t('message.report.cust.saveReport')" :visible.sync="saveShow" :close-on-click-modal="false" custom-class="nopadding">
          <el-form :model="saveInfo" ref="saveForm" :rules="rules" label-position="left">
-             <el-form-item label="报表名称" label-width="100px" prop="name">
+             <el-form-item :label="$t('message.report.cust.name')" label-width="140px" prop="name">
               <el-input v-model="saveInfo.name"></el-input>
             </el-form-item>
          </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="savePage()">确 定</el-button>
-          <el-button @click="saveShow = false">取 消</el-button>
+          <el-button type="primary" @click="savePage()">{{$t('message.base.ok')}}</el-button>
+          <el-button @click="saveShow = false">{{$t('message.base.cancel')}}</el-button>
         </div>
       </el-dialog>
   </div> 
@@ -78,7 +78,7 @@ export default {
         },
         rules:{
           name:[
-						{ required: true, message: '必填', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' }
           ]
         },
         isbindTdEvent:false  //是否给布局器table的 td 绑定拖拽事件
@@ -118,7 +118,7 @@ export default {
     handleSelect(key, keyPath){
       if(key === 'back'){
         if(this.isupdate == true){
-          if(confirm("您还未保存报表，是否确认退出？")){
+          if(confirm(this.$t('message.report.cust.err1'))){
             this.$router.push("/portal/Index");
           }
         }else{ //保存过了，直接退出
@@ -137,7 +137,7 @@ export default {
       if(key === 'view'){
         if(!this.pageInfo.id){
           this.$notify.error({
-            title: '报表还未保存，不能预览!',
+            title: this.$t('message.report.cust.err2'),
             offset: 50
           });
           return;
@@ -174,7 +174,7 @@ export default {
                data:{"pageInfo": JSON.stringify(ts.pageInfo), pageName:ts.saveInfo.name},
                success:(resp)=>{
                  ts.$notify.success({
-                    title: '保存成功!',
+                    title: ts.$t('message.report.cust.suc1'),
                     offset: 50
                   });
                   ts.saveShow = false;
@@ -191,7 +191,7 @@ export default {
           data:{"pageInfo": JSON.stringify(ts.pageInfo), pageId:pageId},
           success:(resp)=>{
             ts.$notify.success({
-              title: '更新成功!',
+              title: ts.$t('message.report.cust.suc2'),
               offset: 50
             });
             ts.isupdate = false;

@@ -1,6 +1,7 @@
 import $ from 'jquery'
 import { Message, Loading } from 'element-ui'
 import {baseUrl, ajax} from '@/common/biConfig'
+import { i18n } from '@/main.js'
 
 //默认5种布局
 export const layout = {
@@ -84,17 +85,17 @@ export const findParamById = (pageInfo, id, retIndex) => {
 export const getParamTypeDesc = (paramType)=>{
 	var tpname = "";
 	if(paramType == "text"){
-	  tpname = "输入框";
+	  tpname = i18n.tc('message.report.left.input');
 	}else if(paramType == "radio"){
-	  tpname = "单选框";
+	  tpname = i18n.tc('message.report.left.radio');
 	}else if(paramType == "checkbox"){
-	  tpname = "多选框";
+	  tpname = i18n.tc('message.report.left.checkbox');
 	}else if(paramType == "dateselect"){
-	  tpname = "日历框";
+	  tpname = i18n.tc('message.report.left.dateselect');
 	}else if(paramType == "monthselect"){
-	  tpname = "月份框";
+	  tpname = i18n.tc('message.report.left.monthselect');
 	}else if(paramType == "yearselect"){
-	  tpname = "年份框";
+	  tpname = i18n.tc('message.report.left.yearselect');
 	}
 	return tpname;
 }
@@ -102,15 +103,15 @@ export const getParamTypeDesc = (paramType)=>{
 export const getCompTypeDesc = (compType)=>{
 	var name = "";
 	if(compType === 'text'){
-		name = "文本";
+		name =  i18n.tc('message.report.left.text');
 	}else if(compType === 'box'){
-		name = "数据块";
+		name = i18n.tc('message.report.left.box');
 	}else if(compType === 'chart'){
-		name = "图形";
+		name = i18n.tc('message.report.left.chart');
 	}else if(compType === 'grid'){
-		name = "表格";
+		name = i18n.tc('message.report.left.grid');
 	}else if(compType === 'table'){
-		name = "交叉表";
+		name =i18n.tc('message.report.left.table');
 	}
 	return name;
 }

@@ -2,11 +2,11 @@
   	    <div class="layout-left">
             <div class="tabs-container">
                 <ul class="nav nav-tabs">
-                    <li :class="isActive('data-tab-1')"><a data-toggle="tab" @click="switchTabs('data-tab-1')" idx="0" aria-expanded="true">组件</a>
+                    <li :class="isActive('data-tab-1')"><a data-toggle="tab" @click="switchTabs('data-tab-1')" idx="0" aria-expanded="true">{{$t('message.report.left.comp')}}</a>
                     </li>
-                    <li :class="isActive('data-tab-2')"><a data-toggle="tab" @click="switchTabs('data-tab-2')" idx="1" aria-expanded="false">立方体</a>
+                    <li :class="isActive('data-tab-2')"><a data-toggle="tab" @click="switchTabs('data-tab-2')" idx="1" aria-expanded="false">{{$t('message.report.left.cube')}}</a>
                     </li>
-                    <li :class="isActive('data-tab-3')"><a data-toggle="tab" @click="switchTabs('data-tab-3')" idx="2" aria-expanded="false">数据表</a>
+                    <li :class="isActive('data-tab-3')"><a data-toggle="tab" @click="switchTabs('data-tab-3')" idx="2" aria-expanded="false">{{$t('message.report.left.dset')}}</a>
                     </li>
                 </ul>
             </div>
@@ -72,20 +72,20 @@ export default {
     },
     regCompAndParamTree(){
         let ts = this;
-        var dt = [{id:'params', text:'参数', icon:"fa fa-binoculars",state:{opened:true}, children:[
-            {id:"input", text:"输入框",li_attr:{tp:"param",ptp:"text"},icon:"fa fa-tag comp_color"},
-            {id:"radio", text:"单选框",li_attr:{tp:"param", ptp:"radio"},icon:"fa fa-tag comp_color"},
-            {id:"checkbox", text:"多选框",li_attr:{tp:"param",ptp:"checkbox"},icon:"fa fa-tag comp_color"},
-            {id:"dateselect", text:"日历框",li_attr:{tp:"param", ptp:"dateselect"},icon:"fa fa-tag comp_color"},
-            {id:"monthselect", text:"月份框",li_attr:{tp:"param", ptp:"monthselect"},icon:"fa fa-tag comp_color"},
-            {id:"yearselect", text:"年份框",li_attr:{tp:"param", ptp:"yearselect"},icon:"fa fa-tag comp_color"}
+        var dt = [{id:'params', text:ts.$t('message.report.left.params'), icon:"fa fa-binoculars",state:{opened:true}, children:[
+            {id:"input", text:ts.$t('message.report.left.input'),li_attr:{tp:"param",ptp:"text"},icon:"fa fa-tag comp_color"},
+            {id:"radio", text:ts.$t('message.report.left.radio'),li_attr:{tp:"param", ptp:"radio"},icon:"fa fa-tag comp_color"},
+            {id:"checkbox", text:ts.$t('message.report.left.checkbox'),li_attr:{tp:"param",ptp:"checkbox"},icon:"fa fa-tag comp_color"},
+            {id:"dateselect", text:ts.$t('message.report.left.dateselect'),li_attr:{tp:"param", ptp:"dateselect"},icon:"fa fa-tag comp_color"},
+            {id:"monthselect", text:ts.$t('message.report.left.monthselect'),li_attr:{tp:"param", ptp:"monthselect"},icon:"fa fa-tag comp_color"},
+            {id:"yearselect", text:ts.$t('message.report.left.yearselect'),li_attr:{tp:"param", ptp:"yearselect"},icon:"fa fa-tag comp_color"}
         ]}
         ];
-        var compDt = [{id:"text", text:"文本",li_attr:{tp:"comp"},icon:"fa fa-file-text-o"},
-            {id:"box", text:"数据块",li_attr:{tp:"comp"},icon:"fa fa-inbox"},
-            {id:"chart", text:"图表",li_attr:{tp:"comp"},icon:"fa fa-line-chart"},
-            {id:"grid", text:"表格",li_attr:{tp:"comp"},icon:"fa fa-table"},
-            {id:"table", text:"交叉表",li_attr:{tp:"comp"},icon:"fa fa-list-alt"}];
+        var compDt = [{id:"text", text:ts.$t('message.report.left.text'),li_attr:{tp:"comp"},icon:"fa fa-file-text-o"},
+            {id:"box", text:ts.$t('message.report.left.box'),li_attr:{tp:"comp"},icon:"fa fa-inbox"},
+            {id:"chart", text:ts.$t('message.report.left.chart'),li_attr:{tp:"comp"},icon:"fa fa-line-chart"},
+            {id:"grid", text:ts.$t('message.report.left.grid'),li_attr:{tp:"comp"},icon:"fa fa-table"},
+            {id:"table", text:ts.$t('message.report.left.table'),li_attr:{tp:"comp"},icon:"fa fa-list-alt"}];
         
         var dragfunc = function(treeDiv){
             $("#"+treeDiv+" .jstree-node").draggable({
@@ -183,7 +183,7 @@ export default {
                 core: {
                     data: {
                         id: 'nodata',
-                        text: '您还未选择数据集',
+                        text: this.$t('message.report.left.err1'),
                         icon: 'fa fa-warning icon_kpi'
                     }
                 },
@@ -255,7 +255,7 @@ export default {
                 core: {
                     data: {
                         id: 'nodata',
-                        text: '您还未选择立方体',
+                        text: this.$t('message.report.left.err2'),
                         icon: 'fa fa-warning icon_kpi'
                     }
                 },

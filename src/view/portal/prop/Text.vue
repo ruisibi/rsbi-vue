@@ -1,38 +1,38 @@
 <template>
   <el-form :model="prop" ref="propForm" label-position="left" size="mini">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="文本属性" name="1">
-            <el-form-item label="是否显示标题" label-width="170px">
+      <el-collapse-item :title="$t('message.report.textProp.prop')" name="1">
+            <el-form-item :label="$t('message.report.textProp.showtitle')" label-width="170px">
               <el-switch v-model="prop.showtitle" @change="changevalue('showtitle')"></el-switch>
             </el-form-item>
-            <el-form-item label="标题" label-width="70px">
+            <el-form-item :label="$t('message.report.textProp.title')" label-width="70px">
               <el-input v-model="prop.title" @blur="changevalue('title')"></el-input>
             </el-form-item>
-            <el-form-item label="位置" label-width="80px">
+            <el-form-item :label="$t('message.report.textProp.talign')" label-width="80px">
               <el-radio-group v-model="prop.talign" size="mini" @change="changevalue('talign')">
               <el-radio-button label="left">左</el-radio-button>
               <el-radio-button label="center">中</el-radio-button>
               <el-radio-button label="right">右</el-radio-button>
               </el-radio-group>
             </el-form-item>
-             <el-form-item label="背景颜色" label-width="180px">
+             <el-form-item :label="$t('message.report.textProp.bgcolor')" label-width="180px">
               <el-color-picker v-model="prop.bgcolor" @change="changevalue('bgcolor')"></el-color-picker>
             </el-form-item>
       </el-collapse-item>
-      <el-collapse-item title="文本字体" name="2">
-            <el-form-item label="字体大小" label-width="70px">
+      <el-collapse-item :title="$t('message.report.textProp.font')" name="2">
+            <el-form-item :label="$t('message.report.textProp.tfontsize')" label-width="70px">
               <el-slider v-model="prop.tfontsize" :max="99" :min="9" @change="changevalue('tfontsize')"></el-slider>
             </el-form-item>
-            <el-form-item label="字体颜色" label-width="180px">
+            <el-form-item :label="$t('message.report.textProp.tfontcolor')" label-width="180px">
                <el-color-picker v-model="prop.tfontcolor" @change="changevalue('tfontcolor')"></el-color-picker>
             </el-form-item>
-            <el-form-item label="是否粗体" label-width="170px">
+            <el-form-item :label="$t('message.report.textProp.tfontweight')" label-width="170px">
               <el-switch v-model="prop.tfontweight" @change="changevalue('tfontweight')"></el-switch>
             </el-form-item>
-            <el-form-item label="是否斜体" label-width="170px">
+            <el-form-item :label="$t('message.report.textProp.titalic')" label-width="170px">
               <el-switch v-model="prop.titalic" @change="changevalue('titalic')"></el-switch>
             </el-form-item>
-            <el-form-item label="是否下划线" label-width="170px">
+            <el-form-item :label="$t('message.report.textProp.tunderscore')" label-width="170px">
               <el-switch v-model="prop.tunderscore" @change="changevalue('tunderscore')"></el-switch>
             </el-form-item>
       </el-collapse-item>

@@ -2,48 +2,48 @@
     <el-dialog :title="title" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
          <div class="el-dialog-div">
            <el-form :model="param" ref="paramForm" :rules="rules" label-position="left">
-             <el-form-item label="参数标识" label-width="100px" prop="paramid">
+             <el-form-item :label="$t('message.report.param.paramid')" label-width="150px" prop="paramid">
               <el-input v-model="param.paramid"></el-input>
             </el-form-item>
-             <el-form-item label="显示名称" label-width="100px" prop="paramname">
+             <el-form-item :label="$t('message.report.param.paramname')" label-width="150px" prop="paramname">
               <el-input v-model="param.paramname"></el-input>
             </el-form-item>
             <!--
-            <el-form-item label="长度" label-width="100px">
+            <el-form-item label="长度" label-width="150px">
               <el-input-number v-model="param.size" :min="5" :max="30" size="small"></el-input-number>
             </el-form-item>
             -->
             <template v-if="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'">
-              <el-form-item label="时间格式" label-width="100px">
-                <el-select v-model="param.dtformat" placeholder="请选择" style="width:100%">
+              <el-form-item :label="$t('message.report.param.dtformat')" label-width="150px">
+                <el-select v-model="param.dtformat" :placeholder="$t('message.base.select')" style="width:100%">
                   <el-option v-for="item in opts.dtformats[datetype]" :key="item" :label="item" :value="item">
                   </el-option>
                 </el-select>				    
               </el-form-item>
-              <el-form-item label="最小值" label-width="100px">
+              <el-form-item :label="$t('message.report.param.minval')" label-width="150px">
                 <el-input v-model="param.minval"></el-input>
               </el-form-item>
-              <el-form-item label="最大值" label-width="100px">
+              <el-form-item :label="$t('message.report.param.maxval')" label-width="150px">
                 <el-input v-model="param.maxval" ></el-input>
               </el-form-item>
             </template>
-            <el-form-item label="默认值" label-width="100px">
-              <el-input v-model="param.defvalue" :placeholder="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'? 'now 表示当前时间, now - 1 表示前一天':'参数默认值'"></el-input>
+            <el-form-item :label="$t('message.report.param.defvalue')" label-width="150px">
+              <el-input v-model="param.defvalue" :placeholder="datetype == 'dateselect' || datetype ==='monthselect' || datetype ==='yearselect'? $t('message.report.param.note2'):$t('message.report.param.note1')"></el-input>
             </el-form-item>
-            <el-form-item label="隐藏参数" label-width="100px">
+            <el-form-item :label="$t('message.report.param.hiddenprm')" label-width="150px">
               <el-switch v-model="param.hiddenprm" active-value="y" inactive-value="n">
               </el-switch>
-              <span class="text-warning"> 隐藏参数不会在页面中显示</span>
+              <span class="text-warning"> {{ $t('message.report.param.note') }}</span>
             </el-form-item>
 
             <template v-if="datetype == 'radio' || datetype ==='checkbox'">
             <fieldset>
-                <legend>值列表</legend>
-                <el-radio v-model="param.valtype" label="static">静态值</el-radio>
-                <el-radio v-model="param.valtype" label="dynamic">动态值</el-radio>
+                <legend>{{ $t('message.report.param.valueList') }}</legend>
+                <el-radio v-model="param.valtype" label="static">{{$t('message.report.param.static')}}</el-radio>
+                <el-radio v-model="param.valtype" label="dynamic">{{$t('message.report.param.dynamic')}}</el-radio>
                 <template v-if="param.valtype === 'static'">
                   <div>
-                  <el-button @click="addStaticVal(false)" type="primary" size="small">添加</el-button>
+                  <el-button @click="addStaticVal(false)" type="primary" size="small">{{$t('message.base.add')}}</el-button>
                   </div>
                    <el-table :data="param.values" style="width: 100%" border header-row-class-name="tableHeadbg">
                     <el-table-column
@@ -56,16 +56,16 @@
                     </el-table-column>
                    <el-table-column
                     fixed="right"
-                    label="操作">
+                    :label="$t('message.base.oper')">
                     <template slot-scope="scope">
-                      <el-button @click="deleteStaticVal(scope.row.value)" type="text" size="small">删除</el-button>
+                      <el-button @click="deleteStaticVal(scope.row.value)" type="text" size="small">{{$t('message.base.delete')}}</el-button>
                     </template>
                   </el-table-column>
                   </el-table>
                 </template>
                 <template v-if="param.valtype === 'dynamic'">
-                   <el-form-item label="数据" label-width="100px">
-                    <el-select v-model="param.tableId" @change="selectcube()" placeholder="请选择" style="width:100%">
+                   <el-form-item :label="$t('message.report.param.data')" label-width="150px">
+                    <el-select v-model="param.tableId" @change="selectcube()" :placeholder="$t('message.base.select')" style="width:100%">
                       <el-option
                       v-for="item in opts.datasetlist"
                       :key="item.value"
@@ -74,8 +74,8 @@
                       </el-option>
                     </el-select>				    
                   </el-form-item>
-                  <el-form-item label="映射字段" label-width="100px" >
-                    <el-select v-model="param.alias" placeholder="请选择" style="width:100%">
+                  <el-form-item :label="$t('message.report.param.alias')" label-width="150px" >
+                    <el-select v-model="param.alias" :placeholder="$t('message.base.select')" style="width:100%">
                       <el-option
                       v-for="item in opts.collist"
                       :key="item.value"
@@ -90,24 +90,24 @@
            </el-form>
          </div>
          <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="save()">确 定</el-button>
-          <el-button @click="show = false">取 消</el-button>
+          <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+          <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
         </div>
 
       <el-dialog width="30%" :title="valaddtitle"
         :visible.sync="innerVisible" :close-on-click-modal="false" custom-class="nopadding"
         append-to-body>
         <el-form :model="pval" ref="pvalForm" :rules="pvalrules" label-position="left">
-             <el-form-item label="Value" label-width="100px" prop="value">
+             <el-form-item label="Value" label-width="150px" prop="value">
               <el-input v-model="pval.value"></el-input>
             </el-form-item>
-             <el-form-item label="Text" label-width="100px" prop="text">
+             <el-form-item label="Text" label-width="150px" prop="text">
               <el-input v-model="pval.text"></el-input>
             </el-form-item>
         </el-form>
          <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="addValueSave()">确 定</el-button>
-          <el-button @click="innerVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addValueSave()">{{$t('message.base.ok')}}</el-button>
+          <el-button @click="innerVisible = false">{{$t('message.base.cancel')}}</el-button>
         </div>
       </el-dialog>
 
@@ -167,15 +167,15 @@ export default {
         },
         rules:{
           paramid:[
-						{ required: true, message: '必填', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' }
           ],
           paramname:[
-						{ required: true, message: '必填', trigger: 'blur' }
+						{ required: true, message:  this.$t('message.base.required'), trigger: 'blur' }
 					]
         },
         pvalrules:{
-          value:[{ required: true, message: '必填', trigger: 'blur' }],
-          text:[{ required: true, message: '必填', trigger: 'blur' }]
+          value:[{ required: true, message:  this.$t('message.base.required'), trigger: 'blur' }],
+          text:[{ required: true, message:  this.$t('message.base.required'), trigger: 'blur' }]
         }
     }
   },
@@ -190,7 +190,7 @@ export default {
       this.$parent.isupdate = true;
     },
      newparam(ptype, paramId){
-       this.title = "创建参数 - " + tools.getParamTypeDesc(ptype);
+       this.title = this.$t('message.report.param.add2') + " - " + tools.getParamTypeDesc(ptype);
        this.show = true;
        this.datetype = ptype;
        if(!paramId){
@@ -225,19 +225,19 @@ export default {
                var r = ts.param.valtype;
                 if(r == 'static'){
                   if(!ts.param.values || ts.param.values.length === 0){
-                    tools.msginfo("您还未设置参数值。");
+                    tools.msginfo(this.$t('message.report.param.err4'));
                     return;
                   }
                 }else {
                   if(!ts.param.tableId || !ts.param.alias){
-                    tools.msginfo("您的参数还未绑定到数据。");
+                    tools.msginfo(this.$t('message.report.param.err5'));
                     return;
                   }
                 }
              }
              if(ts.datetype == 'dateselect' || ts.datetype ==='monthselect' || ts.datetype ==='yearselect'){
                if(!ts.param.dtformat){
-                 tools.msginfo("未设置时间格式。");
+                 tools.msginfo(this.$t('message.report.param.err6'));
                  return;
                }
              }
@@ -313,7 +313,7 @@ export default {
         this.$refs['pvalForm'].resetFields();
       }
       if(isupdate){
-        this.valaddtitle = "修改值";
+        this.valaddtitle = this.$t('message.report.param.modv');
         let ts = this;
          $(this.param.values).each((a, b)=>{
             if(b.value === id){
@@ -323,7 +323,7 @@ export default {
             }
           });
       }else{
-        this.valaddtitle = "添加值";
+        this.valaddtitle =  this.$t('message.report.param.addv');
       }
     },
     deleteStaticVal(id){

@@ -6,8 +6,8 @@
         v-model="ctx">
       </el-input>
       <div slot="footer" class="dialog-footer">
-			    <el-button type="primary" @click="save()">确 定</el-button>
-				<el-button @click="show = false">取 消</el-button>
+			    <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+				<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 			  </div>
   	</el-dialog>
 </template>
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     insertText(tp, layoutId, comp){
-      this.title = "请输入文本内容 - 文本框";
+      this.title =this.$t('message.report.text.title');
       this.show = true;
       this.ctx = "";
       this.layoutId = layoutId;
@@ -50,18 +50,26 @@ export default {
     },
     save(){
       if(this.ctx.length === 0 ){
-        Message.error({message:"请录入文本内容", type:"error",showClose: true});
+        Message.error({message:this.$t('message.report.text.note'), type:"error",showClose: true});
         return;
       }
       if(this.comp){
         this.comp.desc = this.ctx;
+        this.$parent.setUpdate();
+        this.show = false;
+        this.$parent.$forceUpdate();
       }else{
-        var obj = {"id":newGuid(), type:'text', name:"文本", desc:this.ctx};
+        var obj = {"id":newGuid(), type:'text', name:this.$t('message.report.text.name'), desc:this.ctx};
         this.$parent.addComp(this.layoutId, obj);
+        this.$parent.setUpdate();
+        this.show = false;
+        this.$parent.$forceUpdate();
+        this.$parent.$nextTick(()=>{
+          this.$parent.bindCompEvent(obj);
+        });
       }
-      this.$parent.setUpdate();
-      this.$parent.$forceUpdate();
-      this.show = false;
+      
+      
     }
   }
 }
