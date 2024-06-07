@@ -2,9 +2,9 @@
     <div id="boxDataPanel" style="margin:3px;">
         <div class="tsbd">
           <div class="ts_h">
-            <div class="h_tit">数据块度量</div>
+            <div class="h_tit">{{$t('message.report.box.dataName')}}</div>
             <div class="h_ctx">
-              <span v-if="!comp.kpiJson" class="charttip">拖拽度量到此处</span>
+              <span v-if="!comp.kpiJson" class="charttip">{{$t('message.report.box.dataNote')}}</span>
               <span v-if="comp.kpiJson"><span>{{comp.kpiJson.kpi_name}}</span></span>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default {
           //只能拖拽度量
           if(tp == 2){
           }else{
-            utils.msginfo("只能拖拽度量到数据块中显示。");
+            utils.msginfo(this.$t('message.report.box.err1'));
             return;
           }
           

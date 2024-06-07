@@ -49,9 +49,9 @@ export default {
       return h('div', {class:"boxcls", style:style}, this.data.value);
     }else{
       if(this.editor === true){
-        return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+        return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"("+this.$t('message.report.box.note') + ' ' +utils.getCompTypeDesc(comp.type)+")"}});
       }else{
-        return h('div','数据加载中...');
+        return h('div',this.$t('message.base.load'));
       }
     }
   },

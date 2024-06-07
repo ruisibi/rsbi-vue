@@ -1,6 +1,6 @@
 <template>
-  	<el-dialog title="选择数据模型" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
-		<el-input v-model="search"	size="mini" placeholder="输入关键字搜索">
+  	<el-dialog :title="$t('message.olap.selcube.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+		<el-input v-model="search"	size="mini" :placeholder="$t('message.olap.selcube.search')">
 			<el-button slot="append" icon="el-icon-search" @click="searchme"></el-button>
 		</el-input>
 		<div class="el-dialog-div">
@@ -10,9 +10,9 @@
 						<el-radio v-model="checked" name="myselect2" :label="scope.row.cubeId">&nbsp;</el-radio>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" prop="cubeName" label="模型名称"></el-table-column>
-				<el-table-column align="center" prop="desc" label="说明"></el-table-column>
-				<el-table-column align="center" prop="dsetName" label="数据集"></el-table-column>
+				<el-table-column align="center" prop="cubeName" :label="$t('message.olap.selcube.name')"></el-table-column>
+				<el-table-column align="center" prop="desc" :label="$t('message.olap.selcube.note')"></el-table-column>
+				<el-table-column align="center" prop="dsetName" :label="$t('message.olap.selcube.dset')"></el-table-column>
 			</el-table>
 			<el-pagination
 				background
@@ -21,8 +21,8 @@
 			</el-pagination>
 		</div>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="save()">确 定</el-button>
-      <el-button @click="show = false">取 消</el-button>
+      <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+      <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -62,7 +62,7 @@
 			save(){
 				let chk = this.checked;
 				if(!chk){
-					this.$notify.error({title: '未勾选数据',offset: 50});
+					this.$notify.error({title: this.$t('message.base.err1'),offset: 50});
 					return;
 				}
 				

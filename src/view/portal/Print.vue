@@ -27,7 +27,7 @@
     		PortalParamView
 		},
 		mounted(){
-			window.document.title = "报表打印";
+			window.document.title = this.$t('message.report.view.print2');
 			this.reportId = this.$route.query.id;
 			this.getCfg();
 		},

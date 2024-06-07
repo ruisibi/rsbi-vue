@@ -38,7 +38,7 @@ export default {
   },
   data(){
     return {
-      title:"数据面板",
+      title:this.$t('message.report.bottom.title'),
       show:false,
       showBox:false,
       showChart:false,
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     showPanel(comp){
-      this.title = utils.getCompTypeDesc(comp.type) + "数据面板";
+      this.title = utils.getCompTypeDesc(comp.type) + this.$t('message.report.bottom.title');
       $(".layout-left").css("height", "calc(100% - 296px)");
       $(".layout-center").css("height", "calc(100% - 180px)");
       this.show = true;

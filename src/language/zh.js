@@ -19,6 +19,8 @@ export default {
       confirm:"是否确认?",
       select:"请选择",
       oper:"操作",
+      noData:"无数据",
+      load:"数据加载中...",
     },
     login: {
       lang:"语言",
@@ -409,8 +411,53 @@ export default {
         titalic:"是否斜体",
         tunderscore:"是否下划线",
       },
+      box:{
+        note:"点击<i class=\"fa fa-wrench\"></i>按钮配置",
+        text:"文本属性",
+        title:"标题",
+        unit:"单位",
+        fmt:"格式化",
+        rate:"度量比例",
+        fontsize:"字体大小",
+        color:"字体颜色",
+        bgcolor:"背景颜色",
+        dataName:"数据块度量",
+        dataNote:"拖拽度量到此处",
+        err1:"只能拖拽度量到数据块中显示。",
+      },
       right:{
         title:"属性面板",
+      },
+      bottom:{
+        title:"数据面板"
+      },
+      view:{
+        export:"导出",
+        print:"打印",
+        print2:"报表打印",
+      },
+      filter:{
+        title:"组件筛选",
+        add:"新增筛选条件",
+        col:"筛选字段",
+        type:"判断条件",
+        val:"筛选值",
+        valuetype:"值类型",
+        gdz:"固定值",
+        param:"链接到参数",
+        value2:"筛选值2",
+        string:"字符类型",
+        number:"数字类型",
+        err1:"组件还未定义数据，不能定义筛选。",
+      }
+    },
+    olap:{
+      selcube:{
+        title:"选择数据模型",
+        search:"输入关键字搜索",
+        name:"模型名称",
+        note:"说明",
+        dset:"数据集",
       }
     }
   }

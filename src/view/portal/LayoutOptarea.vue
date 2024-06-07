@@ -403,15 +403,15 @@ export default {
             if(tp == "text"){
               ts.$refs['portalTextForm'].insertText("insert", layoutId);
             }else if(tp == "table"){
-              var comp = {"id":newGuid(), "name":this.$t('message.report.left.table'), "type":"table"};
+              var comp = {"id":newGuid(), "name":ts.$t('message.report.left.table'), "type":"table"};
               execf(layoutId, comp);
             }else if(tp == "chart"){
               ts.$refs['chartDailogForm'].insertChart(layoutId, execf);
             }else if(tp == "grid"){
-              var comp = {"id":newGuid(), "name":this.$t('message.report.left.grid'), "type":"grid"};
+              var comp = {"id":newGuid(), "name":ts.$t('message.report.left.grid'), "type":"grid"};
               execf(layoutId, comp);
             }else if(tp == "box"){
-              var comp = {"id":newGuid(), "name":this.$t('message.report.left.box'), "type":"box"};
+              var comp = {"id":newGuid(), "name":ts.$t('message.report.left.box'), "type":"box"};
                execf(layoutId, comp);
             }
           }

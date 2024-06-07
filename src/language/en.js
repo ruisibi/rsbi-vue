@@ -19,6 +19,8 @@ export default {
         confirm:"Are you confirm?",
         select:"Select Please",
         oper: "Operation",
+        noData:"No Data",
+        load:"Data Loading...",
       },
       login: {
         lang:"Language",
@@ -409,8 +411,53 @@ export default {
         titalic:"Whether italic",
         tunderscore:"Whether underline",
       },
+      box:{
+        note:"Click <i class=\"fa fa-wrench\"></i> button configuration",
+        text:"Text properties",
+        title:"Title",
+        unit:"Unit",
+        fmt:"Format",
+        rate:"Rate",
+        fontsize:"Font size",
+        color:"Font colour",
+        bgcolor:"Background",
+        dataName:"Box Metric",
+        dataNote:"Drag metric here",
+        err1:"You can only drag and drop the measurement to the data box to display.",
+      },
       right:{
         title:"Property panel",
+      },
+      bottom:{
+        title:"Data panel"
+      },
+      view:{
+        export:"Export",
+        print:"Print",
+        print2:"Print Report",
+      },
+      filter:{
+        title:"Component Filtering",
+        add:"New filtering",
+        col:"Filter column",
+        type:"Conditions",
+        val:"Filter value",
+        valuetype:"Value type",
+        gdz:"Static",
+        param:"Link to parameters",
+        value2:"Filter value 2",
+        string:"Character",
+        number:"Number",
+        err1:"The component has not yet defined data, and filtering cannot be defined.",
+      }
+    },
+    olap:{
+      selcube:{
+        title:"Select Data Model",
+        search:"Enter keyword search",
+        name:"Model Name",
+        note:"Note",
+        dset:"Data Set",
       }
     }
   }

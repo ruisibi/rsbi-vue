@@ -1,33 +1,33 @@
 <!-- 组件筛选，和查询条件关联 -->
 <template>
-  	<el-dialog title="组件筛选" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+  	<el-dialog :title="$t('message.report.filter.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  <div class="el-dialog-div">
 		 <div align="left" style="margin:10px;">
 			<button type="button" class="btn btn-primary" @click="addFilter()">
-				<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>新增筛选条件
+				<i class="glyphicon glyphicon-plus" aria-hidden="true"></i> {{$t('message.report.filter.add')}}
 			</button>
 		 </div>
 		<el-table :data="comp&&comp.params?comp.params:[]" border style="width: 100%" header-row-class-name="tableHeadbg">
-			<el-table-column align="center" prop="col" label="筛选字段"></el-table-column>
-			<el-table-column align="center" prop="type" label="判断条件"></el-table-column>
-			<el-table-column align="center" prop="val" :formatter="fmtvalue" label="筛选值"></el-table-column>
-			<el-table-column align="center" prop="valuetype" label="值类型"></el-table-column>
-			<el-table-column align="center" prop="id" label="操作">
+			<el-table-column align="center" prop="col" :label="$t('message.report.filter.col')"></el-table-column>
+			<el-table-column align="center" prop="type" :label="$t('message.report.filter.type')"></el-table-column>
+			<el-table-column align="center" prop="val" :formatter="fmtvalue" :label="$t('message.report.filter.val')"></el-table-column>
+			<el-table-column align="center" prop="valuetype" :label="$t('message.report.filter.valuetype')"></el-table-column>
+			<el-table-column align="center" prop="id" :label="$t('message.base.oper')">
 				<template slot-scope="scope">
-						<a class="btn btn-primary btn-xs" @click="modifyFilter(scope.row.id)"> 修改 </a>
-						<a class="btn btn-danger btn-xs" @click="delFilter(scope.row.id)"> 删除 </a>
+						<a class="btn btn-primary btn-xs" @click="modifyFilter(scope.row.id)"> {{$t('message.base.modify')}} </a>
+						<a class="btn btn-danger btn-xs" @click="delFilter(scope.row.id)"> {{$t('message.base.delete')}} </a>
 				</template>
 			</el-table-column>
 		</el-table>
 		  </div>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="filtersSave()">关 闭</el-button>
+			<el-button type="primary" @click="filtersSave()">{{$t('message.base.cancel')}}</el-button>
 		</div>
 
 		<el-dialog :title="title" width="40%" :visible.sync="addShow" append-to-body>
 			<el-form :model="filter" ref="filterForm" :rules="rules">
-				<el-form-item label="筛选字段" label-width="100px" prop="col">
-					<el-select v-model="filter.col" placeholder="请选择" style="width:100%">
+				<el-form-item :label="$t('message.report.filter.col')" label-width="150px" prop="col">
+					<el-select v-model="filter.col" :placeholder="$t('message.base.select')" style="width:100%">
 						<el-option
 						v-for="item in opts.cols"
 						:key="item.value"
@@ -36,8 +36,8 @@
 						</el-option>
 					</el-select>				    
 				</el-form-item>
-				<el-form-item label="判断条件" label-width="100px" prop="type">
-					<el-select v-model="filter.type" placeholder="请选择">
+				<el-form-item :label="$t('message.report.filter.type')" label-width="150px" prop="type">
+					<el-select v-model="filter.type" :placeholder="$t('message.base.select')">
 						<el-option
 						v-for="item in opts.types"
 						:key="item"
@@ -46,12 +46,12 @@
 						</el-option>
 					</el-select>				    
 				</el-form-item>
-				<el-form-item label="筛选值" label-width="100px" prop="value">
+				<el-form-item :label="$t('message.report.filter.val')" label-width="150px" prop="value">
 					<template v-if="filter.usetype === 'gdz'">
-						<el-input v-model="filter.value"  style="width:195px;" ></el-input>
+						<el-input v-model="filter.value"  ></el-input>
 					</template>
 					<template v-if="filter.usetype === 'param'">
-						<el-select v-model="filter.linkparam" placeholder="请选择">
+						<el-select v-model="filter.linkparam" style="width:100%;" :placeholder="$t('message.base.select')">
 							<el-option
 							v-for="item in opts.params"
 							:key="item.value"
@@ -61,17 +61,17 @@
 						</el-select>	
 					</template>
 					<el-radio-group v-model="filter.usetype" size="small">
-						<el-radio-button label="gdz">固定值</el-radio-button>
-						<el-radio-button label="param">链接到参数</el-radio-button>
+						<el-radio-button label="gdz">{{$t('message.report.filter.gdz')}}</el-radio-button>
+						<el-radio-button label="param">{{$t('message.report.filter.param')}}</el-radio-button>
 					</el-radio-group>
 				</el-form-item>
 				<template v-if="filter.type =='between'">
-					<el-form-item label="筛选值2" label-width="100px" prop="value">
+					<el-form-item :label="$t('message.report.filter.value2')" label-width="150px" prop="value">
 						<template v-if="filter.usetype === 'gdz'">
-							<el-input v-model="filter.value2"  style="width:195px;" ></el-input>
+							<el-input v-model="filter.value2" ></el-input>
 						</template>
 						<template v-if="filter.usetype === 'param'">
-							<el-select v-model="filter.linkparam2" placeholder="请选择">
+							<el-select v-model="filter.linkparam2" style="width:100%;" :placeholder="$t('message.base.select')">
 								<el-option
 								v-for="item in opts.params"
 								:key="item.value"
@@ -81,21 +81,21 @@
 							</el-select>	
 						</template>
 						<el-radio-group v-model="filter.usetype" size="small">
-							<el-radio-button label="gdz">固定值</el-radio-button>
-							<el-radio-button label="param">链接到参数</el-radio-button>
+							<el-radio-button label="gdz">{{$t('message.report.filter.gdz')}}</el-radio-button>
+							<el-radio-button label="param">{{$t('message.report.filter.param')}}</el-radio-button>
 						</el-radio-group>
 					</el-form-item>
 				</template>
-				<el-form-item label="值类型" label-width="100px" prop="vtype">
+				<el-form-item :label="$t('message.report.filter.valuetype')" label-width="150px" prop="vtype">
 					<el-radio-group v-model="filter.valuetype" size="small">
-						<el-radio-button label="string">字符类型</el-radio-button>
-						<el-radio-button label="number">数字类型</el-radio-button>
+						<el-radio-button label="string">{{$t('message.report.filter.string')}}</el-radio-button>
+						<el-radio-button label="number">{{$t('message.report.filter.number')}}</el-radio-button>
 					</el-radio-group>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button type="primary" @click="filterSave()">确 定</el-button>
-				<el-button @click="addShow = false">取 消</el-button>
+				<el-button type="primary" @click="filterSave()">{{$t('message.base.ok')}}</el-button>
+				<el-button @click="addShow = false">{{$t('message.base.cancel')}}</el-button>
 			</div>
 		</el-dialog>
   </el-dialog>
@@ -111,7 +111,7 @@
 			return {
 				show:false,
 				addShow:false,
-				title:"创建筛选条件",
+				title: this.$t('message.report.filter.add'),
 				comp:null,
 				tableData:[],
 				isupdate:false,
@@ -134,10 +134,10 @@
 				},
 				rules:{
 					col:[
-						{ required: true, message: '必填', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' }
 					],
 					type:[
-						{ required: true, message: '必填', trigger: 'blur' }
+						{ required: true, message: this.$t('message.base.required'), trigger: 'blur' }
 					]
 				}
 			}
@@ -156,7 +156,7 @@
 		methods: {	
 			init(comp){
 				if(!(comp.dsetId || comp.cubeId)){
-					utils.msginfo("组件还未定义数据，不能定义筛选。");
+					utils.msginfo(this.$t('message.report.filter.err1'));
 					return;
 				}
 				this.comp = comp;
@@ -184,7 +184,7 @@
 			},
 			fmtvalue(row, column, cellValue, index){
 				if(row.usetype === 'param'){
-					return "链接到参数";
+					return this.$t('message.report.filter.param');
 				}else{
 					return row.val +  (row.val2? '/' + row.val2: '');
 				}
@@ -218,7 +218,7 @@
 				this.filter.usetype = t.usetype;
 			},
 			delFilter(id){
-				if(confirm("是否确认删除？")){
+				if(confirm(this.$t('message.base.confirm'))){
 					$(this.comp.params).each((a, b)=>{
 						if(b.id === id){
 							this.comp.params.splice(a, 1);

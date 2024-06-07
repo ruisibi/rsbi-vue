@@ -19,6 +19,8 @@ export default {
       confirm:"是否確認?",
       select:"請選擇",
       oper:"操作",
+      noData:"無數據",
+      load:"數據加載中...",
     },
     login: {
       lang:"語言",
@@ -409,8 +411,53 @@ export default {
         titalic:"是否斜體",
         tunderscore:"是否下劃線",
       },
+      box:{
+        note:"點擊<i class=\"fa fa-wrench\"></i>按鈕配置",
+        text:"文本屬性",
+        title:"標題",
+        unit:"單位",
+        fmt:"格式化",
+        rate:"度量比例",
+        fontsize:"字體大小",
+        color:"字體顏色",
+        bgcolor:"背景顏色",
+        dataName:"數據塊度量",
+        dataNote:"拖拽度量到此處",
+        err1:"只能拖拽度量到數據塊中顯示。",
+      },
       right:{
         title:"屬性面板",
+      },
+      bottom:{
+        title:"數據面板"
+      },
+      view:{
+        export:"導出",
+        print:"打印",
+        print2:"報表打印",
+      },
+      filter:{
+        title:"組件篩選",
+        add:"新增篩選條件",
+        col:"篩選字段",
+        type:"判斷條件",
+        val:"篩選值",
+        valuetype:"值類型",
+        gdz:"固定值",
+        param:"鏈接到參數",
+        value2:"篩選值2",
+        string:"字符類型",
+        number:"數字類型",
+        err1:"組件還未定義數據，不能定義篩選。",
+      }
+    },
+    olap:{
+      selcube:{
+        title:"選擇數據模型",
+        search:"輸入關鍵字搜索",
+        name:"模型名稱",
+        note:"說明",
+        dset:"數據集",
       }
     }
   }

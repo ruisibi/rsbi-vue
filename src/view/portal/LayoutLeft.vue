@@ -292,6 +292,12 @@ export default {
                             url:"model/treeCube.action",
                             data:{cubeId:cubeId},
                             success:(resp)=>{
+                                //支持国际化
+                                for(let r of resp.rows){
+                                    for(let c of r.children){
+                                        c.text = ts.$t(c.text);
+                                    }
+                                }
                                 callback.call(this, resp.rows);
                             }
                         }, ts);

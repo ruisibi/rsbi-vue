@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper-content-nomargin">
     <el-menu @select="handleSelect" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
-			<el-menu-item index="1"><i class="fa fa-arrow-left"></i> 返回</el-menu-item>
-      <el-menu-item index="2"><i class="fa fa-edit"></i> 定制</el-menu-item>
+			<el-menu-item index="1"><i class="fa fa-arrow-left"></i> {{$t('message.base.back')}}</el-menu-item>
+      <el-menu-item index="2"><i class="fa fa-edit"></i> {{ $t('message.report.index.customization') }}</el-menu-item>
 			<el-submenu index="3">
-				<template slot="title"><i class="fa fa-file-excel-o"></i> 导出</template>
+				<template slot="title"><i class="fa fa-file-excel-o"></i> {{ $t('message.report.view.export') }}</template>
         <!--
 				<el-menu-item index="html">HTML</el-menu-item>
         -->
@@ -13,7 +13,7 @@
 				<el-menu-item index="word">WORD</el-menu-item>
 				<el-menu-item index="pdf">PDF</el-menu-item>
 			</el-submenu>
-			<el-menu-item index="4"><i class="fa fa-print"></i> 打印</el-menu-item>
+			<el-menu-item index="4"><i class="fa fa-print"></i> {{ $t('message.report.view.print') }}</el-menu-item>
 		</el-menu>
     <!-- 参数区域 -->
     <portal-param-view ref="paramViewForm" :showSearchBtn="true" :pms="pms"></portal-param-view>
