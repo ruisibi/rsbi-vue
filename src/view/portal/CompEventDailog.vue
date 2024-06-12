@@ -1,12 +1,12 @@
 <!-- 表格对话框都放这里面 -->
 <template>
-  	<el-dialog title="组件联动事件设置" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+  	<el-dialog :title="$t('message.report.event.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  <div class="el-dialog-div" align="left">
-			  <el-form label-width="110px">
+			  <el-form label-width="150px">
 
 				<el-tabs v-model="activeName" type="card">
-					<el-tab-pane label="事件发起" name="send">
-						<el-form-item label="联动组件">
+					<el-tab-pane :label="$t('message.report.event.send')" name="send">
+						<el-form-item :label="$t('message.report.event.linkComp')">
 							<el-checkbox-group v-model="linkComps" size="small">
 								<template v-for="item in comps">
 									<p :key="item.id">	<el-checkbox :label="item.id" border>{{ item.name }}</el-checkbox> </p>
@@ -14,12 +14,12 @@
 							</el-checkbox-group>
 						</el-form-item>
 						<el-form-item label="">
-							<button type="button" class="btn btn-info btn-sm" @click="cleanPostEvent">清除事件发起</button>
+							<button type="button" class="btn btn-info btn-sm" @click="cleanPostEvent">{{$t('message.report.event.cleanPostEvent')}}</button>
 						</el-form-item>
 					</el-tab-pane>
-					<el-tab-pane label="事件接受" name="accept">
-						<el-form-item label="接收字段">
-							<el-select v-model="acceptCol" placeholder="请选择" style="width:100%">
+					<el-tab-pane :label="$t('message.report.event.accept')" name="accept">
+						<el-form-item :label="$t('message.report.event.acceptCol')">
+							<el-select v-model="acceptCol" :placeholder="$t('message.base.select')" style="width:100%">
 								<el-option
 								v-for="item in cols"
 								:key="item.alias"
@@ -30,15 +30,15 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="">
-							<button type="button" @click="cleanAcceptEvent" class="btn btn-info btn-sm">清除事件接收</button>
+							<button type="button" @click="cleanAcceptEvent" class="btn btn-info btn-sm">{{$t('message.report.event.cleanAcceptEvent')}}</button>
 						</el-form-item>
 					</el-tab-pane>
 				</el-tabs>
 			  </el-form>
 		  </div>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -83,7 +83,7 @@
 			},
 			openDailog(comp){
 				if(!(comp.dsetId || comp.cubeId)){
-					utils.msginfo("组件还未定义数据，不能定义事件。");
+					utils.msginfo(this.$t('message.report.event.err1'));
 					return;
 				}
 				this.comp = comp;

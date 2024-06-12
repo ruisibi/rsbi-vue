@@ -1,16 +1,16 @@
 <template>
   <el-form :model="prop" ref="propForm" label-position="left" size="mini">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="图形属性" name="1">
-        <el-form-item label="图形标题" label-width="70px">
+      <el-collapse-item :title="$t('message.report.chartProp.title')" name="1">
+        <el-form-item :label="$t('message.report.chartProp.title2')" label-width="70px">
           <el-input v-model="prop.title" @blur="changevalue('title')"></el-input>
         </el-form-item>
         <template v-if="ctp != 'gauge'">
-          <el-form-item label="是否隐藏图例" label-width="170px">
+          <el-form-item :label="$t('message.report.chartProp.showLegend')" label-width="170px">
             <el-switch v-model="prop.showLegend" @change="changevalue('showLegend')"></el-switch>
           </el-form-item>
-          <el-form-item label="图例位置" label-width="70px">
-              <el-select v-model="prop.legendpos" placeholder="请选择" @change="changevalue('legendpos')">
+          <el-form-item :label="$t('message.report.chartProp.legendpos')" label-width="70px">
+              <el-select v-model="prop.legendpos" :placeholder="$t('message.base.select')" @change="changevalue('legendpos')">
                 <el-option
                   v-for="item in opts.legendpos"
                   :key="item.value"
@@ -20,34 +20,34 @@
                 </el-option>
               </el-select>
           </el-form-item>
-          <el-form-item label="排列方式" label-width="100px">
+          <el-form-item :label="$t('message.report.chartProp.legendLayout')" label-width="100px">
             <el-radio-group v-model="prop.legendLayout" size="mini" @change="changevalue('legendLayout')">
-            <el-radio-button label="vertical">垂直</el-radio-button>
-            <el-radio-button label="horizontal">水平</el-radio-button>
+            <el-radio-button label="vertical">{{ $t('message.report.chartProp.vertical') }}</el-radio-button>
+            <el-radio-button label="horizontal">{{ $t('message.report.chartProp.horizontal') }}</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </template>
         <template v-if="ctp == 'line' || ctp == 'area' || ctp == 'radar'">
-         <el-form-item label="是否禁用描点" label-width="170px">
+         <el-form-item :label="$t('message.report.chartProp.markerEnabled')" label-width="170px">
           <el-switch v-model="prop.markerEnabled" @change="changevalue('markerEnabled')"></el-switch>
          </el-form-item>
         </template>
          <template v-if="ctp == 'line' || ctp == 'column' || ctp == 'area' || ctp == 'bar' || ctp =='scatter' || ctp == 'bubble' || ctp =='map'">
-          <el-form-item label="左间距" label-width="70px">
+          <el-form-item :label="$t('message.report.chartProp.marginLeft')" label-width="70px">
             <el-slider v-model="prop.marginLeft" :max="300" :min="1" @change="changevalue('marginLeft')"></el-slider>
           </el-form-item>
-          <el-form-item label="右间距" label-width="70px">
+          <el-form-item :label="$t('message.report.chartProp.marginRight')" label-width="70px">
             <el-slider v-model="prop.marginRight" :max="300" :min="1" @change="changevalue('marginRight')"></el-slider>
           </el-form-item>
-          <el-form-item label="是否显示值" label-width="170px">
+          <el-form-item :label="$t('message.report.chartProp.dataLabel')" label-width="170px">
             <el-switch v-model="prop.dataLabel" @change="changevalue('dataLabel')"></el-switch>
           </el-form-item>
-          <el-form-item label="值的颜色" label-width="180px">
+          <el-form-item :label="$t('message.report.chartProp.dataLabelColor')" label-width="180px">
               <el-color-picker v-model="prop.dataLabelColor" @change="changevalue('dataLabelColor')"></el-color-picker>
             </el-form-item>
             <template v-if="ctp === 'pie'">
-                <el-form-item label="标签显示内容" label-width="106px">
-                    <el-select v-model="prop.labelType" placeholder="请选择" @change="changevalue('labelType')">
+                <el-form-item :label="$t('message.report.chartProp.labelType')" label-width="106px">
+                    <el-select v-model="prop.labelType" :placeholder="$t('message.base.select')" @change="changevalue('labelType')">
                       <el-option
                         v-for="item in opts.pielabels"
                         :key="item.value"
@@ -60,29 +60,29 @@
             </template>
           </template>
       </el-collapse-item>
-      <el-collapse-item title="横轴" name="3">
-        <el-form-item label="标题" label-width="70px">
+      <el-collapse-item :title="$t('message.report.chartProp.xcol')" name="3">
+        <el-form-item :label="$t('message.report.chartProp.xdispName')" label-width="70px">
           <el-input v-model="prop.xdispName" @blur="changevalue('xdispName')"></el-input>
         </el-form-item>
-        <el-form-item label="显示间隔" label-width="70px">
+        <el-form-item :label="$t('message.report.chartProp.tickInterval')" label-width="70px">
           <el-slider v-model="prop.tickInterval" :max="20" :min="0" @change="changevalue('tickInterval')"></el-slider>
         </el-form-item>
-         <el-form-item label="旋转角度" label-width="70px">
+         <el-form-item :label="$t('message.report.chartProp.routeXaxisLable')" label-width="70px">
           <el-slider v-model="prop.routeXaxisLable" :max="360" :min="0" @change="changevalue('routeXaxisLable')"></el-slider>
         </el-form-item>
-        <el-form-item label="取Top" label-width="70px">
+        <el-form-item :label="$t('message.report.chartProp.top')" label-width="70px">
           <el-slider v-model="prop.top" :max="100" :min="1" @change="changevalue('top')"></el-slider>
         </el-form-item>
       </el-collapse-item>
-       <el-collapse-item title="纵轴" name="2">
-             <el-form-item label="标题" label-width="70px">
+       <el-collapse-item :title="$t('message.report.chartProp.ycol')" name="2">
+             <el-form-item :label="$t('message.report.chartProp.ydispName')" label-width="70px">
               <el-input v-model="prop.ydispName" @blur="changevalue('ydispName')"></el-input>
             </el-form-item>
-            <el-form-item label="单位" label-width="70px">
+            <el-form-item :label="$t('message.report.chartProp.unit')" label-width="70px">
               <el-input v-model="prop.unit" @blur="changevalue('unit')"></el-input>
             </el-form-item>
-            <el-form-item label="格式化" label-width="70px">
-               <el-select v-model="prop.fmt" placeholder="请选择" @change="changevalue('fmt')">
+            <el-form-item :label="$t('message.report.chartProp.fmt')" label-width="70px">
+               <el-select v-model="prop.fmt" :placeholder="$t('message.base.select')" @change="changevalue('fmt')">
                   <el-option
                     v-for="item in opts.fmt"
                     :key="item.value"
@@ -93,17 +93,17 @@
                 </el-select>
             </el-form-item>
             <template v-if="!(ctp == 'pie' || ctp == 'scatter' || ctp == 'bubble' || ctp == 'map' || ctp == 'radar')">
-              <el-form-item label="最小值" label-width="80px">
-                <el-input-number v-model="prop.min" @change="changevalue('min')" :precision="2"></el-input-number>
+              <el-form-item :label="$t('message.report.chartProp.min')" label-width="80px">
+                <el-input-number v-model="prop.min" size="small" @change="changevalue('min')" :precision="2"></el-input-number>
               </el-form-item>
             </template>
             <template v-if="ctp == 'gauge'">
-              <el-form-item label="最大值" label-width="80px">
-                  <el-input-number v-model="prop.max" @change="changevalue('max')" :precision="2"></el-input-number>
+              <el-form-item :label="$t('message.report.chartProp.max')" label-width="80px">
+                  <el-input-number v-model="prop.max" size="small" @change="changevalue('max')" :precision="2"></el-input-number>
                 </el-form-item>
             </template>
-            <el-form-item label="度量比例" label-width="70px">
-               <el-select v-model="prop.rate" placeholder="请选择" @change="changevalue('rate')">
+            <el-form-item :label="$t('message.report.chartProp.rate')" label-width="70px">
+               <el-select v-model="prop.rate" :placeholder="$t('message.base.select')" @change="changevalue('rate')">
                   <el-option
                     v-for="item in opts.rates"
                     :key="item.value"
@@ -115,15 +115,15 @@
             </el-form-item>
        </el-collapse-item>
        <template v-if="isy2()">
-        <el-collapse-item title="第二纵轴" name="4">
-            <el-form-item label="标题" label-width="70px">
+        <el-collapse-item :title="$t('message.report.chartProp.y2')" name="4">
+            <el-form-item :label="$t('message.report.chartProp.y2dispName')" label-width="70px">
               <el-input v-model="prop.y2dispName" @blur="changevalue('y2dispName')"></el-input>
             </el-form-item>
-            <el-form-item label="单位" label-width="70px">
+            <el-form-item :label="$t('message.report.chartProp.unit2')" label-width="70px">
                 <el-input v-model="prop.unit2" @blur="changevalue('unit2')"></el-input>
               </el-form-item>
-              <el-form-item label="格式化" label-width="70px">
-                <el-select v-model="prop.fmt2" placeholder="请选择" @change="changevalue('fmt2')">
+              <el-form-item :label="$t('message.report.chartProp.fmt2')" label-width="70px">
+                <el-select v-model="prop.fmt2" :placeholder="$t('message.base.select')" @change="changevalue('fmt2')">
                     <el-option
                       v-for="item in opts.fmt"
                       :key="item.value"
@@ -133,7 +133,7 @@
                     </el-option>
                   </el-select>
               </el-form-item>
-              <el-form-item label="度量比例" label-width="70px">
+              <el-form-item :label="$t('message.report.chartProp.rate2')" label-width="70px">
                 <el-select v-model="prop.rate2" placeholder="请选择" @change="changevalue('rate2')">
                     <el-option
                       v-for="item in opts.rates"
@@ -145,7 +145,7 @@
                   </el-select>
               </el-form-item>
               <template v-if="(ctp == 'column' || ctp == 'line') && (typeIndex==2 || typeIndex==4)">
-              <el-form-item label="合并数据" label-width="170px">
+              <el-form-item :label="$t('message.report.chartProp.mergeData')" label-width="170px">
                 <el-switch v-model="prop.mergeData" @change="changevalue('mergeData')"></el-switch>
               </el-form-item>
               </template>

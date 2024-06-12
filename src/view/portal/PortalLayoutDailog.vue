@@ -1,20 +1,20 @@
 <template>
-    <el-dialog title="设置报表布局" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+    <el-dialog :title="$t('message.report.layout.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
       <div class="el-dialog-div">
         <el-radio-group v-model="layoutId">
           <template v-for="l in layouts">
             <span class="rlayout" :key="l">
               <div class="onelayout">
                 <img :src="require('../../assets/layout/l'+l+'.png')" @click="selectRadio(l)">
-                <el-radio :label="l"><template v-if="l === 6">自定义</template><template v-if="l !== 6">布局{{l}}</template></el-radio>
+                <el-radio :label="l"><template v-if="l === 6">{{$t('message.report.layout.cus')}}</template><template v-if="l !== 6">{{$t('message.report.layout.layout')}}{{l}}</template></el-radio>
               </div>
             </span>
           </template>
         </el-radio-group>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="save()">确 定</el-button>
-        <el-button @click="show = false">取 消</el-button>
+        <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+        <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
       </div>
     </el-dialog>
 </template>

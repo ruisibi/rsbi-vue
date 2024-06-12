@@ -34,10 +34,10 @@ export default {
 					let o = comp.kpiJson[0];
 					xcol = [h('span', {class:"charttxt",attrs:{title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
 				}else{
-					xcol = [h('span', {class:"charttip"}, '将度量拖到这里')]
+					xcol = [h('span', {class:"charttip"}, this.$t('message.report.chartData.tip1'))]
 				}
 				//横轴　
-				let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '横轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
+				let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, this.$t('message.report.chartData.xcol')), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
 				leftCols.push(xcolobj);
 
 				let ycol = null;
@@ -45,9 +45,9 @@ export default {
 					let o = comp.kpiJson[1];
 					ycol = [h('span', {class:"charttxt",attrs:{ title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'y2col')}})]
 				}else{
-					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')]
+					ycol = [h('span', {class:"charttip"}, this.$t('message.report.chartData.tip1'))]
 				}
-				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},'纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},this.$t('message.report.chartData.ycol')), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
 				leftCols.push(ycolobj);
 
 				//气泡大小
@@ -57,9 +57,9 @@ export default {
 						let o = comp.kpiJson[2];
 						qp = [h('span', {class:"charttxt", attrs:{ title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
 					}else{
-						qp = [h('span', {class:"charttip"}, '将度量拖到这里')]
+						qp = [h('span', {class:"charttip"}, this.$t('message.report.chartData.tip1'))]
 					}
-					let qpobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},'气泡大小'), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
+					let qpobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, this.$t('message.report.chartData.size')), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
 					leftCols.push(qpobj);
 				}
 			}
@@ -69,10 +69,10 @@ export default {
 				let o = comp.chartJson.xcol;
 				xcol = [h('span', {class:"charttxt",attrs:{title:o.dimdesc}}, o.dimdesc), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'xcol')}})]
 			}else{
-				xcol = [h('span', {class:"charttip"}, '将维度拖到这里')]
+				xcol = [h('span', {class:"charttip"}, this.$t('message.report.chartData.tip2'))]
 			}
 			//横轴　
-			let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},isscatter?'观察维度':'横轴'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
+			let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},isscatter?this.$t('message.report.chartData.dim'):this.$t('message.report.chartData.xcol')), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
 			leftCols.push(xcolobj);
 
 			if(!isscatter){
@@ -81,10 +81,10 @@ export default {
 					let o = comp.kpiJson[0];
 					ycol = [h('span', {class:"charttxt", attrs:{ title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
 				}else{
-					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')];
+					ycol = [h('span', {class:"charttip"}, this.$t('message.report.chartData.tip1'))];
 				}
 				//纵轴
-				let ycolobj = h('div', {class:"ts_h"}, [h('div',{class:"h_tit"}, '纵轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div',{class:"h_tit"}, this.$t('message.report.chartData.ycol')), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
 				leftCols.push(ycolobj);
 			}
 
@@ -94,10 +94,10 @@ export default {
 					let o = comp.chartJson.scol;
 					scol = [h('span', {class:"charttxt", attrs:{ title:o.dimdesc}}, o.dimdesc), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'scol')}})]
 				}else{
-					scol = [h('span', {class:"charttip"}, '将维度拖到这里')]
+					scol = [h('span', {class:"charttip"}, this.$t('message.report.chartData.tip2'))]
 				}
 				//图例 Ser
-				let scolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},'图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
+				let scolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"},this.$t('message.report.chartData.ser')), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
 				leftCols.push(scolobj);
 			}
 			let typeIndex = comp.chartJson.typeIndex;
@@ -108,9 +108,9 @@ export default {
 					let o = comp.kpiJson[1];
 					y2col = [h('span', {class:"charttxt", attrs:{ title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'y2col')}})]
 				}else{
-					y2col = [h('span', {class:"charttip"}, '将度量拖到这里')]
+					y2col = [h('span', {class:"charttip"}, this.$t('message.report.chartData.tip1'))]
 				}
-				let y2obj = h('div', {class:"ts_h"}, [h('div',{class:"h_tit"}, '第二纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}},y2col)]);
+				let y2obj = h('div', {class:"ts_h"}, [h('div',{class:"h_tit"}, this.$t('message.report.chartData.ycol2')), h('div', {attrs:{class:"h_ctx", id:"y2col"}},y2col)]);
 				leftCols.push(y2obj);
 			}
 			//更新拖拽事件
@@ -157,9 +157,9 @@ export default {
 				}
 			},
 			items: {
-				"asc": {name: "升序", icon: "fa-sort-amount-asc"},
-				"desc": {name: "降序", icon: 'fa-sort-amount-desc'},
-				"remove": {name: "清除",icon:"fa-remove"}
+				"asc": {name: this.$t('message.report.chartData.asc'), icon: "fa-sort-amount-asc"},
+				"desc": {name: this.$t('message.report.chartData.desc'), icon: 'fa-sort-amount-desc'},
+				"remove": {name: this.$t('message.report.chartData.remove'),icon:"fa-remove"}
 			}
 		});
 	},
@@ -200,7 +200,7 @@ export default {
 						//判断拖入的维度及度量是否和以前维度及度量在同一个表。
 						if(json.cubeId != undefined){
 							if(json.cubeId != node.li_attr.cubeId){
-								utils.msginfo("您拖入的"+ (node.li_attr.col_type == 2 ? "度量" : "维度") +"与组件已有的内容不在同一个数据表中，拖放失败。");
+								utils.msginfo(ts.$t('message.report.chartData.err5')+ (node.li_attr.col_type == 2 ? ts.$t('message.model.cube.kpi') : ts.$t('message.model.cube.dim')) + ts.$t('message.report.chartData.err6'));
 								return;
 							}
 						}
@@ -218,7 +218,7 @@ export default {
 						if(node.li_attr.col_type == 1){
 							var dimId = node.li_attr.col_id;
 							if(chartUtils.findDimById(dimId, json.chartJson.params) != null){
-								utils.msginfo("您拖放的维度已存在于钻取维中，不能拖放。")
+								utils.msginfo(ts.$t('message.report.chartData.err1'))
 								return;
 							}
 						}
@@ -240,7 +240,7 @@ export default {
 						if(node.li_attr.col_type == 1 && dropId == "xcol"){
 							//判断是否在xcol中已经存在
 							if(json.chartJson.scol != undefined && json.chartJson.scol.id == node.li_attr.col_id){
-								utils.msginfo("您拖放的维度已存在于图例项中，不能拖放。")
+								utils.msginfo(ts.$t('message.report.chartData.err2'))
 								return;
 							}
 							
@@ -248,7 +248,7 @@ export default {
 							var gt = node.li_attr.grouptype;
 							if(gt != null && gt != ''){
 								if(json.chartJson.scol != undefined && json.chartJson.scol.grouptype == gt){
-									utils.msginfo("您拖放的维度与此图表中已有维度分组相同，不能拖放。")
+									utils.msginfo(ts.$t('message.report.chartData.err3'))
 									return;
 								}
 							}
@@ -260,7 +260,7 @@ export default {
 						if(node.li_attr.col_type == 1 &&  dropId == "scol"){
 							//判断是否在xcol中已经存在
 							if(json.chartJson.xcol != undefined && json.chartJson.xcol.id == node.li_attr.col_id){
-								utils.msginfo("您拖放的维度已存在于横轴中，不能拖放。")
+								utils.msginfo(ts.$t('message.report.chartData.err4'))
 								return;
 							}
 							
@@ -268,7 +268,7 @@ export default {
 							var gt = node.li_attr.grouptype;
 							if(gt != null && gt != ''){
 								if(json.chartJson.xcol != undefined && json.chartJson.xcol.grouptype == gt){
-									utils.msginfo("您拖放的维度与此图表中已有维度分组相同，不能拖放。")
+									utils.msginfo(ts.$t('message.report.chartData.err3'))
 									return;
 								}
 							}

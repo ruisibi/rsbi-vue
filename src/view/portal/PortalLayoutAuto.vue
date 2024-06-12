@@ -1,13 +1,13 @@
 <template>
-    <el-dialog title="自定义布局" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+    <el-dialog :title="$t('message.report.layout.auto')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
       <div class="el-dialog-div">
         <div class="table-toolbar">
-          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_insertRow()">插入行</button>
-          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_insertCol()">插入列</button>
-          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_deleteRow()">删除行</button>
-          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_deleteCol()">删除列</button>
-          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_mergeCell()">合并</button>
-          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_unmergeCell()">取消合并</button>
+          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_insertRow()">{{$t('message.report.layout.insertRow')}}</button>
+          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_insertCol()">{{$t('message.report.layout.insertCol')}}</button>
+          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_deleteRow()">{{$t('message.report.layout.deleteRow')}}</button>
+          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_deleteCol()">{{$t('message.report.layout.deleteRow')}}</button>
+          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_mergeCell()">{{$t('message.report.layout.merge')}}</button>
+          <button class="btn btn-default btn-rounded btn-outline btn-xs" type="button" @click="lyt_unmergeCell()">{{$t('message.report.layout.unmerge')}}</button>
         </div>
         <div style="height:calc(100% - 30px)">
           <table id="autoLayoutTable" border="0" cellspacing="0" cellpadding="0" class="r_layout">
@@ -22,8 +22,8 @@
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="save()">确 定</el-button>
-        <el-button @click="show = false">取 消</el-button>
+        <el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+        <el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
       </div>
     </el-dialog>
 </template>
@@ -249,7 +249,7 @@ export default {
         var o = $("#autoLayoutTable td.tdselect");
         if(o.length == 0){
           this.$notify.error({
-            title: '请先选择单元格。',
+            title: this.$t('message.report.layout.err1'),
             offset: 50
           });
           return;
@@ -295,7 +295,7 @@ export default {
       lyt_insertRow(){
         var o = $("#autoLayoutTable td.tdselect");
         if(o.length == 0){
-          this.$notify.error({ title: '请先选择单元格。',offset: 50 });
+          this.$notify.error({ title: this.$t('message.report.layout.err1'),offset: 50 });
           return;
         }
         this.curtabtd = o[0];
@@ -358,7 +358,7 @@ export default {
       lyt_insertCol(){
          var o = $("#autoLayoutTable td.tdselect");
         if(o.length == 0){
-          this.$notify.error({ title: '请先选择单元格。',offset: 50 });
+          this.$notify.error({ title: this.$t('message.report.layout.err1'),offset: 50 });
           return;
         }
           var td = o[0];
@@ -430,7 +430,7 @@ export default {
         lyt_deleteCol(){
          var o = $("#autoLayoutTable td.tdselect");
           if(o.length == 0){
-            this.$notify.error({ title: '请先选择单元格。',offset: 50 });
+            this.$notify.error({ title: this.$t('message.report.layout.err1'),offset: 50 });
             return;
           }
           var td = $(o[0]);
@@ -505,7 +505,7 @@ export default {
         lyt_deleteRow(){
           var o = $("#autoLayoutTable td.tdselect");
           if(o.length == 0){
-            this.$notify.error({ title: '请先选择单元格。',offset: 50 });
+            this.$notify.error({ title: this.$t('message.report.layout.err1'),offset: 50 });
             return;
           }
           var td = $(o[0]);

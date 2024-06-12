@@ -223,7 +223,7 @@ export default {
           exec(rightRef.get_node('cubewd'), dims);
           var cubeDim = [];
           if(dims.length == 0){
-            ts.$notify.error("未选择维度");
+            ts.$notify.error(ts.$t('message.model.cube.err1'));
             return false;
           }
           var curGroup = null;
@@ -248,7 +248,7 @@ export default {
           var kpis = [];
           exec(rightRef.get_node('cubedl'), kpis);
           if(kpis.length == 0){
-             ts.$notify.error("还未配置度量。");
+             ts.$notify.error(ts.$t('message.model.cube.err2'));
             return false;
           }
           for(let i=0; i<kpis.length; i++){
