@@ -78,16 +78,16 @@ export default {
       if(ts.islink == true){  //添加返回按钮
         return h('div', [h('span', {class:"eventback"}, [h('span', {class:"label label-success", on:{click:()=>{
           this.linkBack();
-        }}, domProps:{innerHTML:"<i class=\"fa fa-arrow-left\"></i>返回"}})]), ret]);
+        }}, domProps:{innerHTML:"<i class=\"fa fa-arrow-left\"></i>"+ts.$t('message.base.back')}})]), ret]);
       }else{
         return h('div', [ret]);
       }
 
     }else{
       if(this.editor === true){
-        return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(点击<i class=\"fa fa-wrench\"></i>按钮配置"+utils.getCompTypeDesc(comp.type)+")"}});
+        return h('div', {attrs:{align:"center", class:"tipinfo"}, domProps:{innerHTML:"(" + this.$t('message.report.table.tip1') +utils.getCompTypeDesc(comp.type)+")"}});
       }else{
-        return h('div','数据加载中...');
+        return h('div', this.$t('message.base.load'));
       }
     }
   },

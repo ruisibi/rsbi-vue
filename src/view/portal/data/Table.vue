@@ -1,10 +1,10 @@
 <template>
     <div class="tableDatasty" id="tableData" style="margin:10px;">
       <template v-if="hasData()">
-        <div class="tipinfo">拖拽立方体维度或度量到此处作为交叉表的字段</div>
+        <div class="tipinfo">{{this.$t('message.report.table.tip2')}}</div>
       </template>
       <template v-if="!hasData()">
-        <b>交叉表字段：</b>
+        <b>{{$t('message.report.table.tip3')}}：</b>
         <template v-for="item in comp.rows">
           <span class="dimcol" :key="'p' + item.id">
             <span class="text">{{ item.dimdesc }}</span>
@@ -15,7 +15,7 @@
           </span>
         </template>
         <template v-for="item in comp.cols">
-          <b :key="item.id">列字段：</b>
+          <b :key="item.id">{{$t('message.report.table.tip4')}}：</b>
           <span class="dimcol" :key="'c' + item.id">
             <span class="text">{{ item.dimdesc }}</span>
             <div class="ibox-tools">
@@ -88,24 +88,24 @@ export default {
       var items = null;
       if(pos === 'row' || pos === 'col'){
         items = {
-              "desc":{name:"升序", icon:""},
-              "asc":{name:"降序", icon:""},
-              "move":{name:"移动", icon:"fa-arrows-alt", items:{left:{name:"左移", icon:"fa-arrow-left"}, right:{name:"右移", icon:"fa-arrow-right"}, moveTo:{name:"移至"+(pos=='row'?'列':"行")+"字段", icon:""}}},
-              "aggre": {name: "聚合"},
-              "top": {name: "取Top"},
-              "clear": {name: "删除", icon:"fa-times"}
+              "asc":{name:ts.$t('message.report.table.asc'), icon:""},
+              "desc":{name:ts.$t('message.report.table.desc'), icon:""},
+              "move":{name:ts.$t('message.report.table.move'), icon:"fa-arrows-alt", items:{left:{name:ts.$t('message.report.table.moveLeft'), icon:"fa-arrow-left"}, right:{name:ts.$t('message.report.table.moveRight'), icon:"fa-arrow-right"}, moveTo:{name:ts.$t('message.report.table.moveTo')+(pos=='row'?ts.$t('message.report.table.col'):ts.$t('message.report.table.row')), icon:""}}},
+              "aggre": {name: ts.$t('message.report.table.aggre')},
+              "top": {name: ts.$t('message.report.table.top')},
+              "clear": {name: ts.$t('message.report.table.clear'), icon:"fa-times"}
           };
         }
         if(pos === 'kpi'){
           items = {
-              "prop":{name:"属性", icon:""},
-              "sort":{name:"排序", icon:"", items:{
-                "desc":{name:"升序", icon:""},
-                "asc":{name:"降序", icon:""},
-                "def":{name:"默认", icon:""}
+              "prop":{name:ts.$t('message.report.table.prop'), icon:""},
+              "sort":{name:ts.$t('message.report.table.sort'), icon:"", items:{
+                "asc":{name:ts.$t('message.report.table.asc'), icon:""},
+                "desc":{name:ts.$t('message.report.table.desc'), icon:""},
+                "def":{name:ts.$t('message.report.table.def'), icon:""}
               }},
-              "move":{name:"移动", icon:"fa-arrows-alt", items:{left:{name:"左移", icon:"fa-arrow-left"}, right:{name:"右移", icon:"fa-arrow-right"}}},
-              "clear": {name: "删除", icon:"fa-times"}
+              "move":{name:ts.$t('message.report.table.move'), icon:"fa-arrows-alt", items:{left:{name:ts.$t('message.report.table.moveLeft'), icon:"fa-arrow-left"}, right:{name:ts.$t('message.report.table.moveRight'), icon:"fa-arrow-right"}}},
+              "clear": {name: ts.$t('message.report.table.clear'), icon:"fa-times"}
           };
         }
         $.contextMenu({
@@ -184,7 +184,7 @@ export default {
         dims = comp.kpiJson;
       }
       if(dims.length <= 1){
-        utils.msginfo('无效移动。');
+        utils.msginfo(this.$t('message.report.table.err1'));
         return;
       }
       let id = pos === 'kpi'?node.kpi_id:node.id;
@@ -192,7 +192,7 @@ export default {
         if((pos=="kpi"?dims[i].kpi_id:dims[i].id) == id){
           if(tp == 'left'){
             if(i <= 0){
-              utils.msginfo('无效移动。');
+              utils.msginfo(this.$t('message.report.table.err1'));
               return;
             }else{
               var tp = dims[i - 1];
@@ -203,7 +203,7 @@ export default {
           }else
           if(tp == 'right'){
             if( i >= dims.length - 1){
-              utils.msginfo('无效移动。');
+              utils.msginfo(this.$t('message.report.table.err1'));
               return;
             }else{
               var tp = dims[i + 1];
@@ -317,7 +317,8 @@ export default {
           //判断拖入的维度及度量是否和以前维度及度量在同一个表。
           if(json.cubeId != undefined){
             if(json.cubeId != node.li_attr.cubeId){
-              utils.msginfo("您拖入的"+ (node.li_attr.col_type == 2 ? "度量" : "维度") +"与组件已有的内容不在同一个数据表中，拖放失败。");
+              //utils.msginfo("您拖入的"+ (node.li_attr.col_type == 2 ? "度量" : "维度") +"与组件已有的内容不在同一个数据表中，拖放失败。");
+              utils.msginfo(ts.$t('message.report.chartData.err5')+ (node.li_attr.col_type == 2 ? ts.$t('message.model.cube.kpi') : ts.$t('message.model.cube.dim')) + ts.$t('message.report.chartData.err6'));
               return;
             }
           }else{
@@ -341,7 +342,7 @@ export default {
             if(!tools.kpiExist(node.li_attr.col_id, json.kpiJson)){
               json.kpiJson.push({"kpi_id":node.li_attr.col_id, "kpi_name" : node.text, "col_name":node.li_attr.col_name, "aggre":node.li_attr.aggre, "fmt":node.li_attr.fmt, "alias":node.li_attr.alias,"tname":node.li_attr.tname,"unit":node.li_attr.unit,"rate":node.li_attr.rate});
             }else{
-              utils.msginfo("度量已经存在。");
+              utils.msginfo(ts.$t('message.report.table.err2'));
               return;
             }
             
@@ -355,7 +356,7 @@ export default {
               if(!tools.dimExist(node.li_attr.col_id, json.rows) && !tools.dimExist(node.li_attr.col_id, json.cols)){
                 json.rows.push({"id":node.li_attr.col_id, "dimdesc" : node.text, "type":node.li_attr.dim_type, "colname":node.li_attr.col_name,"tname":node.li_attr.tname,"iscas":node.li_attr.iscas, "tableName":node.li_attr.tableName, "tableColKey":node.li_attr.tableColKey,"tableColName":node.li_attr.tableColName, "dimord":node.li_attr.dimord, "dim_name":node.li_attr.dim_name,"grouptype":node.li_attr.grouptype,"valType":node.li_attr.valType,"ordcol":node.li_attr.ordcol,"alias":node.li_attr.alias,"calc":node.li_attr.calc});
               }else{
-                utils.msginfo("维度已经存在。");
+                utils.msginfo(ts.$t('message.report.table.err3'));
                 return;
               }
              

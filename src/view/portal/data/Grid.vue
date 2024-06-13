@@ -2,11 +2,11 @@
     <div style="margin:10px;">
        <div class="tableDatasty" id="gridData">
         <template v-if="!comp.cols || comp.cols.length === 0">
-          <div class="tipinfo">拖拽数据表字段到此处作为表格的列字段</div>
+          <div class="tipinfo">{{$t('message.report.grid.note2')}}</div>
         </template>
         <template v-if="comp.cols && comp.cols.length > 0">
           <b>
-            表格字段：
+            {{$t('message.report.grid.cols')}}：
           </b>
           <template v-for="item in comp.cols">
             <span :key="item.id" class="dimcol">
@@ -17,18 +17,18 @@
           </template>
         </template>
        </div>
-         	<el-dialog title="表格字段属性" :visible.sync="propshow" :close-on-click-modal="false" custom-class="nopadding">
+         	<el-dialog :title="$t('message.report.grid.title')" :visible.sync="propshow" :close-on-click-modal="false" custom-class="nopadding">
              <el-form :model="val" ref="valForm" label-position="left">
-                <el-form-item label="显示名称" label-width="100px">
-                  <el-input v-model="val.dispName" label="名称"></el-input>
+                <el-form-item :label="$t('message.report.grid.dispName')" label-width="150px">
+                  <el-input v-model="val.dispName"></el-input>
                 </el-form-item>
-                <el-form-item label="所属表" label-width="100px">
+                <el-form-item :label="$t('message.report.grid.tname')" label-width="150px">
                   {{col.tname}}
                 </el-form-item>
-                <el-form-item label="对应字段" label-width="100px">
+                <el-form-item :label="$t('message.report.grid.name')" label-width="150px">
                   {{col.name}}
                 </el-form-item>
-                <el-form-item label="位置" label-width="100px">
+                <el-form-item :label="$t('message.report.grid.palign')" label-width="150px">
                    <el-radio-group v-model="val.palign" size="small">
                     <el-radio-button label="left">居左</el-radio-button>
                     <el-radio-button label="center">居中</el-radio-button>
@@ -36,15 +36,15 @@
                   </el-radio-group>
                 </el-form-item>
                 <template v-if="col.type === 'Date' || col.type ==='Datetime'">
-                  <el-form-item label="格式化" label-width="100px">
+                  <el-form-item :label="$t('message.report.grid.fmt')" label-width="150px">
                     <el-input v-model="val.fmt"></el-input>
                   </el-form-item>
                 </template>
                  <template v-if="col.type === 'Double' || col.type ==='Int'">
-                <el-form-item label="格式化" label-width="100px">
+                <el-form-item :label="$t('message.report.grid.fmt')" label-width="150px">
                     <el-select
                       v-model="val.fmt"
-                      placeholder="请选择"
+                      :placeholder="$t('message.base.select')"
                       >
                       <el-option
                         v-for="item in opt.fmts"
@@ -58,8 +58,8 @@
                  </template>
              </el-form>
              <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="saveProp()">确 定</el-button>
-              <el-button @click="propshow = false">取 消</el-button>
+              <el-button type="primary" @click="saveProp()">{{$t('message.base.ok')}}</el-button>
+              <el-button @click="propshow = false">{{$t('message.base.cancel')}}</el-button>
             </div>
           </el-dialog>
     </div>
@@ -116,12 +116,12 @@ export default {
       let ts = this;
       var comp = this.comp;
       var items = {
-            "sort":{name:"排序", items:{asc:{name:"升序",icon:"fa-sort-amount-asc"},
-                desc:{name:"降序", icon:"fa-sort-amount-desc"},
-                def:{name:"默认", icon:""}}},
-            "move":{name:"移动", icon:"fa-arrows-alt", items:{left:{name:"左移", icon:"fa-arrow-left"}, right:{name:"右移", icon:"fa-arrow-right"}}},
-            "prop": {name: "属性"},
-            "clear": {name: "删除", icon:"fa-times"}
+            "sort":{name:ts.$t('message.report.grid.sort'), items:{asc:{name:ts.$t('message.report.grid.asc'),icon:"fa-sort-amount-asc"},
+                desc:{name:ts.$t('message.report.grid.desc'), icon:"fa-sort-amount-desc"},
+                def:{name:ts.$t('message.report.grid.def'), icon:""}}},
+            "move":{name:ts.$t('message.report.grid.move'), icon:"fa-arrows-alt", items:{left:{name:ts.$t('message.report.grid.mleft'), icon:"fa-arrow-left"}, right:{name:ts.$t('message.report.grid.mright'), icon:"fa-arrow-right"}}},
+            "prop": {name: ts.$t('message.report.grid.prop')},
+            "clear": {name: ts.$t('message.report.grid.clear'), icon:"fa-times"}
         };
         $.contextMenu({
           selector: '#gridData span.dimcol button', 
@@ -252,7 +252,7 @@ export default {
           var node = ref.get_node(ui.draggable[0]);
             
             if(grid.dsetId && grid.dsetId != node.li_attr.dsetId){
-              utils.msginfo("你拖入的字段"+node.text+"与表格已有的内容不在同一个表中，拖放失败！");
+              utils.msginfo(node.text+"与表格已有的字段不在同一个表中，拖放失败！");
               return;
             }else{
               grid.dsetId = node.li_attr.dsetId;
@@ -273,7 +273,7 @@ export default {
               return r;
             };
             if(exist(node.id)){
-              utils.msginfo("您拖拽的字段 " + node.text+" 已经存在。");
+              utils.msginfo(node.text+" 已经存在。");
               return;
             }
             grid.cols.push({id:node.id,name:node.li_attr.name,tname:node.li_attr.tname,type:node.li_attr.type,expression:node.li_attr.expression});

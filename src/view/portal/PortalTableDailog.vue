@@ -3,13 +3,13 @@
   	<el-dialog :title="title" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  <el-form :model="val" ref="valForm" label-position="left">
 			<template v-if="type === 'dimAggre'">
-				<el-form-item label="自动聚合" label-width="100px">
+				<el-form-item :label="$t('message.report.tableSet.autoaggre')" label-width="150px">
 					<el-switch v-model="val.autoaggre"></el-switch>
-					(设置后，聚合方式的选择功能既无效) 
+					({{$t('message.report.tableSet.note')}}) 
 				</el-form-item>
 				<template v-if="val.autoaggre == false">
-				<el-form-item label="聚合方式" label-width="100px">
-					<el-select v-model="val.aggreType" style="width:100%" placeholder="请选择">
+				<el-form-item :label="$t('message.report.tableSet.aggreType')" label-width="150px">
+					<el-select v-model="val.aggreType" style="width:100%" :placeholder="$t('message.base.select')">
 						<el-option
 						v-for="item in opt.aggres"
 						:key="item.value"
@@ -19,16 +19,16 @@
 					</el-select>
 				</el-form-item>
 				</template>
-				<el-form-item label-width="100px">
-					<button type="button" class="btn btn-danger btn-rounded btn-outline btn-xs" @click="clearAggre()">清除聚合</button>
+				<el-form-item label-width="150px">
+					<button type="button" class="btn btn-danger btn-rounded btn-outline btn-xs" @click="clearAggre()">{{$t('message.report.tableSet.clearAggre')}}</button>
 				</el-form-item>
 			</template>
 			<template v-if="type === 'top'">
-				<el-form-item label="维度取Top" label-width="100px">
-					<el-input-number v-model="val.top" :min="1" :max="100" label="描述文字" size="small"></el-input-number>
+				<el-form-item :label="$t('message.report.tableSet.top')" label-width="150px">
+					<el-input-number v-model="val.top" :min="1" :max="100" size="small"></el-input-number>
 				</el-form-item>
-				<el-form-item label="" label-width="100px">
-					<el-select v-model="val.topType" placeholder="请选择">
+				<el-form-item label="" label-width="150px">
+					<el-select v-model="val.topType" :placeholder="$t('message.base.select')">
 						<el-option
 						v-for="item in opt.tops"
 						:key="item.value"
@@ -40,17 +40,17 @@
 			</template>
 			<template v-if="type === 'kpiprop'">
 				<el-tabs v-model="activeName" type="card">
-					<el-tab-pane label="基本信息" name="base">
-						<el-form-item label="度量名称" label-width="100px">
+					<el-tab-pane :label="$t('message.report.tableSet.base')" name="base">
+						<el-form-item :label="$t('message.report.tableSet.kpiName')" label-width="150px">
 						{{kpi.kpi_name}}
 						</el-form-item>
-						<el-form-item label="聚合方式" label-width="100px">
+						<el-form-item :label="$t('message.report.tableSet.aggre')" label-width="150px">
 							{{kpi.aggre}}
 						</el-form-item>
-						<el-form-item label="度量单位" label-width="100px">
+						<el-form-item :label="$t('message.report.tableSet.unit')" label-width="150px">
 							<el-select
 							v-model="val.unit"
-							placeholder="请选择"
+							:placeholder="$t('message.base.select')"
 							>
 							<el-option
 								v-for="item in opt.unit"
@@ -61,10 +61,10 @@
 						</el-option>
 						</el-select>
 						</el-form-item>
-						<el-form-item label="格式化" label-width="100px">
+						<el-form-item :label="$t('message.report.tableSet.fmt')" label-width="150px">
 							<el-select
 								v-model="val.fmt"
-								placeholder="请选择"
+								:placeholder="$t('message.base.select')"
 								>
 								<el-option
 									v-for="item in opt.fmt"
@@ -75,26 +75,26 @@
 							</el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="表头排序" label-width="100px">
+						<el-form-item :label="$t('message.report.tableSet.order')" label-width="150px">
 							<el-switch v-model="val.order" active-value="y" inactive-value="n"></el-switch>
 						</el-form-item>
 					</el-tab-pane>
-    				<el-tab-pane label="回调函数" name="cb">
+    				<el-tab-pane :label="$t('message.report.tableSet.cb')" name="cb">
 						function 
 						{{ val.funcname }}
 						(<b>value</b>, <b>col</b>, <b>row</b>, <b>data</b>)
 						{<br>
 						<el-input type="textarea" rows="6" v-model="val.code" size="medium"></el-input>
 						<br>}<br>
-						<p class="text-warning">通过回调函数 return 你想要的数据。</p>
+						<p class="text-warning">{{ $t('message.report.tableSet.note2')}}</p>
 					</el-tab-pane>
 				</el-tabs>
 				
 			</template>
 		  </el-form>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -116,18 +116,18 @@
 				activeName:"base",
 				opt:{
 					aggres:[
-						{name:"求和",value:"sum"},
-						{name:"计数",value:"count"},
-						{name:"平均",value:"avg"},
-						{name:"最大",value:"max"},
-						{name:"最小",value:"min"},
-						{name:"方差",value:"var"},
-						{name:"标准差",value:"sd"},
-						{name:"中位数",value:"middle"}
+						{name:this.$t('message.report.tableSet.sum'),value:"sum"},
+						{name:this.$t('message.report.tableSet.count'),value:"count"},
+						{name:this.$t('message.report.tableSet.avg'),value:"avg"},
+						{name:this.$t('message.report.tableSet.max'),value:"max"},
+						{name:this.$t('message.report.tableSet.min'),value:"min"},
+						{name:this.$t('message.report.tableSet.var'),value:"var"},
+						{name:this.$t('message.report.tableSet.sd'),value:"sd"},
+						{name:this.$t('message.report.tableSet.middle'),value:"middle"}
 					],
 					tops:[
-						{name:"数字", value:"number"},
-						{name:"百分比", value:"percent"}
+						{name:this.$t('message.report.tableSet.number'), value:"number"},
+						{name:this.$t('message.report.tableSet.percent'), value:"percent"}
 					],
 					unit:utils.rates,
 					fmt:utils.fmtJson
@@ -152,7 +152,7 @@
 		},
 		methods: {	
 			dimAggre(dim, comp){
-				this.title = "维度聚合";
+				this.title = this.$t('message.report.tableSet.title1');
 				this.type = "dimAggre";
 				this.show = true;
 				this.dim = dim;
@@ -163,7 +163,7 @@
 			},
 			
 			dimTop(dim, comp){
-				this.title = "维度取Top";
+				this.title = this.$t('message.report.tableSet.title2');
 				this.type = "top";
 				this.show = true;
 				this.dim = dim;
@@ -171,7 +171,7 @@
 				this.val.topType = dim.topType?dim.topType:"number";
 			},
 			kpiProperty(kpi, comp){
-				this.title = "度量属性";
+				this.title = this.$t('message.report.tableSet.title3');
 				this.type = "kpiprop";
 				this.show = true;
 				this.kpi = kpi;

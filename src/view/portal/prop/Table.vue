@@ -1,19 +1,19 @@
 <template>
   <el-form :model="prop" ref="propForm" label-position="left" size="mini">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="交叉表属性" name="1">
-            <el-form-item label="标题" label-width="70px">
+      <el-collapse-item :title="$t('message.report.tableProp.name')" name="1">
+            <el-form-item :label="$t('message.report.tableProp.title')" label-width="70px">
               <el-input v-model="prop.title" @blur="changevalue('title')"></el-input>
             </el-form-item>
-            <el-form-item label="是否显示标题" label-width="170px">
+            <el-form-item :label="$t('message.report.tableProp.showtitle')" label-width="170px">
               <el-switch v-model="prop.showtitle" @change="changevalue('showtitle')"></el-switch>
             </el-form-item>
-            <el-form-item label="交叉表下钻" label-width="170px">
+            <el-form-item :label="$t('message.report.tableProp.usedrill')" label-width="170px">
               <el-switch v-model="prop.usedrill" @change="changevalue('usedrill')"></el-switch>
             </el-form-item>
             <template v-if="prop.usedrill == true">
-            <el-form-item label="钻取维" label-width="70px">
-              <el-select v-model="prop.drillDim" placeholder="请选择" style="width:100%">
+            <el-form-item :label="$t('message.report.tableProp.drillDim')" label-width="70px">
+              <el-select v-model="prop.drillDim" @change="changevalue('drillDim')" :placeholder="$t('message.base.select')" style="width:100%">
                 <el-option
                 v-for="item in cols"
                 :key="item.value"
@@ -51,9 +51,10 @@ export default {
         title:null,
         showtitle:true,
         usedrill:false,
-        drillDim:""
+        drillDim: null,
       },
-      cols:[]
+      cols:[],
+      dims:[],
     }
   },
   mounted(){
@@ -68,6 +69,7 @@ export default {
         url:"bireport/queryDims.action",
         data: {cubeId: this.comp.cubeId},
         success:(resp)=>{
+          this.dims = resp.rows;
           this.cols = resp.rows.map(m=>{
             return {lable:m.dim_desc, value:m.alias}
           });
@@ -82,6 +84,11 @@ export default {
         p.showtitle = c.showtitle;
       }
       p.usedrill = c.usedrill;
+      if(c.drillDim && c.drillDim.length > 0){
+        p.drillDim = c.drillDim[0].code;
+      }else{
+        p.drillDim = null;
+      }
       this.loadCols();
     },
    
@@ -96,6 +103,20 @@ export default {
       let v = this.prop[prop];
       if(prop === 'title' || prop === 'showtitle' || prop === 'usedrill'){
         c[prop] = v;
+        if(prop == 'usedrill' && v == false){
+          delete c.drillDim;
+        }
+      }
+      if(prop === 'drillDim'){
+        if(c['usedrill'] == true){
+          let dim = this.dims.filter(m=>m.alias === this.prop.drillDim)[0];
+          if(!c.drillDim){
+            c.drillDim = [];
+          }
+          c.drillDim[0] = {name:dim.dimdesc,code:dim.alias,type:dim.dim_type,tableColKey:dim.tableColKey,tableColName:dim.tableColName,cubeId:dim.cubeId,dimord:dim.dimord,colname:dim.col_name,calc:dim.calc,tname:dim.tname};
+        }else{
+          delete c.drillDim;
+        }
       }
     }
   },
