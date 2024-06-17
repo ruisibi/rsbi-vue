@@ -1,18 +1,18 @@
 <template>
   <el-form :model="prop" ref="propForm" label-position="left" size="mini">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="表格属性" name="1">
-            <el-form-item label="表格标题" label-width="70px">
+      <el-collapse-item :title="$t('message.report.gridProp.name')" name="1">
+            <el-form-item :label="$t('message.report.gridProp.title')" label-width="70px">
               <el-input v-model="prop.title" @blur="changevalue('title')"></el-input>
             </el-form-item>
-            <el-form-item label="是否显示标题" label-width="170px">
+            <el-form-item :label="$t('message.report.gridProp.showtitle')" label-width="170px">
               <el-switch v-model="prop.showtitle" @change="changevalue('showtitle')"></el-switch>
             </el-form-item>
-            <el-form-item label="禁用分页" label-width="170px">
+            <el-form-item :label="$t('message.report.gridProp.isnotfy')" label-width="170px">
               <el-switch v-model="prop.isnotfy" @change="changevalue('isnotfy')"></el-switch>
             </el-form-item>
             <template v-if="!(prop.isnotfy === true)">
-            <el-form-item label="每页显示条数" label-width="80px">
+            <el-form-item :label="$t('message.report.gridProp.pageSize')" label-width="80px">
                <el-input-number size="small" v-model="prop.pageSize" @change="changevalue('pageSize')"></el-input-number>
             </el-form-item>
             </template>

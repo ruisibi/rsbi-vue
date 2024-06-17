@@ -2,21 +2,21 @@
   	<div class="wrapper-content-nomargin">
 		<el-menu @select="handleSelect" class="el-menu-demo" background-color="#f6f8f8" text-color="#777" mode="horizontal">
 			<el-submenu index="1">
-				<template slot="title"><i class="fa fa-file"></i> 文件</template>
-				<el-menu-item index="1-1">打开</el-menu-item>
-				<el-menu-item index="1-2">新建</el-menu-item>
-				<el-menu-item index="1-3">保存</el-menu-item>
+				<template slot="title"><i class="fa fa-file"></i> {{$t('message.olap.index.file')}}</template>
+				<el-menu-item index="1-1">{{$t('message.olap.index.open')}}</el-menu-item>
+				<el-menu-item index="1-2">{{$t('message.olap.index.new')}}</el-menu-item>
+				<el-menu-item index="1-3">{{$t('message.olap.index.save')}}</el-menu-item>
 			</el-submenu>
 			<el-submenu index="2">
-				<template slot="title"><i class="fa fa-file-excel-o"></i> 导出</template>
+				<template slot="title"><i class="fa fa-file-excel-o"></i> {{$t('message.olap.index.export')}}</template>
 				<el-menu-item index="html">HTML</el-menu-item>
 				<el-menu-item index="csv">CSV</el-menu-item>
 				<el-menu-item index="excel">EXCEL</el-menu-item>
 				<el-menu-item index="word">WORD</el-menu-item>
 				<el-menu-item index="pdf">PDF</el-menu-item>
 			</el-submenu>
-			<el-menu-item index="3"><i class="fa fa-print"></i> 打印</el-menu-item>
-			<el-menu-item index="4"><i class="fa fa-list-alt"></i> 解释</el-menu-item>
+			<el-menu-item index="3"><i class="fa fa-print"></i> {{$t('message.olap.index.print')}}</el-menu-item>
+			<el-menu-item index="4"><i class="fa fa-list-alt"></i> {{$t('message.olap.index.explain')}}</el-menu-item>
 		</el-menu>
 		<div class="wrapper-content">
 			<div class="row">
@@ -24,8 +24,8 @@
 					<div class="ibox">
 						<div class="ibox-content" style="padding:0px;">
 							<div style="padding:15px 20px 0px 20px">
-								<button class="btn btn-block btn-primary" @click="selectCube()"><i class="fa fa-refresh"></i> 选择立方体</button>
-								<p class="text-warning">拖拽数据到表格或图形中展现</p>
+								<button class="btn btn-block btn-primary" @click="selectCube()"><i class="fa fa-refresh"></i> {{$t('message.olap.index.selectcube')}}</button>
+								<p class="text-warning">{{$t('message.olap.index.note1')}}</p>
 							</div>
 							<div id="datasettree"></div>
 						</div>
@@ -36,15 +36,15 @@
 					<reportParam :pageInfo="pageInfo" ref="paramForm"></reportParam>
 					
 					<el-tabs v-model="pageInfo.showtype" type="border-card">
-						<el-tab-pane label="表格" name="table">
+						<el-tab-pane :label="$t('message.olap.index.table')" name="table">
 							<reportTable :pageInfo="pageInfo" ref="tableForm"></reportTable>
 						</el-tab-pane>
-						<el-tab-pane label="图形" name="chart">
+						<el-tab-pane :label="$t('message.olap.index.chart')" name="chart">
 							<report-chart :pageInfo="pageInfo" ref="chartForm"></report-chart>
 						</el-tab-pane>
 					</el-tabs>
 					<div class="clearbtn">
-						<button type="button" class="btn btn-default btn-xs" @click="cleanData()">清除数据</button>
+						<button type="button" class="btn btn-default btn-xs" @click="cleanData()">{{$t('message.olap.index.clear')}}</button>
 					</div>
 					
 				</div>
@@ -86,7 +86,7 @@
 					selectDs:"",
 					showtype:"table",
 					comps:[
-						{"name":"表格组件","id":1, "type":"table"},
+						{"name":"","id":1, "type":"table"},
 						{"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]}], 
 					params:[]
 				},  //多维分析的配置对象
@@ -123,7 +123,7 @@
 						core: {
 							data: {
 								id: 'nodata',
-								text: '您还未选择立方体',
+								text: ts.$t('message.olap.index.err1'),
 								icon: 'fa fa-warning icon_kpi'
 							}
 						},
@@ -160,6 +160,12 @@
 									url:"model/treeCube.action",
 									data:{cubeId:ts.pageInfo.selectDs},
 									success:(resp)=>{
+										//支持国际化
+										for(let r of resp.rows){
+											for(let c of r.children){
+												c.text = ts.$t(c.text);
+											}
+										}
 										callback.call(this, resp.rows);
 									}
 								}, ts);
@@ -176,7 +182,7 @@
 			},
 			cleanData(isall){
 				if(this.pageInfo.showtype==="table" || isall === true){ //清除表格
-					this.pageInfo.comps[0] = {"name":"表格组件","id":1, "type":"table"};
+					this.pageInfo.comps[0] = {"name":"","id":1, "type":"table"};
 					this.$refs['tableForm'].datas = null;
 					this.$refs['tableForm'].$forceUpdate();
 				}
@@ -210,21 +216,21 @@
 					var comp = this.pageInfo.showtype === 'table' ? tools.findCompById(1, this.pageInfo) : tools.findCompById(2, this.pageInfo)
 					if(this.pageInfo.showtype === 'table'){
 						if(!comp.kpiJson){
-							tools.msginfo("无数据");
+							tools.msginfo(this.$t('message.base.noData'));
 							return;
 						}
 					}
 					if(this.pageInfo.showtype ==='chart'){
 						if(!comp.kpiJson || comp.kpiJson.length == 0){
-							tools.msginfo("无数据");
+							tools.msginfo(this.$t('message.base.noData'));
 							return;
 						}
 						if(comp.chartJson.type == "scatter" && (comp.kpiJson.length < 2 || comp.kpiJson[1] == null)  ){
-							tools.msginfo("无数据");
+							tools.msginfo(this.$t('message.base.noData'));
 							return;
 						}
 						if(comp.chartJson.type == "bubble" && (comp.kpiJson.length < 3 || comp.kpiJson[2] == null ) ){
-							tools.msginfo("无数据");
+							tools.msginfo(this.$t('message.base.noData'));
 							return;
 						}
 					}
@@ -238,7 +244,7 @@
 					this.$refs['reportListForm'].open();
 				}else if(key ==='1-2'){ //新建
 					if(this.isupdate){
-						if(!confirm("多维分析未保存，是否继续新建？")){
+						if(!confirm(this.$t('message.olap.index.err2'))){
 							return
 						}
 					}
@@ -247,7 +253,7 @@
 						selectDs:"",
 						showtype:"table",
 						comps:[
-							{"name":"表格组件","id":1, "type":"table"},
+							{"name":"","id":1, "type":"table"},
 							{"name":"","id":2, "type":"chart",chartJson:{type:"line",params:[]},kpiJson:[]}], 
 						params:[]
 					}

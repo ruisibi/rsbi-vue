@@ -106,7 +106,7 @@ export default {
         }},domProps:{innerHTML:"<i class='fa fa-angle-double-right'></i>"}})
       ];
 
-      let pageinfo = h('div', {class:"pagesizeinfo"}, [h('div', {class:"pagesizeLeft"}, pg), h('div', {class:"pagesizeRight"}, '第'+(data.curPage + 1)+'页，共'+data.total+'条记录')]);
+      let pageinfo = h('div', {class:"pagesizeinfo"}, [h('div', {class:"pagesizeLeft"}, pg), h('div', {class:"pagesizeRight"}, this.$t('message.report.grid.page', {curPage:data.curPage + 1,total:data.total}))]);
       let bodysyl = {"overflow":"auto"};
       if(comp.height){
         let height = comp.height;

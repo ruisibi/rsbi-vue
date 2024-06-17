@@ -1,7 +1,7 @@
 <template>
-  	<el-dialog title="多维分析列表" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+  	<el-dialog :title="$t('message.olap.open.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  		<div class="btn-group optbtncls" role="group">
-					<button type="button" class="btn btn-outline btn-default" title="删除" @click="deleteReport()">
+					<button type="button" class="btn btn-outline btn-default" :title="$t('message.olap.open.remove')" @click="deleteReport()">
 						<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
 					</button>
 				</div>
@@ -11,14 +11,14 @@
 							<el-radio v-model="checked" name="myselect" :label="scope.row.pageId">&nbsp;</el-radio>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" prop="pageName" label="报表名称"></el-table-column>
-					<el-table-column align="center" prop="crtuser" label="创建人"></el-table-column>
-					<el-table-column align="center" prop="crtDate" label="创建时间"></el-table-column>
-					<el-table-column align="center" prop="updateDate" label="修改时间"></el-table-column>
+					<el-table-column align="center" prop="pageName" :label="$t('message.olap.open.pageName')"></el-table-column>
+					<el-table-column align="center" prop="crtuser" :label="$t('message.olap.open.crtuser')"></el-table-column>
+					<el-table-column align="center" prop="crtDate" :label="$t('message.olap.open.crtDate')"></el-table-column>
+					<el-table-column align="center" prop="updateDate" :label="$t('message.olap.open.updateDate')"></el-table-column>
 				</el-table>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -43,13 +43,13 @@
 			save(){
 				if(!this.checked){
 					this.$notify.error({
-						title: '请勾选数据!',
+						title: this.$t('message.base.err1'),
 						offset: 50
 					});
 					return;
 				}
 				if(this.$parent.isupdate){
-					if(!confirm("多维分析未保存，是否继续打开？")){
+					if(!confirm(this.$t('message.olap.open.err1'))){
 						return
 					}
 				}
@@ -85,7 +85,7 @@
 			deleteReport(){
 				if(!this.checked){
 					this.$notify.error({
-						title: '请勾选数据!',
+						title: this.$t('message.base.err1'),
 						offset: 50
 					});
 					return;
@@ -96,7 +96,7 @@
 					data:{id:this.checked},
 					success:(resp)=>{
 						this.$notify.success({
-							title: '删除成功!',
+							title: this.$t('message.olap.open.suc1'),
 							offset: 50
 						});
 						this.loadData();
