@@ -34,7 +34,7 @@ const messages = {
 }
 
 const i18n = new VueI18n({
-  locale: 'en',  // 设置默认语言
+  locale: 'zh',  // 设置默认语言
   fallbackLocale:'zh',
   messages
 })

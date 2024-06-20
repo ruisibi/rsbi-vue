@@ -66,13 +66,25 @@
 				data:{},
 				url:"frame/Menus.action",
 				success:function(resp){
+					ts.loopMenu(resp.rows);
 					ts.menus = resp.rows;
 				}
 			}, ts);
 		},
 		computed: {
 		},
-		methods: {		
+		methods: {	
+			//递归菜单实现国际化
+			loopMenu(menus){
+				$(menus).each((a, b)=>{
+					if(b.menuName && b.menuName.indexOf('.')>=0){
+						b.menuName =  this.$t(b.menuName);
+					}
+					if(b.children){
+						this.loopMenu(b.children);
+					}
+				});
+			},
 			selectMenu(index){
 				let m = null;
 				this.menus.forEach(element => { //第一层

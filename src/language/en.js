@@ -22,6 +22,16 @@ export default {
         noData:"No Data",
         load:"Data Loading...",
       },
+      menu:{
+        intro:"System Introduction",
+        model:"Data modelling",
+        report:"Data report",
+        olap:"Multidimensional analysis",
+        auth:"Permission",
+        user:"User management",
+        role:"Role management",
+        menu:"Menu management",
+      },
       login: {
         lang:"Language",
         userLogin: "User login",
@@ -44,6 +54,7 @@ export default {
         qq:"Technical exchange QQ group",
         more:"If you need more functions, you can",
         indexName:"Home",
+        switchMenu:"Switch Menu",
         user:{
           info:"User information",
           psd:"Change password",

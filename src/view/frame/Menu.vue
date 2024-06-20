@@ -201,6 +201,12 @@ export default {
                   postJSON: false,
                   url: 'frame/menu/loadData.action',
                   success: function (resp) {
+                    //实现国际化，根据.判断
+                    $(resp.rows).each((a, b)=>{
+                      if(b.text && b.text.indexOf('.')>=0){
+                        b.text =  ts.$t(b.text);
+                      }
+                    });
                     callback.call(this, resp.rows);
                   },
                 }, ts);

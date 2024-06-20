@@ -5,7 +5,7 @@
       <img src="../assets/image/log2.png">
     </div>
     <div class="navbar-head myhead">
-      <button class="btn btn-default btn-xs uinfo-btn" type="button" :class="swatchcls" @click="swatch" title="切换菜单" style="margin-top:15px;"><i class="fa fa-bars"></i></button>
+      <button class="btn btn-default btn-xs uinfo-btn" type="button" :class="swatchcls" @click="swatch" :title="$t('message.main.switchMenu')" style="margin-top:15px;"><i class="fa fa-bars"></i></button>
     </div>
     <ul class="navbar-right-my">
       <li>

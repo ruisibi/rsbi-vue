@@ -22,6 +22,16 @@ export default {
       noData:"無數據",
       load:"數據加載中...",
     },
+    menu:{
+      intro:"系統介紹",
+      model:"數據建模",
+      report:"數據報表",
+      olap:"多維分析",
+      auth:"權限管理",
+      user:"用戶管理",
+      role:"角色管理",
+      menu:"菜單管理",
+    },
     login: {
       lang:"語言",
       userLogin: "用戶登錄",
@@ -44,6 +54,7 @@ export default {
       qq:"技術交流QQ群",
       more:"如果您需要更多功能，可以",
       indexName:"首頁",
+      switchMenu:"切換菜單",
       user:{
         info:"個人信息",
         psd:"修改密碼",

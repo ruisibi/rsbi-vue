@@ -22,6 +22,16 @@ export default {
       noData:"无数据",
       load:"数据加载中...",
     },
+    menu:{
+      intro:"系统介绍",
+      model:"数据建模",
+      report:"数据报表",
+      olap:"多维分析",
+      auth:"权限管理",
+      user:"用户管理",
+      role:"角色管理",
+      menu:"菜单管理",
+    },
     login: {
       lang:"语言",
       userLogin: "用户登录",
@@ -44,6 +54,7 @@ export default {
       qq:"技术交流QQ群",
       more:"如果您需要更多功能，可以",
       indexName:"首页",
+      switchMenu:"切换菜单",
       user:{
         info:"个人信息",
         psd:"修改密码",
