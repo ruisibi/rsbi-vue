@@ -75,7 +75,7 @@ export default {
 				});
 				ret.push(h('table',{attrs:{class:"grid5"}},[h('tbody', trs)]));
 			}else{
-				ret = [h('div',{class:"tabhelpr"},[h('div','将维度拖到此处'), h('div','作为行标签')])];
+				ret = [h('div',{class:"tabhelpr"},[h('div', this.$t('message.olap.table.note1')), h('div',this.$t('message.olap.table.note2'))])];
 			}
 
 		  return ret;
@@ -116,7 +116,7 @@ export default {
 				 ret.push(h('div', {class:"colDimsList"}, nodes));
 
 			}else{
-				ret.push(h('div', {class:"tabhelpr"},'将维度拖到此处作为列标签'));
+				ret.push(h('div', {class:"tabhelpr"}, this.$t('message.olap.table.note3')));
 			}
 			if(this.datas){
 				let trs = [];
@@ -186,7 +186,7 @@ export default {
 				});
 				ret.push(h('table',{class:"grid5"},[h('tbody', trs)]));
 		   }else{
-		 	  ret.push(h('div', {attrs:{class:"tabhelpr"},domProps:{innerHTML:"将度量拖到此处<br/>查询数据"}}));
+		 	  ret.push(h('div', {attrs:{class:"tabhelpr"},domProps:{innerHTML:this.$t('message.olap.table.note4')}}));
 		   }
 		   return [h("div", {attrs:{id:"d_kpi"}}, ret)];
 	   },
@@ -240,7 +240,8 @@ export default {
 				//判断拖入的维度及度量是否和以前维度及度量在同一个表。
 				if(json.cubeId != undefined){
 					if(json.cubeId != node.li_attr.cubeId){
-						tools.msginfo("您拖入的"+ (node.li_attr.col_type == 2 ? "度量" : "维度") +"与组件已有的内容不在同一个数据表中，拖放失败。");
+						let mtp = node.li_attr.col_type == 2 ? ts.$t('message.model.cube.kpi') : ts.$t('message.model.cube.dim');
+						tools.msginfo(ts.$t('message.olap.chart.err2', {mtp:mtp}));
 						return;
 					}
 				}
@@ -274,7 +275,7 @@ export default {
 					if(!tools.kpiExist(node.li_attr.col_id, json.kpiJson)){
 						json.kpiJson.push({"kpi_id":node.li_attr.col_id, "kpi_name" : node.text, "col_name":node.li_attr.col_name, "aggre":node.li_attr.aggre, "fmt":node.li_attr.fmt, "alias":node.li_attr.alias,"tname":node.li_attr.tname,"unit":node.li_attr.unit,"rate":node.li_attr.rate,"calc":node.li_attr.calc});
 					}else{
-						tools.msginfo("度量已经存在。");
+						tools.msginfo(ts.$t('message.olap.table.err1'));
 						return;
 					}
 					ts.setUpdate();
@@ -285,13 +286,13 @@ export default {
 					//写col维度
 					if($(this).attr("id") == "d_colDims"){
 						if(tools.dimExist(node.li_attr.col_id, json.cols) || tools.dimExist(node.li_attr.col_id, json.rows)){
-							tools.msginfo("维度已经存在。");
+							tools.msginfo(ts.$t('message.olap.table.err2'));
 							return;
 						}
 						//如果维度有分组，分组必须相同
 						var group = node.li_attr.grouptype;
 						if(group != null && tools.findGroup(json.rows, group)){
-							tools.msginfo("拖放失败，同一分组的维度必须在同一行/列标签。");
+							tools.msginfo(ts.$t('message.olap.table.err3'));
 							return;
 						}
 						json.cols.push({"id":node.li_attr.col_id, "dimdesc" : node.text, "type":node.li_attr.dim_type, "colname":node.li_attr.col_name,"alias":node.li_attr.alias,"tname":node.li_attr.tname,"iscas":node.li_attr.iscas, "tableName":node.li_attr.tableName, "tableColKey":node.li_attr.tableColKey,"tableColName":node.li_attr.tableColName, "dimord":node.li_attr.dimord, "grouptype":node.li_attr.grouptype,"valType":node.li_attr.valType,ordcol:node.li_attr.ordcol,dateformat:node.li_attr.dateformat,"calc":node.li_attr.calc});
@@ -301,13 +302,13 @@ export default {
 					//写row维度
 					if($(this).attr("id") == "d_rowDims"){
 						if(tools.dimExist(node.li_attr.col_id, json.rows) || tools.dimExist(node.li_attr.col_id, json.cols)){
-							tools.msginfo("维度已经存在。");
+							tools.msginfo(ts.$t('message.olap.table.err2'));
 							return;
 						}
 						//如果维度有分组，分组必须相同
 						var group = node.li_attr.grouptype;
 						if(group != null && tools.findGroup(json.cols, group)){
-							tools.msginfo("拖放失败，同一分组的维度必须在同一行/列标签。");
+							tools.msginfo(ts.$t('message.olap.table.err3'));
 							return;
 						}
 						json.rows.push({"id":node.li_attr.col_id, "dimdesc" : node.text, "type":node.li_attr.dim_type, "colname":node.li_attr.col_name,"alias":node.li_attr.alias,"tname":node.li_attr.tname,"iscas":node.li_attr.iscas, "tableName":node.li_attr.tableName, "tableColKey":node.li_attr.tableColKey,"tableColName":node.li_attr.tableColName, "dimord":node.li_attr.dimord,"grouptype":node.li_attr.grouptype,"valType":node.li_attr.valType,ordcol:node.li_attr.ordcol,dateformat:node.li_attr.dateformat,"calc":node.li_attr.calc});
@@ -403,14 +404,14 @@ export default {
 					}
 				},
 				items: {
-					"asc": {name: "升序", icon: "fa-sort-amount-asc"},
-					"desc": {name: "降序", icon: 'fa-sort-amount-desc'},
-					"move":{name:"移动",items:{left:{name:"左移",icon:"fa-arrow-left"},right:{name:"右移", icon:"fa-arrow-right"},moveTo:{name:"移至行/列"}}},
-					"hlhh": {name: "行列互换", icon:"fa-exchange"},
-					"filter": {name: "筛选",icon:"fa-filter"},
-					"aggre": {name: "聚合",icon:""},
-					"top": {name: "取Top...",icon:""},
-					"remove": {name: "删除",icon:"fa-remove"}
+					"asc": {name: ts.$t('message.olap.menu.asc'), icon: "fa-sort-amount-asc"},
+					"desc": {name: ts.$t('message.olap.menu.desc'), icon: 'fa-sort-amount-desc'},
+					"move":{name:ts.$t('message.olap.menu.move'),items:{left:{name:ts.$t('message.olap.menu.mleft'),icon:"fa-arrow-left"},right:{name:ts.$t('message.olap.menu.mright'), icon:"fa-arrow-right"},moveTo:{name:ts.$t('message.olap.menu.moveTo')}}},
+					"hlhh": {name: ts.$t('message.olap.menu.exchange'), icon:"fa-exchange"},
+					"filter": {name: ts.$t('message.olap.menu.filter'),icon:"fa-filter"},
+					"aggre": {name: ts.$t('message.olap.menu.aggre'),icon:""},
+					"top": {name: ts.$t('message.olap.menu.top'),icon:""},
+					"remove": {name: ts.$t("message.olap.menu.remove"),icon:"fa-remove"}
 				}
 			});
 		}
@@ -471,14 +472,14 @@ export default {
 				}
 			},
 			items: {
-				"compute": {name: "计算", items:{sq:{name:"上期"}, tq:{name:"同期"}, zje:{name:'增减额'}, hb:{name:'环比(%)'}, tb:{name:"同比(%)"},"sep1": "---------",
-					sxpm:{name:"升序排名"}, jxpm:{name:"降序排名"}, zb:{name:"占比(%)"}}},
-				"prop": {name: "属性..."},
-				"chart": {name: "图表...",icon:"fa-line-chart"},
-				"filter": {name: "筛选...",icon:"fa-filter"},
-				"warn": {name: "预警...", icon:"fa-warning"},
-				"sort":{name:"排序",items:{asc:{name:"升序",icon:"fa-sort-amount-asc"},desc:{name:"降序", icon:"fa-sort-amount-desc"},def:{name:"默认"}}},
-				"remove": {name: "删除",icon:"fa-remove"}
+				"compute": {name: ts.$t("message.olap.menu.compute.title"), items:{sq:{name:ts.$t("message.olap.menu.compute.sq")}, tq:{name:ts.$t("message.olap.menu.compute.tq")}, zje:{name:ts.$t("message.olap.menu.compute.zje")}, hb:{name:ts.$t("message.olap.menu.compute.hb")}, tb:{name:ts.$t("message.olap.menu.compute.tb")},"sep1": "---------",
+					sxpm:{name:ts.$t("message.olap.menu.compute.sxpm")}, jxpm:{name:ts.$t("message.olap.menu.compute.jxpm")}, zb:{name:ts.$t("message.olap.menu.compute.zb")}}},
+				"prop": {name: ts.$t("message.olap.menu.prop")},
+				"chart": {name: ts.$t("message.olap.menu.chart"),icon:"fa-line-chart"},
+				"filter": {name: ts.$t("message.olap.menu.filter"),icon:"fa-filter"},
+				"warn": {name: ts.$t("message.olap.menu.warn"), icon:"fa-warning"},
+				"sort":{name:ts.$t("message.olap.menu.sort"),items:{asc:{name:ts.$t("message.olap.menu.asc"),icon:"fa-sort-amount-asc"},desc:{name:ts.$t("message.olap.menu.desc"), icon:"fa-sort-amount-desc"},def:{name:ts.$t("message.olap.menu.def")}}},
+				"remove": {name: ts.$t("message.olap.menu.remove"),icon:"fa-remove"}
 			}
 		});
 	},
@@ -526,7 +527,7 @@ export default {
 				if(resp[i].grouptype == '' || resp[i].grouptype == null){ //无分组的，直接显示维度
 						var id  = resp[i].dim_id;
 						//str = str +  "<div onclick=\"drill("+id+", "+comp.id+", '"+pos+"', '"+val+"', '"+vdesc+"', '"+oldDimId+"', true)\"><span style=\"color:#ccc\">下钻</span>" + resp[i].dimdesc+"</div>"
-						items["dim_"+id] = {name:'<span style="color:#ccc">下钻</span>'+resp[i].dim_desc,isHtmlName: true,callback:function(itemKey, opt, e){
+						items["dim_"+id] = {name:'<span style="color:#ccc">'+ts.$t('message.olap.chart.drill')+'</span>'+resp[i].dim_desc,isHtmlName: true,callback:function(itemKey, opt, e){
 							var dimid = itemKey.split("_")[1];
 							tableUtils.drill(oldDimId, dimid, comp, pos, value, "", ()=>{
 								ts.tableView();
@@ -536,7 +537,7 @@ export default {
 						cnt = cnt + 1;	
 					}else{ //有分组，显示分组, 对于分组，如果下级分组已选择，不能再选择上级分组
 						if(!groupExist(ignoreGroup, resp[i].grouptype)){
-							var o = items["g"+resp[i].grouptype] = {name:"<span style=\"color:#ccc\">下钻</span>"+resp[i].groupname,isHtmlName: true, items:{}};
+							var o = items["g"+resp[i].grouptype] = {name:"<span style=\"color:#ccc\">"+ts.$t('message.olap.chart.drill')+"</span>"+resp[i].groupname,isHtmlName: true, items:{}};
 							ignoreGroup.push(resp[i].grouptype);
 							//查询分组的内容
 							var lsdim = findGroupChild(resp[i].grouptype);
@@ -546,7 +547,7 @@ export default {
 								var tmp = lsdim[kl];
 								var bcz = !tools.dimExist(tmp.dim_id, comp.cols) && !tools.dimExist(tmp.dim_id, comp.rows);
 								if(bcz){
-									o.items['dim_'+tmp.dim_id] = {name:'<span style="color:#ccc">下钻</span>' + tmp.dim_desc, isHtmlName: true, callback:function(itemKey, opt, e){
+									o.items['dim_'+tmp.dim_id] = {name:'<span style="color:#ccc">'+ts.$t('message.olap.chart.drill')+'</span>' + tmp.dim_desc, isHtmlName: true, callback:function(itemKey, opt, e){
 										var dimid = itemKey.split("_")[1];
 										tableUtils.drill(oldDimId, dimid, comp, pos, value, "", ()=>{
 											ts.tableView();
@@ -567,7 +568,7 @@ export default {
 					}
 			}
 			if(cnt == 0){
-				tools.msginfo("数据已钻透。", "error");
+				tools.msginfo(ts.$t('message.olap.chart.err10'), "error");
 				return;
 			}
 			$.contextMenu( 'destroy');

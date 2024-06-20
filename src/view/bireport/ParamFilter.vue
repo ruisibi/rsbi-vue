@@ -2,7 +2,7 @@
   	<el-dialog :title="title" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 
 		<template v-if="!(param.type === 'month' || param.type === 'day')">
-			<el-input v-model="search"	size="mini" placeholder="输入关键字搜索">
+			<el-input v-model="search"	size="mini" :placeholder="$t('message.olap.param.keyword')">
 				<el-button slot="append" icon="el-icon-search" @click="searchme"></el-button>
 			</el-input>
 			<div class="el-dialog-div">
@@ -18,21 +18,21 @@
 		<template v-if="param.type === 'month'">
 			<div class="el-dialog-div">
 			<div class="block">
-				<span class="demonstration">开始月份</span>
+				<span class="demonstration">{{$t('message.olap.param.smonth')}}</span>
 				<el-date-picker
 				v-model="st"
 				type="month"
 				value-format="yyyy-MM"
-				placeholder="选择月份">
+				:placeholder="$t('message.olap.param.month')">
 				</el-date-picker>
 			</div>
 			<div class="block">
-				<span class="demonstration">结束月份</span>
+				<span class="demonstration">{{$t('message.olap.param.emonth')}}</span>
 				<el-date-picker
 				v-model="end"
 				type="month"
 				value-format="yyyy-MM"
-				placeholder="选择月份">
+				:placeholder="$t('message.olap.param.month')">
 				</el-date-picker>
 			</div>
 			</div>
@@ -40,28 +40,28 @@
 		<template v-if="param.type === 'day'">
 			<div class="el-dialog-div">
 			<div class="block">
-				<span class="demonstration">开始日期</span>
+				<span class="demonstration">{{$t('message.olap.param.sday')}}</span>
 				<el-date-picker
 				v-model="st"
 				type="date"
 				value-format="yyyy-MM-dd"
-				placeholder="选择日期">
+				:placeholder="$t('message.olap.param.day')">
 				</el-date-picker>
 			</div>
 			<div class="block">
-				<span class="demonstration">结束日期</span>
+				<span class="demonstration">{{$t('message.olap.param.eday')}}</span>
 				<el-date-picker
 				v-model="end"
 				type="date"
 				value-format="yyyy-MM-dd"
-				placeholder="选择日期">
+				:placeholder="$t('message.olap.param.day')">
 				</el-date-picker>
 			</div>
 			</div>
 		</template>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -101,7 +101,7 @@
 		methods: {	
 			createDimFilter(dim, comp, useType){   //用在维度
 				this.show = true;
-				this.title = dim.dimdesc+" - 维度筛选";
+				this.title = dim.dimdesc+" - " + this.$t('message.olap.param.fdim');
 				this.param = dim;
 				this.cubeId = comp.cubeId;
 				this.dsid = comp.dsid;
@@ -122,7 +122,7 @@
 			},
 			create(p){	//用在参数筛选
 				this.show = true;
-				this.title = p.name + " - 参数筛选";
+				this.title = p.name + " - "+ this.$t('message.olap.param.pdim');
 				this.param = p;
 				this.cubeId = p.cubeId;
 				this.dsid = p.dsid;
@@ -148,7 +148,7 @@
 					p.end =  this.end;
 					//判断是否st < ed
 					if(Number(p.st) > Number(p.end)){
-						msginfo("您选择的开始月份不能大于结束月份。", "error");
+						msginfo(this.$t('message.olap.param.err3'), "error");
 						return;
 					}
 				}else if(p.type === 'day'){
@@ -156,7 +156,7 @@
 					p.end =  this.end;
 					//判断是否st < ed
 					if(Number(p.st.replace(/-/g, "")) > Number(p.end.replace(/-/g, ""))){
-						msginfo("您选择的开始日期不能大于结束日期。", "error");
+						msginfo(this.$t('message.olap.param.err4'), "error");
 						return;
 					}
 				}else{

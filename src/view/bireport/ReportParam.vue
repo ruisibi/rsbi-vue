@@ -1,12 +1,12 @@
 <template>
 	<div class="ibox" style="margin-bottom:20px;">
 		<div class="ibox-content" id="p_param" style="padding:5px;">
-			<div class="ptabhelpr" v-if="!pageInfo.params || pageInfo.params.length == 0 ">拖拽维度到此处作为筛选条件</div>
-			<b v-if="pageInfo.params && pageInfo.params.length > 0">参数：</b>
+			<div class="ptabhelpr" v-if="!pageInfo.params || pageInfo.params.length == 0 ">{{$t('message.olap.param.note1')}}</div>
+			<b v-if="pageInfo.params && pageInfo.params.length > 0">{{$t('message.olap.param.param')}}：</b>
 			<template v-for="(p) in pageInfo.params">
 				<span :key="p.id" class="pppp">
-					<span title="筛选" @click="paramFilter(p, p.type, p.name)" class="text">{{p.name}}({{ paramsDisp(p) }})</span>
-					<button class="btn btn-default btn-xs" title="删除" @click.stop="deleteParam(p.id)"><i class="fa fa-remove"></i></button>
+					<span :title="$t('message.olap.param.filter')" @click="paramFilter(p, p.type, p.name)" class="text">{{p.name}}({{ paramsDisp(p) }})</span>
+					<button class="btn btn-default btn-xs" :title="$t('message.base.delete')" @click.stop="deleteParam(p.id)"><i class="fa fa-remove"></i></button>
 				</span>
 			</template>
 		</div>
@@ -46,15 +46,15 @@
 			paramsDisp(p){
 				if(p.type === 'day' || p.type === 'month'){
 					if(p.st && p.end){
-						return p.st + "至" + p.end
+						return p.st + this.$t('message.olap.param.to') + p.end
 					}else{
-						return "无";
+						return this.$t('message.olap.param.no');
 					}
 				}else{
 					if(p.valStrs&&p.valStrs.length>0){
 						return p.valStrs.join(",");
 					}else{
-						return "无";
+						return this.$t('message.olap.param.no');
 					}
 				}
 			},
@@ -92,7 +92,7 @@
 							}
 							//判断是否存在
 							if(findParamById(node.li_attr.col_id, ts.pageInfo.params) != null){
-								ts.$notify.error({title: '您已经添加了该参数！',offset: 50});
+								ts.$notify.error({title: ts.$t('message.olap.param.err1'),offset: 50});
 								return;
 							}
 							var id = node.li_attr.col_id;
@@ -119,9 +119,6 @@
 						return false;
 					}
 				});
-				if(this.pageInfo.params.length === 0){
-					$("#p_param").html("<div class=\"ptabhelpr\">拖拽维度到此处作为页面参数</div>");
-				}
 				this.$parent.$refs['tableForm'].tableView();
 				this.$parent.$refs['chartForm'].chartView();
 			}

@@ -1,11 +1,11 @@
 <!-- 表格对话框都放这里面 -->
 <template>
-  	<el-dialog title="通过表格创建图形" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+  	<el-dialog :title="$t('message.olap.t2c.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  <el-form :model="chart" ref="chartForm" label-position="left">
-			<el-form-item label="图表类型" label-width="100px">
+			<el-form-item :label="$t('message.olap.t2c.ctype')" label-width="150px">
 				<el-select
 					v-model="chart.type"
-					placeholder="请选择"
+					:placeholder="$t('message.base.select')"
 					>
 					<el-option
 						v-for="item in opt.types"
@@ -16,10 +16,10 @@
 				</el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="横轴" label-width="100px">
+			<el-form-item :label="$t('message.olap.t2c.xcol')" label-width="150px">
 				<el-select
 					v-model="chart.xcol"
-					placeholder="请选择"
+					:placeholder="$t('message.base.select')"
 					>
 					<el-option
 						v-for="item in opt.xcols"
@@ -30,10 +30,10 @@
 				</el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="图例" label-width="100px">
+			<el-form-item :label="$t('message.olap.t2c.scol')" label-width="150px">
 				<el-select
 					v-model="chart.scol"
-					placeholder="请选择"
+					:placeholder="$t('message.base.select')"
 					>
 					<el-option
 						v-for="item in opt.scols"
@@ -47,8 +47,8 @@
 		  </el-form>
 			
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -69,12 +69,12 @@
 				},
 				opt:{
 					types:[
-						{value:'line', text:'曲线图'},
-						{value:'column', text:'柱状图'},
-						{value:'pie', text:'饼图'},
-						{value:'area', text:'面积图'},
-						{value:'bar', text:'条形图'},
-						{value:'radar', text:'雷达图'}
+						{value:'line', text:this.$t('message.report.chart.line')},
+						{value:'column', text:this.$t('message.report.chart.column')},
+						{value:'pie', text:this.$t('message.report.chart.pie')},
+						{value:'area', text:this.$t('message.report.chart.area')},
+						{value:'bar', text:this.$t('message.report.chart.bar')},
+						{value:'radar', text:this.$t('message.report.chart.radar')}
 					],
 					cols:null,
 					rows:null
@@ -93,7 +93,7 @@
 				var comp = ts.comp;
 				var xcol = ts.chart.xcol;
 				var scol = ts.chart.scol;
-				var chart = {id:2, name:"图表组件", type:"chart", chartJson:{type:tp,ycol:{type:"kpi"}, params:[]}, cubeId:comp.cubeId, tname:comp.tname, kpiJson:[], dsid:comp.dsid, dsetId:comp.dsetId};
+				var chart = {id:2, name:"", type:"chart", chartJson:{type:tp,ycol:{type:"kpi"}, params:[]}, cubeId:comp.cubeId, tname:comp.tname, kpiJson:[], dsid:comp.dsid, dsetId:comp.dsetId};
 				//设置度量
 				var k = eval("(" + JSON.stringify(ts.kpi) + ")");
 				chart.kpiJson.push(k);

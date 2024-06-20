@@ -1,6 +1,6 @@
 <!-- 表格对话框都放这里面 -->
 <template>
-  	<el-dialog title="切换图形类型" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+  	<el-dialog :title="$t('message.report.chart.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		
 			<div class="row">
 			<div class="col-sm-3">
@@ -21,7 +21,7 @@
 						</span>
 						</template>
 						<template v-if="item.type == 'map'">
-							 <el-select v-model="mapArea" placeholder="请选择地图区域" style="width:100%">
+							 <el-select v-model="mapArea" :placeholder="$t('message.report.chart.maparea')" style="width:100%">
 								<el-option
 								v-for="item in opts.areas"
 								:key="item.code"
@@ -36,8 +36,8 @@
 		</div>
 
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -53,39 +53,39 @@
 				mapArea:"china",
 				mapAreaname:null,
 				opts:{
-					areas:[{code:"china",name:"全国"}]
+					areas:[{code:"china",name:this.$t('message.report.chart.china')}]
 				},
 				chart:null,
 				charts:[
-					{cid:"1", cname:"曲线图", type:"line",show:true,children:[
-						{img:"c1.gif", index:"1", name:"曲线图"}
+					{cid:"1", cname:this.$t('message.report.chart.line'), type:"line",show:true,children:[
+						{img:"c1.gif", index:"1", name:this.$t('message.report.chart.line1')}
 					]},
-					{cid:"2", cname:"柱状图",type:"column",show:false,children:[
-						{img:"c2.gif",  index:"1", name:"柱状图"}
+					{cid:"2", cname:this.$t('message.report.chart.column'),type:"column",show:false,children:[
+						{img:"c2.gif",  index:"1", name:this.$t('message.report.chart.column1')}
 					]},
-					{cid:"3", cname:"条形图",type:"bar",show:false,children:[
-						{img:"bar.gif",  index:"1", name:"条形图"}
+					{cid:"3", cname:this.$t('message.report.chart.bar'),type:"bar",show:false,children:[
+						{img:"bar.gif",  index:"1", name:this.$t('message.report.chart.bar1')}
 					]},
-					{cid:"4", cname:"面积图",type:"area",show:false,children:[
-						{img:"area.gif", index:"1", name:"面积图"}
+					{cid:"4", cname:this.$t('message.report.chart.area'),type:"area",show:false,children:[
+						{img:"area.gif", index:"1", name:this.$t('message.report.chart.area1')}
 					]},
-					{cid:"5", cname:"饼图",type:"pie", show:false,children:[
-						{img:"c3.gif", index:"1", name:"饼图"}
+					{cid:"5", cname:this.$t('message.report.chart.pie'),type:"pie", show:false,children:[
+						{img:"c3.gif", index:"1", name:this.$t('message.report.chart.pie1')}
 					]},
-					{cid:"6", cname:"仪表盘",type:"gauge",show:false,children:[
-						{img:"c4.gif", index:"1", name:"仪表盘"}
+					{cid:"6", cname:this.$t('message.report.chart.gauge'),type:"gauge",show:false,children:[
+						{img:"c4.gif", index:"1", name:this.$t('message.report.chart.gauge1')}
 					]},
-					{cid:"7", cname:"雷达图", type:"radar", show:false,children:[
-						{img:"c5.gif",  index:"1", name:"雷达图"}
+					{cid:"7", cname:this.$t('message.report.chart.radar'), type:"radar", show:false,children:[
+						{img:"c5.gif",  index:"1", name:this.$t('message.report.chart.radar1')}
 					]},
-					{cid:"8", cname:"散点图",type:"scatter",show:false,children:[
-						{img:"c6.gif",  index:"1", name:"散点图"}
+					{cid:"8", cname:this.$t('message.report.chart.scatter'),type:"scatter",show:false,children:[
+						{img:"c6.gif",  index:"1", name:this.$t('message.report.chart.scatter1')}
 					]},
-					{cid:"9", cname:"气泡图",type:"bubble",show:false,children:[
-						{img:"c7.gif",  index:"1", name:"气泡图"}
+					{cid:"9", cname:this.$t('message.report.chart.bubble'),type:"bubble",show:false,children:[
+						{img:"c7.gif",  index:"1", name:this.$t('message.report.chart.bubble1')}
 					]},
-					{cid:"10", cname:"地图",type:"map", show:false,children:[
-						{img:"c8.gif", index:"1", name:"地图"}
+					{cid:"10", cname:this.$t('message.report.chart.map'),type:"map", show:false,children:[
+						{img:"c8.gif", index:"1", name:this.$t('message.report.chart.map1')}
 					]},
 				]
 			}

@@ -3,24 +3,24 @@
   	<el-dialog :title="title" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  <el-form :model="val" ref="valForm" label-position="left">
 			<template v-if="type === 'top'">
-				<el-form-item label="维度取Top" label-width="100px">
-					<el-input-number v-model="val.top" :min="1" :max="100" label="描述文字" size="small"></el-input-number>
+				<el-form-item :label="$t('message.olap.chartDailog.top')" label-width="150px">
+					<el-input-number v-model="val.top" :min="1" :max="100" size="small"></el-input-number>
 				</el-form-item>
 			</template>
 			<template v-if="type === 'kpiprop'">
-				<el-form-item label="度量名称" label-width="100px">
+				<el-form-item :label="$t('message.olap.chartDailog.kpiName')" label-width="150px">
 					{{kpi.kpi_name}}
 				</el-form-item>
-				<el-form-item label="所属表" label-width="100px">
+				<el-form-item :label="$t('message.olap.chartDailog.tname')" label-width="150px">
 					{{kpi.tname}}
 				</el-form-item>
-				<el-form-item label="聚合方式" label-width="100px">
+				<el-form-item :label="$t('message.olap.chartDailog.aggre')" label-width="150px">
 					{{kpi.aggre}}
 				</el-form-item>
-				<el-form-item label="度量单位" label-width="100px">
+				<el-form-item :label="$t('message.olap.chartDailog.rate')" label-width="150px">
 					<el-select
 					v-model="val.rate"
-					placeholder="请选择"
+					:placeholder="$t('message.base.select')"
 					>
 					<el-option
 						v-for="item in opt.unit"
@@ -31,10 +31,10 @@
 				</el-option>
 				</el-select>
 				</el-form-item>
-				<el-form-item label="格式化" label-width="100px">
+				<el-form-item :label="$t('message.olap.chartDailog.fmt')" label-width="150px">
 					<el-select
 						v-model="val.fmt"
-						placeholder="请选择"
+						:placeholder="$t('message.base.select')"
 						>
 						<el-option
 							v-for="item in opt.fmt"
@@ -47,13 +47,13 @@
 				</el-form-item>
 			</template>
 			<template v-if="type === 'kpifilter'">
-				<el-form-item label="度量名称" label-width="100px">
+				<el-form-item :label="$t('message.olap.chartDailog.kpiName')" label-width="150px">
 					{{kpi.kpi_name}}
 				</el-form-item>
-				<el-form-item label="操作" label-width="100px">
+				<el-form-item :label="$t('message.base.oper')" label-width="150px">
 					<el-select
 						v-model="val.oper"
-						placeholder="请选择"
+						:placeholder="$t('message.base.select')"
 						>
 						<el-option
 							v-for="item in opt.oper"
@@ -64,17 +64,17 @@
 					</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="值" label-width="100px">
-					<el-input-number v-model="val.value1" label="描述文字" size="small"></el-input-number>
+				<el-form-item :label="$t('message.olap.chartDailog.val')" label-width="150px">
+					<el-input-number v-model="val.value1" size="small"></el-input-number>
 				</el-form-item>
-				<el-form-item label="值2" v-show="val.oper === 'between'" label-width="100px">
-					<el-input-number v-model="val.value2" label="描述文字" size="small"></el-input-number>
+				<el-form-item :label="$t('message.olap.chartDailog.val2')" v-show="val.oper === 'between'" label-width="150px">
+					<el-input-number v-model="val.value2" size="small"></el-input-number>
 				</el-form-item>
 			</template>
 		  </el-form>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -114,21 +114,21 @@
 						name:"亿", value:"100000000"
 					}],
 					fmt:[{
-						value:"#,###", text:"整数"
+						value:"#,###", text: this.$t("message.model.fmt.int")
 						},{
-						value:"#,##0.00", text:"小数(保留两位)"
+						value:"#,##0.00", text: this.$t("message.model.fmt.double")
 						},{
-						value:"#,##0.0000", text:"小数(保留四位)"
+						value:"#,##0.0000", text: this.$t("message.model.fmt.double2")
 						},{
-						value:"0.00%", text: "百分比"
+						value:"0.00%", text: this.$t("message.model.fmt.percentage")
 						}
 					],
 					oper:[
-						{value:null, text:"清除"},
-						{value:">", text:"大于"},
-						{value:"<", text:"小于"},
-						{value:"=", text:"等于"},
-						{value:"between", text:"区间"}
+						{value:null, text:this.$t('message.olap.chartDailog.empty')},
+						{value:">", text:this.$t('message.olap.chartDailog.bigger')},
+						{value:"<", text:this.$t('message.olap.chartDailog.smaller')},
+						{value:"=", text:this.$t('message.olap.chartDailog.equal')},
+						{value:"between", text:this.$t('message.olap.chartDailog.between')}
 					]
 				}
 			}
@@ -139,7 +139,7 @@
 		},
 		methods: {	
 			dimTop(dim, comp){
-				this.title = "维度取Top";
+				this.title = this.$t('message.olap.chartDailog.title1');
 				this.show = true;
 				this.type = "top";
 				this.dim = dim;
@@ -147,7 +147,7 @@
 				this.val.top = dim.top;
 			},
 			setChartKpi(kpi, comp){
-				this.title = "度量属性";
+				this.title = this.$t('message.olap.chartDailog.title2');
 				this.show = true;
 				this.type = "kpiprop";
 				this.kpi = kpi;
@@ -156,7 +156,7 @@
 				this.val.rate = kpi.rate;
 			},
 			kpifilter(kpi, comp){
-				this.title = "度量筛选";
+				this.title = this.$t('message.olap.chartDailog.title3');
 				this.type = "kpifilter";
 				this.show = true;
 				this.kpi = kpi;

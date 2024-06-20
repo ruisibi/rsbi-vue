@@ -3,6 +3,7 @@
  */
 import $ from 'jquery'
 import * as tools from '@/view/bireport/bireportUtils'
+import { i18n } from '@/main.js'
 
 export const dimsort = (tp, dim, pos, comp, cb)=>{
 	dim.dimord = tp;
@@ -31,14 +32,14 @@ export function dimmove(tp, dim, pos, comp, cb){
 		dims = comp.rows;
 	}
 	if(dims.length <= 1){
-		tools.msginfo('无效移动。', "error");
+		tools.msginfo(i18n.tc('message.report.table.err1'), "error");
 		return;
 	}
 	for(var i=0; i<dims.length; i++){
 		if(dims[i].id == dim.id){
 			if(tp == 'left'){
 				if(i <= 0){
-					tools.msginfo('无效移动。', "error");
+					tools.msginfo(i18n.tc('message.report.table.err1'), "error");
 					return;
 				}else{
 					var tp = dims[i - 1];
@@ -52,7 +53,7 @@ export function dimmove(tp, dim, pos, comp, cb){
 			}else
 			if(tp == 'right'){
 				if( i >= dims.length - 1){
-					tools.msginfo('无效移动。', "error");
+					tools.msginfo(i18n.tc('message.report.table.err1'), "error");
 					return;
 				}else{
 					var tp = dims[i + 1];
@@ -85,7 +86,7 @@ export function dimexchange(dim, pos, comp, cb){
 		//如果维度有分组，分组必须相同
 		var group = tmp.grouptype;
 		if(group != null && tools.findGroup(comp.cols, group, tmp)){
-			tools.msginfo("移动失败，同一分组的维度必须在同一行/列标签。", "error");
+			tools.msginfo(i18n.tc('message.olap.table.err3'), "error");
 			return;
 		}
 		comp.cols.splice(idx, 1);
@@ -107,7 +108,7 @@ export function dimexchange(dim, pos, comp, cb){
 		//如果维度有分组，分组必须相同
 		var group = tmp.grouptype;
 		if(group != null && tools.findGroup(comp.rows, group, tmp)){
-			tools.msginfo("移动失败，同一分组的维度必须在同一行/列标签。", "error");
+			tools.msginfo(i18n.tc('message.olap.table.err3'), "error");
 			return;
 		}
 		comp.rows.splice(idx, 1);
@@ -266,12 +267,12 @@ export function kpicompute(tp, kpi, comp, pageInfo, cb){
 		kpi.compute = "jxpm";
 	}else{
 		if(!isExistDateDim(comp, 'table')){
-			tools.msginfo("当前度量计算需要表格中先有时间类型的维度(年/季度/月/日)。", "error");
+			tools.msginfo(i18n.tc('message.olap.table.err4'), "error");
 			return;
 		}		
 		//如果有参数,并且参数是时间维度，需要判断表格中是否有同样的参数维度，如果没有提示用户添加
 		if(!paramsamedimdate(comp, pageInfo)){
-			tools.msginfo("度量计算时，需要表格中具有和参数相同的维度。", "error");
+			tools.msginfo(i18n.tc('message.olap.table.err5'), "error");
 			return;
 		}
 		//先判断已经存在的，如果是时间偏移计算就追加，或者替换.

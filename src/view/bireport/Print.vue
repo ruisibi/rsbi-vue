@@ -41,7 +41,7 @@
 		},
 		methods: {	
 			printReport(){
-				window.document.title = "多维分析表格打印";
+				window.document.title = this.$t('message.olap.table.print');
 				if(this.type === 'table'){ 
 					this.$refs['tableForm'].tableView(this.pageInfo, ()=>{
 						setTimeout(()=>{

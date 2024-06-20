@@ -3,8 +3,8 @@
   	<el-dialog :title="title" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 		  <el-form :model="val" ref="valForm" label-position="left">
 			<template v-if="type === 'dimAggre'">
-				<el-form-item label="聚合方式" label-width="100px">
-					<el-select v-model="val.aggreType" style="width:100%" placeholder="请选择">
+				<el-form-item :label="$t('message.olap.tableDlg.aggreType')" label-width="100px">
+					<el-select v-model="val.aggreType" style="width:100%" :placeholder="$t('message.base.select')">
 						<el-option
 						v-for="item in opt.aggres"
 						:key="item.value"
@@ -14,15 +14,15 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label-width="100px">
-					<button type="button" class="btn btn-danger btn-rounded btn-outline btn-xs" @click="clearAggre()">清除聚合</button>
+					<button type="button" class="btn btn-danger btn-rounded btn-outline btn-xs" @click="clearAggre()">{{$t('message.olap.tableDlg.clear')}}</button>
 				</el-form-item>
 			</template>
 			<template v-if="type === 'top'">
-				<el-form-item label="维度取Top" label-width="100px">
-					<el-input-number v-model="val.top" :min="1" :max="100" label="描述文字" size="small"></el-input-number>
+				<el-form-item :label="$t('message.olap.tableDlg.top')" label-width="100px">
+					<el-input-number v-model="val.top" :min="1" :max="100" size="small"></el-input-number>
 				</el-form-item>
 				<el-form-item label="" label-width="100px">
-					<el-select v-model="val.topType" placeholder="请选择">
+					<el-select v-model="val.topType" :placeholder="$t('message.base.select')">
 						<el-option
 						v-for="item in opt.tops"
 						:key="item.value"
@@ -33,19 +33,19 @@
 				</el-form-item>
 			</template>
 			<template v-if="type === 'kpiprop'">
-				<el-form-item label="度量名称" label-width="100px">
+				<el-form-item :label="$t('message.olap.tableDlg.kpiName')" label-width="100px">
 					{{kpi.kpi_name}}
 				</el-form-item>
-				<el-form-item label="所属表" label-width="100px">
+				<el-form-item :label="$t('message.olap.tableDlg.tname')" label-width="100px">
 					{{kpi.tname}}
 				</el-form-item>
-				<el-form-item label="聚合方式" label-width="100px">
+				<el-form-item :label="$t('message.olap.tableDlg.aggre')" label-width="100px">
 					{{kpi.aggre}}
 				</el-form-item>
-				<el-form-item label="度量单位" label-width="100px">
+				<el-form-item :label="$t('message.olap.tableDlg.unit')" label-width="100px">
 					<el-select
 					v-model="val.unit"
-					placeholder="请选择"
+					:placeholder="$t('message.base.select')"
 					>
 					<el-option
 						v-for="item in opt.unit"
@@ -56,10 +56,10 @@
 				</el-option>
 				</el-select>
 				</el-form-item>
-				<el-form-item label="格式化" label-width="100px">
+				<el-form-item :label="$t('message.olap.tableDlg.fmt')" label-width="100px">
 					<el-select
 						v-model="val.fmt"
-						placeholder="请选择"
+						:placeholder="$t('message.base.select')"
 						>
 						<el-option
 							v-for="item in opt.fmt"
@@ -72,13 +72,13 @@
 				</el-form-item>
 			</template>
 			<template v-if="type === 'kpifilter'">
-				<el-form-item label="度量名称" label-width="100px">
+				<el-form-item :label="$t('message.olap.tableDlg.kpiName')" label-width="100px">
 					{{kpi.kpi_name}}
 				</el-form-item>
-				<el-form-item label="操作" label-width="100px">
+				<el-form-item :label="$t('message.base.oper')" label-width="100px">
 					<el-select
 						v-model="val.oper"
-						placeholder="请选择"
+						:placeholder="$t('message.base.select')"
 						>
 						<el-option
 							v-for="item in opt.oper"
@@ -89,16 +89,16 @@
 					</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="值" label-width="100px">
-					<el-input-number v-model="val.value1" label="描述文字" size="small"></el-input-number>
+				<el-form-item :label="$t('message.olap.tableDlg.val1')" label-width="100px">
+					<el-input-number v-model="val.value1" size="small"></el-input-number>
 				</el-form-item>
-				<el-form-item label="值2" v-show="val.oper === 'between'" label-width="100px">
-					<el-input-number v-model="val.value2" label="描述文字" size="small"></el-input-number>
+				<el-form-item :label="$t('message.olap.tableDlg.val2')" v-show="val.oper === 'between'" label-width="100px">
+					<el-input-number v-model="val.value2" size="small"></el-input-number>
 				</el-form-item>
 			</template>
 			<template v-if="type === 'kpiwarning'">
-				<el-form-item label="图片样式" label-width="160px">
-					<el-select v-model="val.wctype" placeholder="请选择" @change="chgpic">
+				<el-form-item :label="$t('message.olap.tableDlg.wctype')" label-width="160px">
+					<el-select v-model="val.wctype" :placeholder="$t('message.base.select')" @change="chgpic">
 						<el-option
 							v-for="item in opt.wctypes"
 							:key="item.value"
@@ -109,7 +109,7 @@
 					</el-select>
 					<el-switch
 						v-model="val.fztp"
-						inactive-text="反转图片"
+						:inactive-text="$t('message.olap.tableDlg.fztp')"
 						@change="fztpfunc"
 						>
 					</el-switch>
@@ -117,9 +117,9 @@
 				<el-form-item label="" label-width="160px">
 					<span slot="label">
 						<span id="ww1" class="warning6"></span>
-						当前值
+						{{$t('message.olap.tableDlg.cval') }}
 					</span>
-					<el-select v-model="val.logic1" style="width:100px;" placeholder="请选择" >
+					<el-select v-model="val.logic1" style="width:100px;" :placeholder="$t('message.base.select')" >
 						<el-option
 							v-for="item in opt.logics"
 							:key="item.value"
@@ -133,9 +133,9 @@
 				<el-form-item label-width="160px">
 					<span slot="label">
 						<span id="ww2" class="warning5">
-						</span> 当前值 &lt; <span id="and1"></span> 且 
+						</span> {{$t('message.olap.tableDlg.cval') }} &lt; <span id="and1"></span> {{$t('message.olap.tableDlg.and') }}
 					</span>
-					<el-select v-model="val.logic2" style="width:100px;" placeholder="请选择" >
+					<el-select v-model="val.logic2" style="width:100px;" :placeholder="$t('message.base.select')" >
 						<el-option
 							v-for="item in opt.logics"
 							:key="item.value"
@@ -149,16 +149,16 @@
 				<el-form-item label-width="160px">
 					<span slot="label">
 						<span id="ww3" class="warning4"></span>
-						当前值 &lt; <span id="and2"></span>
+						{{$t('message.olap.tableDlg.cval') }} &lt; <span id="and2"></span>
 					
 					</span>
 				</el-form-item>
-				<button type="button" class="btn btn-danger btn-rounded btn-outline btn-xs" @click="clearwarning">清除预警</button>
+				<button type="button" class="btn btn-danger btn-rounded btn-outline btn-xs" @click="clearwarning">{{$t('message.olap.tableDlg.clearwarn') }}</button>
 			</template>
 		  </el-form>
 		<div slot="footer" class="dialog-footer">
-			<el-button type="primary" @click="save()">确 定</el-button>
-			<el-button @click="show = false">取 消</el-button>
+			<el-button type="primary" @click="save()">{{$t('message.base.ok')}}</el-button>
+			<el-button @click="show = false">{{$t('message.base.cancel')}}</el-button>
 		</div>
   </el-dialog>
 </template>
@@ -179,18 +179,18 @@
 				kpi:null,
 				opt:{
 					aggres:[
-						{name:"求和",value:"sum"},
-						{name:"计数",value:"count"},
-						{name:"平均",value:"avg"},
-						{name:"最大",value:"max"},
-						{name:"最小",value:"min"},
-						{name:"方差",value:"var"},
-						{name:"标准差",value:"sd"},
-						{name:"中位数",value:"middle"}
+						{name:this.$t('message.report.tableSet.sum'),value:"sum"},
+						{name: this.$t('message.report.tableSet.count'),value:"count"},
+						{name:this.$t('message.report.tableSet.avg'),value:"avg"},
+						{name: this.$t('message.report.tableSet.max'),value:"max"},
+						{name: this.$t('message.report.tableSet.min'),value:"min"},
+						{name: this.$t('message.report.tableSet.var'),value:"var"},
+						{name:this.$t('message.report.tableSet.sd'),value:"sd"},
+						{name:this.$t('message.report.tableSet.middle'),value:"middle"}
 					],
 					tops:[
-						{name:"数字", value:"number"},
-						{name:"百分比", value:"percent"}
+						{name:this.$t('message.report.tableSet.number'), value:"number"},
+						{name:this.$t('message.report.tableSet.percent'), value:"percent"}
 					],
 					unit:[{
 						name:"", value:"1"
@@ -204,22 +204,22 @@
 						name:"亿", value:"100000000"
 					}],
 					fmt:[{
-						value:"#,###", text:"整数"
+						value:"#,###", text: this.$t("message.model.fmt.int")
 						},{
-						value:"#,##0.00", text:"小数(保留两位)"
+						value:"#,##0.00", text: this.$t("message.model.fmt.double")
 						},{
-						value:"#,##0.0000", text:"小数(保留四位)"
+						value:"#,##0.0000", text: this.$t("message.model.fmt.double2")
 						},{
-						value:"0.00%", text: "百分比"
+						value:"0.00%", text: this.$t("message.model.fmt.percentage")
 						}
 					],
 					oper:[
-						{value:">", text:"大于"},
-						{value:"<", text:"小于"},
-						{value:"=", text:"等于"},
-						{value:"between", text:"区间"}
+						{value:">", text:this.$t('message.olap.chartDailog.bigger')},
+						{value:"<", text:this.$t('message.olap.chartDailog.smaller')},
+						{value:"=", text:this.$t('message.olap.chartDailog.equal')},
+						{value:"between", text:this.$t('message.olap.chartDailog.between')}
 					],
-					wctypes:[{value:"1",text:"交通灯"},{value:"2",text:"箭头"}],
+					wctypes:[{value:"1",text:this.$t('message.olap.tableDlg.wctp1')},{value:"2",text:this.$t('message.olap.tableDlg.wctp2')}],
 					logics:[{value:">="},{value:">"}]
 				},
 				val:{
@@ -244,7 +244,7 @@
 		},
 		methods: {	
 			dimAggre(dim, comp){
-				this.title = "维度聚合";
+				this.title = this.$t('message.olap.tableDlg.title1');
 				this.type = "dimAggre";
 				this.show = true;
 				this.dim = dim;
@@ -253,7 +253,7 @@
 				}
 			},
 			dimTop(dim, comp){
-				this.title = "维度取Top";
+				this.title = this.$t('message.olap.tableDlg.title2');
 				this.type = "top";
 				this.show = true;
 				this.dim = dim;
@@ -261,7 +261,7 @@
 				this.val.topType = dim.topType;
 			},
 			kpiProperty(kpi, comp){
-				this.title = "度量属性";
+				this.title = this.$t('message.olap.tableDlg.title3');
 				this.type = "kpiprop";
 				this.show = true;
 				this.kpi = kpi;
@@ -269,13 +269,13 @@
 				this.val.unit = kpi.rate;
 			},
 			kpiFilter(kpi, comp){
-				this.title = "度量筛选";
+				this.title = this.$t('message.olap.tableDlg.title4');
 				this.type = "kpifilter";
 				this.show = true;
 				this.kpi = kpi;
 			},
 			kpiwarning(kpi, comp){
-				this.title = "指标预警";
+				this.title = this.$t('message.olap.tableDlg.title5');
 				this.type = "kpiwarning";
 				this.show = true;
 				this.kpi = kpi;

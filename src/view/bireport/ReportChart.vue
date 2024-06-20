@@ -29,7 +29,7 @@
 			let leftCols = [];  //左边显示的列表
 			
 			//切换图表
-			let cgbtn = h('button', {attrs:{class:"btn btn-block btn-default"}, on:{click:()=>{this.changeChartType()}}}, '切换图形类型');
+			let cgbtn = h('button', {attrs:{class:"btn btn-block btn-default"}, on:{click:()=>{this.changeChartType()}}}, this.$t('message.olap.chart.chg'));
 			leftCols.push(cgbtn);
 
 			const comp = tools.findCompById(this.chartId, this.pageInfo);
@@ -43,10 +43,10 @@
 					let o = comp.kpiJson[0];
 					xcol = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
 				}else{
-					xcol = [h('span', {class:"charttip"}, '将度量拖到这里')]
+					xcol = [h('span', {class:"charttip"}, this.$t('message.olap.chart.note1'))]
 				}
 				//横轴　
-				let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '横轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
+				let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, this.$t('message.olap.chart.xcol')), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, xcol)]);
 				leftCols.push(xcolobj);
 
 				let ycol = null;
@@ -54,9 +54,9 @@
 					let o = comp.kpiJson[1];
 					ycol = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'y2col')}})]
 				}else{
-					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')]
+					ycol = [h('span', {class:"charttip"}, this.$t('message.olap.chart.note1'))]
 				}
-				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '纵轴'), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, this.$t('message.olap.chart.ycol')), h('div', {attrs:{class:"h_ctx", id:"y2col"}}, ycol)]);
 				leftCols.push(ycolobj);
 
 				//气泡大小
@@ -66,9 +66,9 @@
 						let o = comp.kpiJson[2];
 						qp = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
 					}else{
-						qp = [h('span', {class:"charttip"}, '将度量拖到这里')]
+						qp = [h('span', {class:"charttip"}, this.$t('message.olap.chart.note1'))]
 					}
-					let qpobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '气泡大小'), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
+					let qpobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, this.$t('message.olap.chart.size')), h('div', {attrs:{class:"h_ctx", id:"y3col"}}, qp)]);
 					leftCols.push(qpobj);
 				}
 			}
@@ -78,10 +78,10 @@
 				let o = comp.chartJson.xcol;
 				xcol = [h('span', {attrs:{class:"charttxt", title:o.dimdesc}}, o.dimdesc), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'xcol')}})]
 			}else{
-				xcol = [h('span', {class:"charttip"}, '将维度拖到这里')]
+				xcol = [h('span', {class:"charttip"}, this.$t('message.olap.chart.note2'))]
 			}
 			//横轴　
-			let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, isscatter?'观察维度':'横轴'), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
+			let xcolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, isscatter?this.$t('message.olap.chart.scol'):this.$t('message.olap.chart.xcol')), h('div', {attrs:{class:"h_ctx", id:"xcol"}}, xcol)]);
 			leftCols.push(xcolobj);
 
 			if(!isscatter){
@@ -90,10 +90,10 @@
 					let o = comp.kpiJson[0];
 					ycol = [h('span', {attrs:{class:"charttxt", title:o.kpi_name}}, o.kpi_name), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'ycol')}})]
 				}else{
-					ycol = [h('span', {class:"charttip"}, '将度量拖到这里')];
+					ycol = [h('span', {class:"charttip"}, this.$t('message.olap.chart.note1'))];
 				}
 				//纵轴
-				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '纵轴'), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
+				let ycolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, this.$t('message.olap.chart.ycol')), h('div', {attrs:{class:"h_ctx", id:"ycol"}}, ycol)]);
 				leftCols.push(ycolobj);
 			}
 
@@ -103,10 +103,10 @@
 					let o = comp.chartJson.scol;
 					scol = [h('span', {attrs:{class:"charttxt", title:o.dimdesc}}, o.dimdesc), h('a', {attrs:{class:"charticon"},domProps:{innerHTML:`<i class="fa fa-gear"></i>`},on:{click:()=>this.chartmenu(o, 'scol')}})]
 				}else{
-					scol = [h('span', {class:"charttip"}, '将维度拖到这里')]
+					scol = [h('span', {class:"charttip"}, this.$t('message.olap.chart.note2'))]
 				}
 				//图例 Ser
-				let scolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, '图例'), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
+				let scolobj = h('div', {class:"ts_h"}, [h('div', {class:"h_tit"}, this.$t('message.olap.chart.scol2')), h('div', {attrs:{class:"h_ctx", id:"scol"}},scol)]);
 				leftCols.push(scolobj);
 			}
 			//启用多指标查询
@@ -129,13 +129,13 @@
 			rh.push(h('div', {class:"exchangexs", style:{display:disp}}, exchange));
 			let zqw = [];
 			if(comp.chartJson.params && comp.chartJson.params.length > 0){
-				let clds = [h('b', '钻取维：')];
+				let clds = [h('b', this.$t('message.olap.chart.dirll'))];
 				$(comp.chartJson.params).each((a,b)=>{
 					clds.push(h('span', {class:"chartdrillDim"}, [h('a', {class:"fa fa-minus-square-o",attrs:{href:'javascript:;',title:"上卷"},on:{click:()=>{chartUtils.chartGoupDim(comp, b.id,b.pos, ()=>{this.chartView()})}}}), h('b', b.dimdesc)]));
 				});
 				zqw.push(h('span', {class:"chartdrillmenu"}, clds));
 			}
-			zqw.push(h("div", {attrs:{id:"chart"+this.chartId}}, "图表预览区域"));
+			zqw.push(h("div", {attrs:{id:"chart"+this.chartId}},  this.$t('message.olap.chart.note3')));
 			rh.push(h('div',{class:"chartctx"}, zqw ));
 			
 			let r = h('div', {attrs:{class:"ctx", id:"T"+this.chartId}}, rh);
@@ -158,7 +158,7 @@
 			exchangexs(){
 				var comp = tools.findCompById(this.chartId, this.pageInfo);
 				if(comp.chartJson == undefined || (comp.chartJson.xcol == undefined && comp.chartJson.scol == undefined)){
-					tools.msginfo("您还未选择维度。");
+					tools.msginfo(this.$t('message.olap.chart.err1'));
 				}
 				var tmp = comp.chartJson.xcol;
 				comp.chartJson.xcol = comp.chartJson.scol;
@@ -205,7 +205,8 @@
 						//判断拖入的维度及度量是否和以前维度及度量在同一个表。
 						if(json.cubeId != undefined){
 							if(json.cubeId != node.li_attr.cubeId){
-								tools.msginfo("您拖入的"+ (node.li_attr.col_type == 2 ? "度量" : "维度") +"与组件已有的内容不在同一个数据表中，拖放失败。");
+								let mtp = node.li_attr.col_type == 2 ? ts.$t('message.model.cube.kpi') : ts.$t('message.model.cube.dim');
+								tools.msginfo(ts.$t('message.olap.chart.err2', {mtp:mtp}));
 								return;
 							}
 						}
@@ -223,7 +224,7 @@
 						if(node.li_attr.col_type == 1){
 							var dimId = node.li_attr.col_id;
 							if(chartUtils.findDimById(dimId, json.chartJson.params) != null){
-								tools.msginfo("您拖放的维度已存在于钻取维中，不能拖放。")
+								tools.msginfo(ts.$t('message.olap.chart.err3'))
 								return;
 							}
 						}
@@ -245,7 +246,7 @@
 						if(node.li_attr.col_type == 1 && dropId == "xcol"){
 							//判断是否在xcol中已经存在
 							if(json.chartJson.scol != undefined && json.chartJson.scol.id == node.li_attr.col_id){
-								tools.msginfo("您拖放的维度已存在于图例项中，不能拖放。")
+								tools.msginfo(ts.$t('message.olap.chart.err4'))
 								return;
 							}
 							
@@ -253,7 +254,7 @@
 							var gt = node.li_attr.grouptype;
 							if(gt != null && gt != ''){
 								if(json.chartJson.scol != undefined && json.chartJson.scol.grouptype == gt){
-									tools.msginfo("您拖放的维度与此图表中已有维度分组相同，不能拖放。")
+									tools.msginfo(ts.$t('message.olap.chart.err5'))
 									return;
 								}
 							}
@@ -265,7 +266,7 @@
 						if(node.li_attr.col_type == 1 &&  dropId == "scol"){
 							//判断是否在xcol中已经存在
 							if(json.chartJson.xcol != undefined && json.chartJson.xcol.id == node.li_attr.col_id){
-								tools.msginfo("您拖放的维度已存在于横轴中，不能拖放。")
+								tools.msginfo(ts.$t('message.olap.chart.err6'))
 								return;
 							}
 							
@@ -273,7 +274,7 @@
 							var gt = node.li_attr.grouptype;
 							if(gt != null && gt != ''){
 								if(json.chartJson.xcol != undefined && json.chartJson.xcol.grouptype == gt){
-									tools.msginfo("您拖放的维度与此图表中已有维度分组相同，不能拖放。")
+									tools.msginfo(ts.$t('message.olap.chart.err5'))
 									return;
 								}
 							}
@@ -395,17 +396,17 @@
 						}
 					},
 					items: {
-						"asc": {name: "升序", icon: "fa-sort-amount-asc"},
-						"desc": {name: "降序", icon: 'fa-sort-amount-desc'},
-						"filter": {name: "筛选",icon:"fa-filter"},
-						"top": {name: "取Top...",disabled:function(key, opt){
+						"asc": {name: ts.$t('message.olap.chart.asc'), icon: "fa-sort-amount-asc"},
+						"desc": {name: ts.$t('message.olap.chart.desc'), icon: 'fa-sort-amount-desc'},
+						"filter": {name: ts.$t('message.olap.chart.filter'),icon:"fa-filter"},
+						"top": {name: ts.$t('message.olap.chart.top'),disabled:function(key, opt){
 							if(pos == "xcol"){
 								return false;
 							}else{
 								return true;
 							}
 						}},
-						"prop": {name: "属性...",disabled:function(key, opt){
+						"prop": {name: ts.$t('message.olap.chart.prop'),disabled:function(key, opt){
 							let tp = pos;
 							if(tp == 'ycol' || tp == 'y2col' || tp=='y3col'){
 								return false;
@@ -413,7 +414,7 @@
 								return true;
 							}
 						}},
-						"remove": {name: "删除",icon:"fa-remove"}
+						"remove": {name: ts.$t('message.olap.chart.remove'),icon:"fa-remove"}
 					}
 				});
 			},
@@ -435,7 +436,7 @@
 								}
 							}
 							if(areaDim == null){
-								tools.msginfo("未找到地市维度。");
+								tools.msginfo(ts.$t('message.olap.chart.err7'));
 								return;
 							}
 							/**
@@ -455,7 +456,7 @@
 								}
 							}
 							if(areaDim == null){
-								tools.msginfo("未找到县维度。");
+								tools.msginfo(ts.$t('message.olap.chart.err8'));
 								return;
 							}
 							/**
@@ -467,7 +468,7 @@
 							**/
 							return;
 						}else{
-							tools.msginfo("地图只支持从省市县三级。");
+							tools.msginfo(ts.$t('message.olap.chart.err9'));
 							return;
 						}
 					}
@@ -505,7 +506,7 @@
 						}
 						if(resp[i].grouptype == '' || resp[i].grouptype == null){ //无分组的，直接显示维度
 							var id  = resp[i].dim_id;
-							items["dim_"+id] = {name:'<span style="color:#ccc">下钻</span>'+resp[i].dim_desc,isHtmlName: true, callback:function(itemKey, opt, e){
+							items["dim_"+id] = {name:'<span style="color:#ccc">'+ts.$t('message.olap.chart.drill')+'</span>'+resp[i].dim_desc,isHtmlName: true, callback:function(itemKey, opt, e){
 								var dimid = itemKey.split("_")[1];
 								chartUtils.drillingChart(dimid, comp, 'row', xvalue, oldDimId, ()=>{
 									ts.setUpdate();
@@ -516,7 +517,7 @@
 						}else{ //有分组，显示分组, 对于分组，如果下级分组已选择，不能再选择上级分组
 							if(!groupExist(ignoreGroup, resp[i].grouptype)){
 								//var groups = "<div><span style=\"color:#ccc\">下钻</span><span>" + resp[i].groupname+"</span><div style=\"width:150px;\">"
-								var o = items["g"+resp[i].grouptype] = {name:"<span style=\"color:#ccc\">下钻</span>"+resp[i].groupname,isHtmlName: true, items:{}};
+								var o = items["g"+resp[i].grouptype] = {name:"<span style=\"color:#ccc\">"+ts.$t('message.olap.chart.drill')+"</span>"+resp[i].groupname,isHtmlName: true, items:{}};
 								ignoreGroup.push(resp[i].grouptype);
 								//查询分组的内容
 								var lsdim = findGroupChild(resp[i].grouptype);
@@ -526,7 +527,7 @@
 									var tmp = lsdim[kl];
 									var cz = tools.dimExist(tmp.dim_id, comp.chartJson.params) ||  (comp.chartJson.xcol && tmp.dim_id == comp.chartJson.xcol.id) || (comp.chartJson.scol && tmp.dim_id == comp.chartJson.scol.id);
 									if(!cz){
-										o.items['dim_'+tmp.dim_id] = {name:'<span style="color:#ccc">下钻</span>' + tmp.dim_desc, isHtmlName: true, callback:function(itemKey, opt, e){
+										o.items['dim_'+tmp.dim_id] = {name:'<span style="color:#ccc">'+ts.$t('message.olap.chart.drill')+'</span>' + tmp.dim_desc, isHtmlName: true, callback:function(itemKey, opt, e){
 											var dimid = itemKey.split("_")[1];
 											chartUtils.drillingChart(dimid, comp, 'row', xvalue, oldDimId, ()=>{
 												ts.setUpdate();
@@ -545,7 +546,7 @@
 						
 					}
 					if(cnt == 0){
-						tools.msginfo("数据已钻透。", "error");
+						tools.msginfo(ts.$t('message.olap.chart.err10'), "error");
 						return;
 					}
 					//drillmenu

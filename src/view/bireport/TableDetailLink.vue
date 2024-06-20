@@ -1,9 +1,9 @@
 <!-- 表格明细数据提取 -->
 <template>
-  	<el-dialog fullscreen :append-to-body="true" title="明细数据提取" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
+  	<el-dialog fullscreen :append-to-body="true" :title="$t('message.olap.detail.title')" :visible.sync="show" :close-on-click-modal="false" custom-class="nopadding">
 			<div>
-				<button class="btn btn-sm btn-primary" @click="exportXls()">导出到Excel</button>
-				<button class="btn btn-sm btn-danger" @click="show=false">关闭</button>
+				<button class="btn btn-sm btn-primary" @click="exportXls()">{{$t('message.olap.detail.excel')}}</button>
+				<button class="btn btn-sm btn-danger" @click="show=false">{{$t('message.olap.detail.close')}}</button>
 			</div>
 			<el-table :data="tableData" :height="height" border style="width: 100%" header-row-class-name="tableHeadbg">
 				<template v-for="(item, index) in cols">
