@@ -1,4 +1,7 @@
-# rsbi-vue
+# 睿思BI-开源版-前端
+
+- zh_CN [简体中文](README.md)
+- en [English](README_en.md)
 
 睿思bi开源版前端框架-基于VUE  <br/>
 ⚠️ 此项目后端框架基于springboot, 地址：https://github.com/ruisibi/rsbi-os  ⚠️<br/>
