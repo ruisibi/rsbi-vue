@@ -32,11 +32,11 @@ Demonstrate： http://bi.ruisitech.com/  <br/>
 
 # Product screenshot:<br/>
 Data modelling<br/>
-![olap](https://www.ruisitech.com/img/kybpic0.jpg?v4)  <br/>
+![olap](https://www.ruisitech.com/img/3461099639.png?v4)  <br/>
 Multidimensional analysis<br/>
-![1](https://www.ruisitech.com/img/kybpic1.jpg?v5)  <br/>
+![1](https://www.ruisitech.com/img/173641763.png?v5)  <br/>
 Data report<br/>
-![2](https://www.ruisitech.com/img/kybpic2.jpg?v3)  <br/>
+![2](https://www.ruisitech.com/img/1693025478.png?v3)  <br/>
 
 ## Build Setup
 
